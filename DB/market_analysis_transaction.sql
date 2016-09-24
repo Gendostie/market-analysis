@@ -16,27 +16,34 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `portfolio`
+-- Table structure for table `transaction`
 --
 
-DROP TABLE IF EXISTS `portfolio`;
+DROP TABLE IF EXISTS `transaction`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `portfolio` (
-  `id_portfolio` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(255) DEFAULT 'new_portfolio',
-  PRIMARY KEY (`id_portfolio`),
-  UNIQUE KEY `name_UNIQUE` (`name`)
+CREATE TABLE `transaction` (
+  `id_transaction` int(11) NOT NULL,
+  `id_portfolio` int(11) NOT NULL,
+  `symbol_company` varchar(10) NOT NULL,
+  `quantity` int(11) DEFAULT '0',
+  `value_current` decimal(4,0) DEFAULT '0',
+  `transaction_date` datetime NOT NULL,
+  PRIMARY KEY (`id_transaction`,`id_portfolio`),
+  KEY `id_portfolio_idx` (`id_portfolio`),
+  KEY `symbol_company_idx` (`symbol_company`),
+  CONSTRAINT `portfolio` FOREIGN KEY (`id_portfolio`) REFERENCES `portfolio` (`id_portfolio`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `symbol_company` FOREIGN KEY (`symbol_company`) REFERENCES `company` (`symbol`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `portfolio`
+-- Dumping data for table `transaction`
 --
 
-LOCK TABLES `portfolio` WRITE;
-/*!40000 ALTER TABLE `portfolio` DISABLE KEYS */;
-/*!40000 ALTER TABLE `portfolio` ENABLE KEYS */;
+LOCK TABLES `transaction` WRITE;
+/*!40000 ALTER TABLE `transaction` DISABLE KEYS */;
+/*!40000 ALTER TABLE `transaction` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 

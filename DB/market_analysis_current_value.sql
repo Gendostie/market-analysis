@@ -16,27 +16,39 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `portfolio`
+-- Table structure for table `current_value`
 --
 
-DROP TABLE IF EXISTS `portfolio`;
+DROP TABLE IF EXISTS `current_value`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `portfolio` (
-  `id_portfolio` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(255) DEFAULT 'new_portfolio',
-  PRIMARY KEY (`id_portfolio`),
-  UNIQUE KEY `name_UNIQUE` (`name`)
+CREATE TABLE `current_value` (
+  `date_current_value` datetime NOT NULL,
+  `id_symbol` varchar(10) NOT NULL,
+  `stock_value` decimal(4,0) DEFAULT '0',
+  `income` decimal(4,0) DEFAULT '0',
+  `profit_margin` decimal(4,0) DEFAULT '0',
+  `dividende_yield` decimal(4,0) DEFAULT '0',
+  `market_capitalisation` decimal(4,0) DEFAULT '0',
+  `financical_index` decimal(4,0) DEFAULT '0',
+  `index_end` decimal(4,0) DEFAULT '0',
+  `price_by_book` decimal(4,0) DEFAULT '0',
+  `price_by_sales` decimal(4,0) DEFAULT '0',
+  `price_by_cash_flow` decimal(4,0) DEFAULT '0',
+  `52w_price_change` decimal(4,0) DEFAULT '0',
+  PRIMARY KEY (`date_current_value`,`id_symbol`),
+  KEY `id_symbol_idx` (`id_symbol`),
+  CONSTRAINT `id_symbol` FOREIGN KEY (`id_symbol`) REFERENCES `company` (`symbol`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `portfolio`
+-- Dumping data for table `current_value`
 --
 
-LOCK TABLES `portfolio` WRITE;
-/*!40000 ALTER TABLE `portfolio` DISABLE KEYS */;
-/*!40000 ALTER TABLE `portfolio` ENABLE KEYS */;
+LOCK TABLES `current_value` WRITE;
+/*!40000 ALTER TABLE `current_value` DISABLE KEYS */;
+/*!40000 ALTER TABLE `current_value` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 

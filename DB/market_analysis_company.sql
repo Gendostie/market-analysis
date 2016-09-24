@@ -1,4 +1,4 @@
--- MySQL dump 10.13  Distrib 5.7.12, for Win32 (AMD64)
+-- MySQL dump 10.13  Distrib 5.7.12, for Win64 (x86_64)
 --
 -- Host: localhost    Database: market_analysis
 -- ------------------------------------------------------
@@ -26,8 +26,7 @@ CREATE TABLE `company` (
   `symbol` varchar(10) NOT NULL,
   `name` varchar(255) NOT NULL,
   `last_update_historic` datetime DEFAULT NULL,
-  PRIMARY KEY (`symbol`),
-  UNIQUE KEY `symbol_UNIQUE` (`symbol`)
+  PRIMARY KEY (`symbol`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -50,4 +49,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2016-09-22 17:43:41
+-- Dump completed on 2016-09-23 22:39:53

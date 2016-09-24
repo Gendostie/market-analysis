@@ -16,27 +16,28 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `portfolio`
+-- Table structure for table `historic_value`
 --
 
-DROP TABLE IF EXISTS `portfolio`;
+DROP TABLE IF EXISTS `historic_value`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `portfolio` (
-  `id_portfolio` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(255) DEFAULT 'new_portfolio',
-  PRIMARY KEY (`id_portfolio`),
-  UNIQUE KEY `name_UNIQUE` (`name`)
+CREATE TABLE `historic_value` (
+  `date_historic_value` datetime NOT NULL,
+  `id_symbol` varchar(4) NOT NULL,
+  PRIMARY KEY (`date_historic_value`,`id_symbol`),
+  KEY `id_symbol_idx` (`id_symbol`),
+  CONSTRAINT `symbol` FOREIGN KEY (`id_symbol`) REFERENCES `company` (`symbol`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `portfolio`
+-- Dumping data for table `historic_value`
 --
 
-LOCK TABLES `portfolio` WRITE;
-/*!40000 ALTER TABLE `portfolio` DISABLE KEYS */;
-/*!40000 ALTER TABLE `portfolio` ENABLE KEYS */;
+LOCK TABLES `historic_value` WRITE;
+/*!40000 ALTER TABLE `historic_value` DISABLE KEYS */;
+/*!40000 ALTER TABLE `historic_value` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
