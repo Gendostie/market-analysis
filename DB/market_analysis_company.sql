@@ -25,6 +25,7 @@ DROP TABLE IF EXISTS `company`;
 CREATE TABLE `company` (
   `symbol` varchar(10) NOT NULL,
   `name` varchar(255) NOT NULL,
+  `is_in_snp500` bit(1) DEFAULT b'0',
   `last_update_historic` datetime DEFAULT NULL,
   PRIMARY KEY (`symbol`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -36,7 +37,7 @@ CREATE TABLE `company` (
 
 LOCK TABLES `company` WRITE;
 /*!40000 ALTER TABLE `company` DISABLE KEYS */;
-INSERT INTO `company` VALUES ('AMZN','Amazon.com Inc',NULL),('GOOGL','Alphabet Inc Class A',NULL);
+INSERT INTO `company` VALUES ('AMZN','Amazon.com Inc','\0',NULL),('GOOGL','Alphabet Inc Class A','\0',NULL);
 /*!40000 ALTER TABLE `company` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -49,4 +50,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2016-09-23 22:39:53
+-- Dump completed on 2016-09-25 16:17:04
