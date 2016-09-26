@@ -1,5 +1,5 @@
 #!/usr/bin/python
-import pymysql
+import mysql.connector
 
 
 class DBConnection:
@@ -18,9 +18,9 @@ class DBConnection:
         self.__database = database
 
         try:
-            self.__connection = pymysql.connect(host=host, user=user, password=password, database=database)
+            self.__connection = mysql.connector.connect(host=host, user=user, password=password, database=database)
             self.__cursor = self.__connection.cursor()
-        except pymysql.Error as e:
+        except mysql.connector.Error as e:
             print 'Error connection: ', e.message, \
                 '\nwith parameters %(host)s, %(user)s, %(password)s, %(database)s' % locals()
             raise ValueError('Error in call of the query: ', e.message,
@@ -36,16 +36,16 @@ class DBConnection:
         """
         Function to call query select to db
         :param query: query sql
-        :type query: basestring
-        :param params: parameter to put in query, ex: "WHERE id = %s" or "WHERE id = %(id)s"
-        :type params: dict of parameter, ex: {id: 1}
+        :type query: string
+        :param params: parameter to put in query, ex: "WHERE id = %s" or "WHERE id = %(id)s",  params = {id: 1}
+        :type params: dict
         :return: result of query select
         :rtype tuple
         """
         try:
             self.__cursor.execute(query, params)
             return self.__cursor.fetchall()
-        except pymysql.Error as e:
+        except mysql.connector.Error as e:
             print 'Error in call of the query: ', e.message, \
                 '\nwith parameters %(query)s, %(params)s' % locals()
             raise ValueError('Error in call of the query: ', e.message,
@@ -55,15 +55,15 @@ class DBConnection:
         """
         Function to call query who modified data in db. INSERT, UPDATE and DELETE
         :param query: query sql
-        :type query: basestring
-        :param params: parameter to put in query, ex: "WHERE id = %s" or "WHERE id = %(id)s"
-        :type params: dict of parameter, ex: {id: 1}
+        :type query: string
+        :param params: parameter to put in query, ex: "WHERE id = %s" or "WHERE id = %(id)s",  params = {id: 1}
+        :type params: dict
         :return: None
         """
         try:
             self.__cursor.execute(query, params)
             self.__cursor.commit()
-        except pymysql.Error as e:
+        except mysql.connector.Error as e:
             self.close_connection()
             print 'Error in call of the query: ', e.message, \
                 '\nwith parameters %(query)s, %(params)s' % locals()
