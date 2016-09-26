@@ -1,6 +1,7 @@
 #!/usr/bin/python
-from DbConnection import DBConnection
 import finsymbols
+
+from DbConnection import DBConnection
 
 HOST = '127.0.0.1'
 USER = 'root'
@@ -54,7 +55,6 @@ def get_company_by_symbol(symbol):
     res = db.select_in_db(query, {'symbol': symbol})
     db.close_connection()
     return res
-
 
 
 def get_company_by_name(name):

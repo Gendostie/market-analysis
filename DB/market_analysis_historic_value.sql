@@ -1,4 +1,4 @@
--- MySQL dump 10.13  Distrib 5.7.12, for Win64 (x86_64)
+-- MySQL dump 10.13  Distrib 5.7.12, for Win32 (AMD64)
 --
 -- Host: localhost    Database: market_analysis
 -- ------------------------------------------------------
@@ -25,6 +25,14 @@ DROP TABLE IF EXISTS `historic_value`;
 CREATE TABLE `historic_value` (
   `date_historic_value` datetime NOT NULL,
   `id_symbol` varchar(4) NOT NULL,
+  `revenu_usd_mil` decimal(3,0) DEFAULT '0',
+  `gross_margin_pct` decimal(3,0) DEFAULT '0',
+  `net_income_usd_mil` decimal(3,0) DEFAULT '0',
+  `earning_per_share_usd` decimal(3,0) DEFAULT '0',
+  `dividends_usd` decimal(3,0) DEFAULT '0',
+  `book_value_per_share_usd` decimal(3,0) DEFAULT '0',
+  `free_cash_flo_per_share_usd` decimal(3,0) DEFAULT '0',
+  `historic_valuecol` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`date_historic_value`,`id_symbol`),
   KEY `id_symbol_idx` (`id_symbol`),
   CONSTRAINT `symbol` FOREIGN KEY (`id_symbol`) REFERENCES `company` (`symbol`) ON DELETE NO ACTION ON UPDATE NO ACTION
@@ -49,4 +57,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2016-09-23 22:39:53
+-- Dump completed on 2016-09-26 11:57:37
