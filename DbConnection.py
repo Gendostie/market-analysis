@@ -64,6 +64,7 @@ class DBConnection:
             self.__cursor.execute(query, params)
             self.__cursor.commit()
         except pymysql.Error as e:
+            self.close_connection()
             print 'Error in call of the query: ', e.message, \
                 '\nwith parameters %(query)s, %(params)s' % locals()
             raise ValueError('Error in call of the query: ', e.message,
