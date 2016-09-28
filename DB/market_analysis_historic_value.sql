@@ -31,11 +31,11 @@ CREATE TABLE `historic_value` (
   `earning_per_share_usd` decimal(3,0) DEFAULT '0',
   `dividends_usd` decimal(3,0) DEFAULT '0',
   `book_value_per_share_usd` decimal(3,0) DEFAULT '0',
-  `free_cash_flo_per_share_usd` decimal(3,0) DEFAULT '0',
+  `free_cash_flow_per_share_usd` decimal(3,0) DEFAULT '0',
   `historic_valuecol` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`date_historic_value`,`id_symbol`),
   KEY `id_symbol_idx` (`id_symbol`),
-  CONSTRAINT `symbol` FOREIGN KEY (`id_symbol`) REFERENCES `company` (`symbol`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  CONSTRAINT `id_symbol_fk_historic_value` FOREIGN KEY (`id_symbol`) REFERENCES `company` (`symbol`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -57,4 +57,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2016-09-26 11:57:37
+-- Dump completed on 2016-09-28 12:52:18

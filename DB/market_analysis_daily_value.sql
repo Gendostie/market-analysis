@@ -28,7 +28,8 @@ CREATE TABLE `daily_value` (
   `stock_value` decimal(3,0) DEFAULT '0',
   `52w_price_change` decimal(3,0) DEFAULT '0',
   PRIMARY KEY (`date_daily_value`,`id_symbol`),
-  KEY `id_symbol_idx` (`id_symbol`)
+  KEY `id_symbol_idx` (`id_symbol`),
+  CONSTRAINT `id_symbol_fk_daily_value` FOREIGN KEY (`id_symbol`) REFERENCES `company` (`symbol`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -50,4 +51,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2016-09-26 11:57:37
+-- Dump completed on 2016-09-28 12:52:18
