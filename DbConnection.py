@@ -1,5 +1,5 @@
 #!/usr/bin/python
-import mysql.connector
+import MySQLdb
 
 
 class DBConnection:
@@ -18,9 +18,9 @@ class DBConnection:
         self.__database = database
 
         try:
-            self.__connection = mysql.connector.connect(host=host, user=user, password=password, database=database)
+            self.__connection = MySQLdb.connect(host, user, password, database)
             self.__cursor = self.__connection.cursor()
-        except mysql.connector.Error as e:
+        except MySQLdb.Error as e:
             print 'Error connection: ', e.message, \
                 '\nwith parameters %(host)s, %(user)s, %(password)s, %(database)s' % locals()
             raise ValueError('Error in call of the query: ', e.message,
@@ -45,11 +45,11 @@ class DBConnection:
         try:
             self.__cursor.execute(query, params)
             return self.__cursor.fetchall()
-        except mysql.connector.Error as e:
-            print 'Error in call of the query: ', e.message, \
+        except MySQLdb.Error as e:
+            print 'Error in call of the query: ', e, \
                 '\nwith parameters %(query)s, %(params)s' % locals()
-            raise ValueError('Error in call of the query: ', e.message,
-                             '\nwith parameters %(query)s, %(params)s' % locals())
+            raise ValueError('Error in call of the query: ', e,
+                             '\nwith parameters %(query)s ; %(params)s' % locals())
 
     def modified_db(self, query, params=None):
         """
@@ -62,11 +62,11 @@ class DBConnection:
         """
         try:
             self.__cursor.execute(query, params)
-            self.__cursor.commit()
-        except mysql.connector.Error as e:
-            self.close_connection()
-            print 'Error in call of the query: ', e.message, \
+            self.__connection.commit()
+        except MySQLdb.Error as e:
+            self.__connection.rollback()
+            print 'Error in call of the query: ', e, \
                 '\nwith parameters %(query)s, %(params)s' % locals()
-            raise ValueError('Error in call of the query: ', e.message,
-                             '\nwith parameters %(query)s, %(params)s' % locals())
+            raise ValueError('Error in call of the query: ', e,
+                             '\nwith parameters %(query)s ; %(params)s' % locals())
 
