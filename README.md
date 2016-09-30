@@ -7,6 +7,10 @@
     - user: root
     - password: root
 
+## Package python to need
+- mysqldb (https://sourceforge.net/projects/mysql-python/)
+- findsymbols
+
 ## Export data base MySql
 1. Create schema `market_analysis`
     - CREATE SCHEMA 'market_analysis';
