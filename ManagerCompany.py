@@ -111,3 +111,54 @@ def update_snp550_to_db(db=None):
         add_company_to_db(company.get('symbol'), company.get('company'))
 
     # TODO: call fct to historic data in csv [Gen]
+
+
+def insert_daily_value_to_db(symbol_company, list_values, db=None):
+    """
+    Values to insert in table daily_value of db for a company
+    :param symbol_company: symbol of a company
+    :type symbol_company: string
+    :param list_values: list of list of values
+    :type list_values: list[list[string, string, string]]
+    :param db: if we have already connexion in other function who cal this function
+    :type db: DBConnection
+    :return: None
+    """
+    if not db:
+        db = DBConnection(HOST, USER, PASSWORD, DATABASE)
+
+    query = """INSERT INTO market_analysis.daily_value (date_daily_value, id_symbol, stock_value, 52w_price_change)
+                VALUES (%(datetime_value)s, %(symbol_company)s, %(stock_value)s, %(price_change)s)"""
+    for datetime_value, stock_value, price_change in list_values:
+        params = {'datetime_value': datetime_value, 'symbol_company': symbol_company, 'stock_value': stock_value,
+                  'price_change': price_change}
+        # TODO: check for multi-row to insert, maybe use connection.executemayny(query, list of tuple values)
+        db.modified_db(query, params)
+
+
+def insert_historic_value_to_db(symbol_company, list_values, db=None):
+    """
+    Values to insert in table historic_value of db for a company
+    :param symbol_company: symbol of a company
+    :type symbol_company: string
+    :param list_values: list of list of values
+    :type list_values: list[list[string, string, string, string, string, string, string, string, string]]
+    :param db: if we have already connexion in other function who cal this function
+    :type db: DBConnection
+    :return: None
+    """
+    if not db:
+        db = DBConnection(HOST, USER, PASSWORD, DATABASE)
+
+    query = """INSERT INTO market_analysis.historic_value (date_historic_value, id_symbol, revenu_usd_mil,
+                                                           gross_margin_pct, net_income_usd_mil, earning_per_share_usd,
+                                                           dividends_usd, book_value_per_share_usd,
+                                                           free_cash_flow_per_share_usd)
+               VALUES (%(datetime_value)s, %(symbole_company)s, %(revenu)s, %(gross_margin)s, %(income)s,
+                       %(earning)s, %(dividends)s, %(book_value)s, %(cash_flow)s)"""
+    for datetime_value, revenu, gross_margin, income, earning, dividends, book_value, cash_flow in list_values:
+        params = {'datetime_value': datetime_value, 'symbol_company': symbol_company, 'revenu': revenu,
+                  'gross_margin': gross_margin, 'income': income, 'earning': earning, 'dividends': dividends,
+                  'book_value': book_value, 'cash_flow': cash_flow}
+        # TODO: check for multi-row to insert, maybe use connection.executemayny(query, list of tuple values)
+        db.modified_db(query, params)
