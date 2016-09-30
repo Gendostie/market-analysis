@@ -3,6 +3,9 @@ import MySQLdb
 
 
 class DBConnection:
+    """
+    Create connection with db MySql and give possibility to execute query sql
+    """
     __connection = None
     __cursor = None
 
@@ -12,13 +15,24 @@ class DBConnection:
     __database = None
 
     def __init__(self, host, user, password, database):
+        """
+        Create connection to db MySql
+        :param host:
+        :type host: string
+        :param user:
+        :type user: string
+        :param password:
+        :type password: string
+        :param database:
+        :type database: string
+        """
         self.__host = host
         self.__user = user
         self.__password = password
         self.__database = database
 
         try:
-            self.__connection = MySQLdb.connect(host, user, password, database)
+            self.__connection = MySQLdb.connect(host=host, user=user, passwd=password, db=database)
             self.__cursor = self.__connection.cursor()
         except MySQLdb.Error as e:
             print 'Error connection: ', e.message, \
@@ -27,6 +41,10 @@ class DBConnection:
                              '\nwith parameters %(host)s, %(user)s, %(password)s, %(database)s' % locals())
 
     def close_connection(self):
+        """
+        Close connection to db MySql
+        :return: None
+        """
         if self.__cursor is not None:
             self.__cursor.close()
         if self.__connection is not None:
@@ -69,4 +87,3 @@ class DBConnection:
                 '\nwith parameters %(query)s, %(params)s' % locals()
             raise ValueError('Error in call of the query: ', e,
                              '\nwith parameters %(query)s ; %(params)s' % locals())
-

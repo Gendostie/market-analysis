@@ -1,5 +1,4 @@
 #!/usr/bin/python
-from DbConnection import DBConnection
 import ManagerCompany
 import finsymbols
 

@@ -1,7 +1,7 @@
 #!/usr/bin/python
 import finsymbols
 
-from DbConnection import DBConnection
+from Manager_DB.DbConnection import DBConnection
 
 HOST = '127.0.0.1'
 USER = 'root'
