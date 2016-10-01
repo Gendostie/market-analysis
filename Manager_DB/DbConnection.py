@@ -18,13 +18,13 @@ class DBConnection:
         """
         Create connection to db MySql
         :param host:
-        :type host: string
+        :type host: str
         :param user:
-        :type user: string
+        :type user: str
         :param password:
-        :type password: string
+        :type password: str
         :param database:
-        :type database: string
+        :type database: str
         """
         self.__host = host
         self.__user = user
@@ -54,11 +54,11 @@ class DBConnection:
         """
         Function to call query select to db
         :param query: query sql
-        :type query: string
+        :type query: str
         :param params: parameter to put in query, ex: "WHERE id = %s" or "WHERE id = %(id)s",  params = {id: 1}
         :type params: dict
         :return: result of query select
-        :rtype tuple
+        :rtype tuple(tuple)
         """
         try:
             self.__cursor.execute(query, params)
@@ -73,7 +73,7 @@ class DBConnection:
         """
         Function to call query who modified data in db. INSERT, UPDATE and DELETE
         :param query: query sql
-        :type query: string
+        :type query: str
         :param params: parameter to put in query, ex: "WHERE id = %s" or "WHERE id = %(id)s",  params = {id: 1}
         :type params: dict
         :return: None
