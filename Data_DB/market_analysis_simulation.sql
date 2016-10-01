@@ -1,4 +1,4 @@
--- MySQL dump 10.13  Distrib 5.7.12, for Win32 (AMD64)
+-- MySQL dump 10.13  Distrib 5.7.15, for Win64 (x86_64)
 --
 -- Host: localhost    Database: market_analysis
 -- ------------------------------------------------------
@@ -23,14 +23,15 @@ DROP TABLE IF EXISTS `simulation`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `simulation` (
-  `id_simulation` int(11) NOT NULL,
+  `id_simulation` int(11) NOT NULL AUTO_INCREMENT,
   `id_portfolio` int(11) NOT NULL,
   `parameters` varchar(255) DEFAULT NULL,
   `results` varchar(5000) DEFAULT NULL,
+  `timestamp` datetime DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id_simulation`,`id_portfolio`),
   KEY `id_portfolio_idx` (`id_portfolio`),
   CONSTRAINT `id_portfolio_fk_simulation` FOREIGN KEY (`id_portfolio`) REFERENCES `portfolio` (`id_portfolio`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -51,4 +52,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2016-09-28 12:52:18
+-- Dump completed on 2016-09-30 20:15:43

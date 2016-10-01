@@ -1,4 +1,4 @@
--- MySQL dump 10.13  Distrib 5.7.12, for Win32 (AMD64)
+-- MySQL dump 10.13  Distrib 5.7.15, for Win64 (x86_64)
 --
 -- Host: localhost    Database: market_analysis
 -- ------------------------------------------------------
@@ -29,10 +29,13 @@ CREATE TABLE `transaction` (
   `quantity` int(11) DEFAULT '0',
   `value_current` decimal(4,0) DEFAULT '0',
   `transaction_date` datetime NOT NULL,
+  `id_simulation` int(11) DEFAULT NULL,
   PRIMARY KEY (`id_transaction`,`id_portfolio`),
   KEY `id_portfolio_idx` (`id_portfolio`),
   KEY `symbol_company_idx` (`id_symbol`),
+  KEY `id_simulation_fk_transaction_idx` (`id_simulation`),
   CONSTRAINT `id_portfolio_fk_transaction` FOREIGN KEY (`id_portfolio`) REFERENCES `portfolio` (`id_portfolio`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `id_simulation_fk_transaction` FOREIGN KEY (`id_simulation`) REFERENCES `simulation` (`id_simulation`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `id_symbol_fk_transaction` FOREIGN KEY (`id_symbol`) REFERENCES `company` (`symbol`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -55,4 +58,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2016-09-28 12:52:18
+-- Dump completed on 2016-09-30 20:15:43
