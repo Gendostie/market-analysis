@@ -1,6 +1,7 @@
 #!/usr/bin/python
-import ManagerCompany
 import finsymbols
+
+from Manager_DB import ManagerCompany
 
 
 def insert_company_snp500():
