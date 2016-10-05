@@ -9,7 +9,7 @@ DATABASE = 'market_analysis'
 
 def get_id_portfolio(name, db=None):
     """
-    Get name of portfolio
+    Get name of portfolio as name of portfolio
     :param name: name of portfolio
     :type name: str
     :param db: if we have already connexion in other function who cal this function
@@ -31,7 +31,7 @@ def get_id_portfolio(name, db=None):
 
 def get_name_portfolio_name(id_portfolio, db=None):
     """
-    Get name of portfolio
+    Get name of portfolio as id of portfolio
     :param id_portfolio: id of portfolio
     :type id_portfolio: int
     :param db: if we have already connexion in other function who cal this function
@@ -175,7 +175,7 @@ def insert_transaction_to_db(id_portfolio, symbol_company, quantity, value_curre
 # TODO: to complete
 def start_simulation(dict_params, id_portfolio=None, db=None):
     """
-
+    As parameter giving, a simulation of a portfolio is doing
     :param dict_params:
     :type dict_params: dict{string}
     :param id_portfolio: id of portfolio
@@ -194,7 +194,7 @@ def start_simulation(dict_params, id_portfolio=None, db=None):
 
 def get_info_simulation(id_simulation, db=None):
     """
-
+    Get information of simulation as id of simulation
     :param id_simulation: id of simulation
     :type id_simulation: int
     :param db: if we have already connexion in other function who cal this function
@@ -217,7 +217,7 @@ def get_info_simulation(id_simulation, db=None):
 
 def get_transaction_simulation(id_simulation, db=None):
     """
-
+    Get transaction of simulation as id of simulation
     :param id_simulation: id of simulation
     :type id_simulation: int
     :param db: if we have already connexion in other function who cal this function

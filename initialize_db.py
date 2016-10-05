@@ -7,7 +7,6 @@ from Manager_DB.DbConnection import DBConnection
 HOST = '127.0.0.1'
 USER = 'root'
 PASSWORD = 'root'
-#DATABASE = 'market_analysis'
 
 
 def insert_company_snp500():
@@ -22,11 +21,11 @@ def insert_company_snp500():
 
 
 def init_db_mysql():
+    """
+    Create schema and table for use the program
+    :return: None
+    """
+    # No Database name, because if not exists, we have an error
     db = DBConnection(HOST, USER, PASSWORD, '')
     query = """Create schema IF NOT EXISTS `market_analysis`"""
     db.modified_db(query)
-
-    return 1
-
-res = init_db_mysql()
-print res

@@ -28,7 +28,7 @@ def get_snp500(db=None):
 
 def add_company_to_db(symbol, name, db=None):
     """
-    add a company to table company
+    Add a company to table company
     :param symbol: symbol of company in stock market
     :type symbol: str
     :param name: name of company in stock market
@@ -51,7 +51,7 @@ def add_company_to_db(symbol, name, db=None):
 
 def get_company_by_symbol(symbol, db=None):
     """
-
+    Get information in table company  as symbol of company
     :param symbol: symbol of a company we search
     :type symbol: str
     :param db: if we have already connexion in other function who cal this function
@@ -73,7 +73,7 @@ def get_company_by_symbol(symbol, db=None):
 
 def get_company_by_name(name, db=None):
     """
-
+    Get information in table company  as name of company
     :param name: name of a company we search
     :type name: str
     :param db: if we have already connexion in other function who cal this function
