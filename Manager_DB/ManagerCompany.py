@@ -109,7 +109,7 @@ def update_snp550_to_db(db=None):
     snp500 = finsymbols.get_sp500_symbols()
     # update and add_company of s500
     for company in snp500:
-        add_company_to_db(company.get('symbol'), company.get('company'))
+        add_company_to_db(company.get('symbol'), company.get('company'), db)
 
     # TODO: call fct to historic data in csv [Gen]
 
@@ -173,19 +173,19 @@ def insert_historic_value_to_db(symbol_company, list_values, db=None):
                                                            gross_margin_pct, net_income_usd_mil, earning_per_share_usd,
                                                            dividends_usd, book_value_per_share_usd,
                                                            free_cash_flow_per_share_usd)
-               VALUES (%(datetime_value)s, %(symbole_company)s, %(revenu)s, %(gross_margin)s, %(income)s,
+               VALUES (%(datetime_value)s, %(symbol_company)s, %(revenue)s, %(gross_margin)s, %(income)s,
                        %(earning)s, %(dividends)s, %(book_value)s, %(cash_flow)s)
-               ON DUPLICATE KEY UPDATE revenu_usd_mil = %(revenu)s, gross_margin_pct = %(gross_margin)s,
+               ON DUPLICATE KEY UPDATE revenu_usd_mil = %(revenue)s, gross_margin_pct = %(gross_margin)s,
                                        net_income_usd_mil = %(income)s, earning_per_share_usd = %(earning)s,
                                        dividends_usd = %(dividends)s, book_value_per_share_usd = %(book_value)s,
                                        free_cash_flow_per_share_usd = %(cash_flow)s"""
-    for datetime_value, revenu, gross_margin, income, earning, dividends, book_value, cash_flow in list_values:
+    for datetime_value, revenue, gross_margin, income, earning, dividends, book_value, cash_flow in list_values:
         # check if datetime_value None, if None we continue with next row
         if not datetime_value:
             print "Value of date_daily_value is None for company %s. params = " % symbol_company,\
-                (datetime_value, revenu, gross_margin, income, earning, dividends, book_value, cash_flow)
+                (datetime_value, revenue, gross_margin, income, earning, dividends, book_value, cash_flow)
             continue
-        params = {'datetime_value': datetime_value, 'symbol_company': symbol_company, 'revenu': revenu,
+        params = {'datetime_value': datetime_value, 'symbol_company': symbol_company, 'revenue': revenue,
                   'gross_margin': gross_margin, 'income': income, 'earning': earning, 'dividends': dividends,
                   'book_value': book_value, 'cash_flow': cash_flow}
         # TODO: check for multi-row to insert, maybe use connection.executemayny(query, list of tuple values)
