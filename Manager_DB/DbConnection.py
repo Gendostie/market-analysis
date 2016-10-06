@@ -35,10 +35,10 @@ class DBConnection:
             self.__connection = MySQLdb.connect(host=host, user=user, passwd=password, db=database)
             self.__cursor = self.__connection.cursor()
         except MySQLdb.Error as e:
-            print 'Error connection: ', e.message, \
+            print 'Error connection: ', e, \
                 '\nwith parameters %(host)s, %(user)s, %(password)s, %(database)s' % locals()
-            raise ValueError('Error in call of the query: ', e.message,
-                             '\nwith parameters %(host)s, %(user)s, %(password)s, %(database)s' % locals())
+            raise ValueError('Error in call of the query: ', e,
+                             '\nwith parameters: \"%(host)s, %(user)s, %(password)s, %(database)s\"' % locals())
 
     def close_connection(self):
         """
@@ -67,7 +67,7 @@ class DBConnection:
             print 'Error in call of the query: ', e, \
                 '\nwith parameters %(query)s, %(params)s' % locals()
             raise ValueError('Error in call of the query: ', e,
-                             '\nwith parameters %(query)s ; %(params)s' % locals())
+                             '\nwith parameters: \"%(query)s\" ; \"%(params)s\"' % locals())
 
     def modified_db(self, query, params=None):
         """
@@ -86,4 +86,4 @@ class DBConnection:
             print 'Error in call of the query: ', e, \
                 '\nwith parameters %(query)s, %(params)s' % locals()
             raise ValueError('Error in call of the query: ', e,
-                             '\nwith parameters %(query)s ; %(params)s' % locals())
+                             '\nwith parameters: \"%(query)s\" ; \"%(params)s\"' % locals())
