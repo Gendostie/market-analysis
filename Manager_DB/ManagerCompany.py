@@ -68,7 +68,12 @@ def get_company_by_symbol(symbol, db=None):
         db = DBConnection(HOST, USER, PASSWORD, DATABASE)
     query = """SELECT name, symbol, is_in_snp500, last_update_historic
                 FROM company WHERE symbol = %(symbol)s"""
-    return db.select_in_db(query, {'symbol': symbol})
+    res = db.select_in_db(query, {'symbol': symbol})
+    return_value = []
+    for name, symbol, is_in_snp500, last_update_historic in res:
+        return_value.append({'name': name, 'symbol': symbol, 'is_in_snp500': is_in_snp500,
+                             'last_update_historic': last_update_historic})
+    return return_value
 
 
 def get_company_by_name(name, db=None):
@@ -88,7 +93,12 @@ def get_company_by_name(name, db=None):
         db = DBConnection(HOST, USER, PASSWORD, DATABASE)
     query = """SELECT name, symbol, is_in_snp500, last_update_historic
                 FROM company WHERE name = %(name)s"""
-    return db.select_in_db(query, {'name': name})
+    res = db.select_in_db(query, {'name': name})
+    return_value = []
+    for name, symbol, is_in_snp500, last_update_historic in res:
+        return_value.append({'name': name, 'symbol': symbol, 'is_in_snp500': is_in_snp500,
+                             'last_update_historic': last_update_historic})
+    return return_value
 
 
 def update_snp550_to_db(db=None):
