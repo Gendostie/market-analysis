@@ -140,8 +140,8 @@ def insert_daily_value_to_db(symbol_company, list_values, db=None):
     for datetime_value, stock_value, price_change in list_values:
         # check if datetime_value None, if None we continue with next row
         if not datetime_value:
-            print "Value of date_daily_value is None for company %s. params = " % symbol_company,\
-                (datetime_value, stock_value, price_change)
+            print("Value of date_daily_value is None for company %s. params = " % symbol_company,
+                  (datetime_value, stock_value, price_change))
             continue
         params = {'datetime_value': datetime_value, 'symbol_company': symbol_company, 'stock_value': stock_value,
                   'price_change': price_change}
@@ -182,8 +182,8 @@ def insert_historic_value_to_db(symbol_company, list_values, db=None):
     for datetime_value, revenue, gross_margin, income, earning, dividends, book_value, cash_flow in list_values:
         # check if datetime_value None, if None we continue with next row
         if not datetime_value:
-            print "Value of date_daily_value is None for company %s. params = " % symbol_company,\
-                (datetime_value, revenue, gross_margin, income, earning, dividends, book_value, cash_flow)
+            print("Value of date_daily_value is None for company %s. params = " % symbol_company,
+                (datetime_value, revenue, gross_margin, income, earning, dividends, book_value, cash_flow))
             continue
         params = {'datetime_value': datetime_value, 'symbol_company': symbol_company, 'revenue': revenue,
                   'gross_margin': gross_margin, 'income': income, 'earning': earning, 'dividends': dividends,

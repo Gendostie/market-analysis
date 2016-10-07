@@ -74,7 +74,7 @@ def get_transaction_portfolio(id_portfolio, symbol_company=None, db=None):
     params = {'id_portfolio': id_portfolio}
     if symbol_company:
         query += "AND id_symbol = %(id_symbol)s"
-        params.update({'symbol_company': symbol_company})
+        params['symbol_company'] = symbol_company
     res = db.select_in_db(query, params)
     db.close_connection()
     return res
@@ -189,7 +189,7 @@ def start_simulation(dict_params, id_portfolio=None, db=None):
     if not id_portfolio:
         id_portfolio = create_portfolio()
 
-    print 'Simulation start'
+    print('Simulation start')
 
 
 def get_info_simulation(id_simulation, db=None):

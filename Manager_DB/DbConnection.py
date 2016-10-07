@@ -1,5 +1,5 @@
 #!/usr/bin/python
-import MySQLdb
+import pymysql
 
 
 class DBConnection:
@@ -17,13 +17,13 @@ class DBConnection:
     def __init__(self, host, user, password, database):
         """
         Create connection to db MySql
-        :param host:
+        :param host: host of db, ex: localhost, 127.0.0.1
         :type host: str
-        :param user:
+        :param user: user of db
         :type user: str
         :param password:
         :type password: str
-        :param database:
+        :param database: name of database, can include name table, ex: market_analysis.company
         :type database: str
         """
         self.__host = host
@@ -32,11 +32,11 @@ class DBConnection:
         self.__database = database
 
         try:
-            self.__connection = MySQLdb.connect(host=host, user=user, passwd=password, db=database)
+            self.__connection = pymysql.connect(host=host, user=user, passwd=password, db=database)
             self.__cursor = self.__connection.cursor()
-        except MySQLdb.Error as e:
-            print 'Error connection: ', e, \
-                '\nwith parameters %(host)s, %(user)s, %(password)s, %(database)s' % locals()
+        except pymysql.Error as e:
+            print('Error connection: ', e, 
+                  '\nwith parameters %(host)s, %(user)s, %(password)s, %(database)s' % locals())
             raise ValueError('Error in call of the query: ', e,
                              '\nwith parameters: \"%(host)s, %(user)s, %(password)s, %(database)s\"' % locals())
 
@@ -63,9 +63,8 @@ class DBConnection:
         try:
             self.__cursor.execute(query, params)
             return self.__cursor.fetchall()
-        except MySQLdb.Error as e:
-            print 'Error in call of the query: ', e, \
-                '\nwith parameters %(query)s, %(params)s' % locals()
+        except pymysql.Error as e:
+            print('Error in call of the query: ', e, '\nwith parameters %(query)s, %(params)s' % locals())
             raise ValueError('Error in call of the query: ', e,
                              '\nwith parameters: \"%(query)s\" ; \"%(params)s\"' % locals())
 
@@ -81,9 +80,8 @@ class DBConnection:
         try:
             self.__cursor.execute(query, params)
             self.__connection.commit()
-        except MySQLdb.Error as e:
+        except pymysql.Error as e:
             self.__connection.rollback()
-            print 'Error in call of the query: ', e, \
-                '\nwith parameters %(query)s, %(params)s' % locals()
+            print('Error in call of the query: ', e, '\nwith parameters %(query)s, %(params)s' % locals())
             raise ValueError('Error in call of the query: ', e,
                              '\nwith parameters: \"%(query)s\" ; \"%(params)s\"' % locals())
