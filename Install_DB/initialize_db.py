@@ -10,6 +10,7 @@ HOST = '127.0.0.1'
 USER = 'root'
 PASSWORD = 'root'
 DATABASE = 'market_analysis'
+PATH_DATA_DB = '../Data_DB/'
 
 
 def insert_company_snp500():
@@ -43,19 +44,19 @@ def init_update_db_mysql():
     # Create another connection, because now we are sure that database exists
     db = DBConnection(HOST, USER, PASSWORD, DATABASE)
     # Create table
-    for filename in listdir(path.join('Data_DB')):
+    list_file = ['company', 'daily_value', 'historic_value', 'portfolio', 'simulation', 'transaction']
+    for filename in list_file:
         # Take just filename to finish by extension sql
-        if filename.find('sql') != -1:
-            f = open(path.join('Data_DB/' + filename))
+        f = open(path.join(PATH_DATA_DB + DATABASE + '_' + filename + '.sql'))
 
-            query = ''
-            for line in f:
-                # exclude comments, line empty
-                if line[0:2] != '/*' and line[0:2] != '--' and line[0:2] != '\n':
-                    query += line
-            row_affected = 0
-            # remove last ; for new_query empty to end
-            # ex: [DROP TABLE IF EXISTS `daily_value`, CREATE TABLE `daily_value`(...), ]
-            for new_query in query[:query.rfind(';')].split(';\n'):
-                row_affected += db.modified_db(new_query)
-            print('number row affected for table %s: %s' % (filename[0:len(filename) - len('.sql')], row_affected))
+        query = ''
+        for line in f:
+            # exclude comments, line empty
+            if line[0:2] != '/*' and line[0:2] != '--' and line[0:2] != '\n':
+                query += line
+        row_affected = 0
+        # remove last ; for new_query empty to end
+        # ex: [DROP TABLE IF EXISTS `daily_value`, CREATE TABLE `daily_value`(...), ]
+        for new_query in query[:query.rfind(';')].split(';\n'):
+            row_affected += db.modified_db(new_query)
+        print('number row affected for table %s: %s' % (filename, row_affected))
