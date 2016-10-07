@@ -20,10 +20,12 @@ def get_snp500(db=None):
     if not db:
         db = DBConnection(HOST, USER, PASSWORD, DATABASE)
     query = """SELECT name, symbol, last_update_historic
-                FROM market_analysis.company WHERE is_in_snp500 = 1"""
+                FROM company WHERE is_in_snp500 = 1"""
     res = db.select_in_db(query)
-    db.close_connection()
-    return res
+    return_value = []
+    for name, symbol, last_update_historic in res:
+        return_value.append({'name': name, 'symbol': symbol, 'last_update_historic': last_update_historic})
+    return return_value
 
 
 def add_company_to_db(symbol, name, db=None):
@@ -35,7 +37,8 @@ def add_company_to_db(symbol, name, db=None):
     :type name: str
     :param db: if we have already connexion in other function who cal this function
     :type db: DBConnection
-    :return: None
+    :return: number row affected
+    :rtype: int
     """
     if not symbol or not name:
         raise ValueError('Name or symbol is None. name: %(name)s ; symbol: %(symbol)s ' % locals())
@@ -43,10 +46,9 @@ def add_company_to_db(symbol, name, db=None):
     if not db:
         db = DBConnection(HOST, USER, PASSWORD, DATABASE)
     # Add new company not in table and update name and flag snp500 if already in table
-    query = """INSERT INTO market_analysis.company (name, symbol, is_in_snp500) VALUES (UPPER(%(name)s), %(symbol)s, 1)
+    query = """INSERT INTO company (name, symbol, is_in_snp500) VALUES (%(name)s, UPPER(%(symbol)s), 1)
                 ON DUPLICATE KEY UPDATE name = %(name)s, is_in_snp500 = 1"""
-    db.modified_db(query, {'name': name, 'symbol': symbol})
-    db.close_connection()
+    return db.modified_db(query, {'name': name, 'symbol': symbol})
 
 
 def get_company_by_symbol(symbol, db=None):
@@ -65,10 +67,8 @@ def get_company_by_symbol(symbol, db=None):
     if not db:
         db = DBConnection(HOST, USER, PASSWORD, DATABASE)
     query = """SELECT name, symbol, is_in_snp500, last_update_historic
-                FROM market_analysis.company WHERE symbol = %(symbol)s"""
-    res = db.select_in_db(query, {'symbol': symbol})
-    db.close_connection()
-    return res
+                FROM company WHERE symbol = %(symbol)s"""
+    return db.select_in_db(query, {'symbol': symbol})
 
 
 def get_company_by_name(name, db=None):
@@ -87,10 +87,8 @@ def get_company_by_name(name, db=None):
     if not db:
         db = DBConnection(HOST, USER, PASSWORD, DATABASE)
     query = """SELECT name, symbol, is_in_snp500, last_update_historic
-                FROM market_analysis.company WHERE name = %(name)s"""
-    res = db.select_in_db(query, {'name': name})
-    db.close_connection()
-    return res
+                FROM company WHERE name = %(name)s"""
+    return db.select_in_db(query, {'name': name})
 
 
 def update_snp550_to_db(db=None):
@@ -98,12 +96,13 @@ def update_snp550_to_db(db=None):
     Update data of table company to check if we have new company and remove company not in new list s&p500
     :param db: if we have already connexion in other function who cal this function
     :type db: DBConnection
-    :return: None
+    :return: number row affected
+    :rtype: int
     """
     if not db:
         db = DBConnection(HOST, USER, PASSWORD, DATABASE)
     # Set all company in table for to re-init to 0 flag is_in_snp500
-    query = """UPDATE market_analysis.company SET is_in_snp500 = 0"""
+    query = """UPDATE company SET is_in_snp500 = 0"""
     db.modified_db(query)
 
     snp500 = finsymbols.get_sp500_symbols()
@@ -112,6 +111,7 @@ def update_snp550_to_db(db=None):
         add_company_to_db(company.get('symbol'), company.get('company'), db)
 
     # TODO: call fct to historic data in csv [Gen]
+    return 0
 
 
 def insert_daily_value_to_db(symbol_company, list_values, db=None):
@@ -123,7 +123,8 @@ def insert_daily_value_to_db(symbol_company, list_values, db=None):
     :type list_values: list[list[str, str, str]]
     :param db: if we have already connexion in other function who cal this function
     :type db: DBConnection
-    :return: None
+    :return: number row affected
+    :rtype: int
     """
     if not symbol_company:
         raise ValueError('Symbol company is None.')
@@ -133,21 +134,22 @@ def insert_daily_value_to_db(symbol_company, list_values, db=None):
     if not db:
         db = DBConnection(HOST, USER, PASSWORD, DATABASE)
 
-    query = """INSERT INTO market_analysis.daily_value (date_daily_value, id_symbol, stock_value, 52w_price_change)
+    query = """INSERT INTO daily_value (date_daily_value, id_symbol, stock_value, 52w_price_change)
                 VALUES (%(datetime_value)s, %(symbol_company)s, %(stock_value)s, %(price_change)s)
                 ON DUPLICATE KEY UPDATE date_daily_value = %(datetime_value)s, stock_value = %(stock_value)s,
                                         52w_price_change = %(price_change)s"""
     for datetime_value, stock_value, price_change in list_values:
         # check if datetime_value None, if None we continue with next row
         if not datetime_value:
-            print "Value of date_daily_value is None for company %s. params = " % symbol_company,\
-                (datetime_value, stock_value, price_change)
+            print("Value of date_daily_value is None for company %s. params = " % symbol_company,
+                  (datetime_value, stock_value, price_change))
             continue
         params = {'datetime_value': datetime_value, 'symbol_company': symbol_company, 'stock_value': stock_value,
                   'price_change': price_change}
         # TODO: check for multi-row to insert, maybe use connection.executemayny(query, list of tuple values)
         db.modified_db(query, params)
-    db.close_connection()
+
+    return 0
 
 
 def insert_historic_value_to_db(symbol_company, list_values, db=None):
@@ -159,7 +161,8 @@ def insert_historic_value_to_db(symbol_company, list_values, db=None):
     :type list_values: list[list[str, str, str, str, str, str, str, str, str]]
     :param db: if we have already connexion in other function who cal this function
     :type db: DBConnection
-    :return: None
+    :return: number row affected
+    :rtype: int
     """
     if not symbol_company:
         raise ValueError('Symbol company is None.')
@@ -169,7 +172,7 @@ def insert_historic_value_to_db(symbol_company, list_values, db=None):
     if not db:
         db = DBConnection(HOST, USER, PASSWORD, DATABASE)
 
-    query = """INSERT INTO market_analysis.historic_value (date_historic_value, id_symbol, revenu_usd_mil,
+    query = """INSERT INTO historic_value (date_historic_value, id_symbol, revenu_usd_mil,
                                                            gross_margin_pct, net_income_usd_mil, earning_per_share_usd,
                                                            dividends_usd, book_value_per_share_usd,
                                                            free_cash_flow_per_share_usd)
@@ -182,12 +185,13 @@ def insert_historic_value_to_db(symbol_company, list_values, db=None):
     for datetime_value, revenue, gross_margin, income, earning, dividends, book_value, cash_flow in list_values:
         # check if datetime_value None, if None we continue with next row
         if not datetime_value:
-            print "Value of date_daily_value is None for company %s. params = " % symbol_company,\
-                (datetime_value, revenue, gross_margin, income, earning, dividends, book_value, cash_flow)
+            print("Value of date_daily_value is None for company %s. params = " % symbol_company,
+                (datetime_value, revenue, gross_margin, income, earning, dividends, book_value, cash_flow))
             continue
         params = {'datetime_value': datetime_value, 'symbol_company': symbol_company, 'revenue': revenue,
                   'gross_margin': gross_margin, 'income': income, 'earning': earning, 'dividends': dividends,
                   'book_value': book_value, 'cash_flow': cash_flow}
         # TODO: check for multi-row to insert, maybe use connection.executemayny(query, list of tuple values)
         db.modified_db(query, params)
-    db.close_connection()
+
+    return 0

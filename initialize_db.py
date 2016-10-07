@@ -19,8 +19,10 @@ def insert_company_snp500():
     """
     snp500 = finsymbols.get_sp500_symbols()
 
+    row_affected = 0
     for company in snp500:
-        ManagerCompany.add_company_to_db(company.get('symbol'), company.get('company'))
+        row_affected += ManagerCompany.add_company_to_db(company.get('symbol'), company.get('company'))
+    print('number row affected: %s' % row_affected)
 
 
 def init_update_db_mysql():
@@ -30,12 +32,12 @@ def init_update_db_mysql():
     :return: None
     """
     # Drop database if exists already
-    db = DBConnection(HOST, USER, PASSWORD, '')  # no database, because we don<t know if database exists
+    db = DBConnection(HOST, USER, PASSWORD, '')  # no database, because we don't know if database exists
     query = """DROP DATABASE IF EXISTS %s""" % ('`' + DATABASE + '`')
-    db.modified_db(query)
+    print('Number table remove: %s' % db.modified_db(query))
     # Create database
     query = """CREATE DATABASE %s""" % ('`' + DATABASE + '`')
-    db.modified_db(query)
+    print('Creation of database: %s' % db.modified_db(query))
     db.close_connection()
 
     # Create another connection, because now we are sure that database exists
@@ -48,9 +50,12 @@ def init_update_db_mysql():
 
             query = ''
             for line in f:
+                # exclude comments, line empty
                 if line[0:2] != '/*' and line[0:2] != '--' and line[0:2] != '\n':
                     query += line
+            row_affected = 0
             # remove last ; for new_query empty to end
             # ex: [DROP TABLE IF EXISTS `daily_value`, CREATE TABLE `daily_value`(...), ]
             for new_query in query[:query.rfind(';')].split(';\n'):
-                db.modified_db(new_query)
+                row_affected += db.modified_db(new_query)
+            print('number row affected for table %s: %s' % (filename[0:len(filename) - len('.sql')], row_affected))
