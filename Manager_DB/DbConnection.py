@@ -6,14 +6,6 @@ class DBConnection:
     """
     Create connection with db MySql and give possibility to execute query sql
     """
-    __connection = None
-    __cursor = None
-
-    __host = None
-    __user = None
-    __password = None
-    __database = None
-
     def __init__(self, host, user, password, database):
         """
         Create connection to db MySql
@@ -26,11 +18,6 @@ class DBConnection:
         :param database: name of database, can include name table, ex: market_analysis.company
         :type database: str
         """
-        self.__host = host
-        self.__user = user
-        self.__password = password
-        self.__database = database
-
         try:
             self.__connection = pymysql.connect(host=host, user=user, passwd=password, db=database)
             self.__cursor = self.__connection.cursor()
@@ -75,11 +62,13 @@ class DBConnection:
         :type query: str
         :param params: parameter to put in query, ex: "WHERE id = %s" or "WHERE id = %(id)s",  params = {id: 1}
         :type params: dict
-        :return: None
+        :return: Number row affected
+        :rtype: int
         """
         try:
             self.__cursor.execute(query, params)
             self.__connection.commit()
+            return self.__cursor.rowcount
         except pymysql.Error as e:
             self.__connection.rollback()
             print('Error in call of the query: ', e, '\nwith parameters %(query)s, %(params)s' % locals())

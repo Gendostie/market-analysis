@@ -23,10 +23,8 @@ def get_id_portfolio(name, db=None):
     if not db:
         db = DBConnection(HOST, USER, PASSWORD, DATABASE)
 
-    query = """SELECT id_portfolio FROM market_analysis.portfolio WHERE name = %(name)s"""
-    res = db.select_in_db(query, {'name': name})
-    db.close_connection()
-    return res
+    query = """SELECT id_portfolio FROM portfolio WHERE name = %(name)s"""
+    return db.select_in_db(query, {'name': name})
 
 
 def get_name_portfolio_name(id_portfolio, db=None):
@@ -45,10 +43,8 @@ def get_name_portfolio_name(id_portfolio, db=None):
     if not db:
         db = DBConnection(HOST, USER, PASSWORD, DATABASE)
 
-    query = """SELECT name FROM market_analysis.portfolio WHERE id_portfolio = %(id)s"""
-    res = db.select_in_db(query, {'id': id_portfolio})
-    db.close_connection()
-    return res
+    query = """SELECT name FROM portfolio WHERE id_portfolio = %(id)s"""
+    return db.select_in_db(query, {'id': id_portfolio})
 
 
 def get_transaction_portfolio(id_portfolio, symbol_company=None, db=None):
@@ -70,14 +66,12 @@ def get_transaction_portfolio(id_portfolio, symbol_company=None, db=None):
         db = DBConnection(HOST, USER, PASSWORD, DATABASE)
 
     query = """SELECT id_transaction, id_symbol, quantity, value_current, transaction_date, id_simulation
-                FROM market_analysis.transaction WHERE id_portfolio = %(id_portfolio)s"""
+                FROM transaction WHERE id_portfolio = %(id_portfolio)s"""
     params = {'id_portfolio': id_portfolio}
     if symbol_company:
         query += "AND id_symbol = %(id_symbol)s"
         params['symbol_company'] = symbol_company
-    res = db.select_in_db(query, params)
-    db.close_connection()
-    return res
+    return db.select_in_db(query, params)
 
 
 def get_simulation_portfolio(id_portfolio, db=None):
@@ -97,11 +91,9 @@ def get_simulation_portfolio(id_portfolio, db=None):
         db = DBConnection(HOST, USER, PASSWORD, DATABASE)
 
     query = """SELECT id_simulation, parameters, results
-                FROM market_analysis.simulation WHERE id_portfolio = %(id_portfolio)s"""
+                FROM simulation WHERE id_portfolio = %(id_portfolio)s"""
     params = {'id_portfolio': id_portfolio}
-    res = db.select_in_db(query, params)
-    db.close_connection()
-    return res
+    return db.select_in_db(query, params)
 
 
 def create_portfolio(name=None, db=None):
@@ -118,17 +110,15 @@ def create_portfolio(name=None, db=None):
 
     if not name:
         query = """SELECT (CASE COUNT(id_portfolio) WHEN 0 THEN 1 ELSE COUNT(id_portfolio)+1 END) AS new_id
-                    FROM market_analysis.portfolio"""
+                    FROM portfolio"""
         res = db.select_in_db(query)
         name = 'new_portfolio' + str(res[0][0])
 
-    query = """INSERT INTO market_analysis.portfolio (name) VALUES (%(name)s)"""
+    query = """INSERT INTO portfolio (name) VALUES (%(name)s)"""
     db.modified_db(query, {'name': name})
     # get id portfolio
-    query = """SELECT id_portfolio FROM market_analysis.portfolio WHERE name = %(name)s"""
-    res = db.select_in_db(query, {'name': name})
-    db.close_connection()
-    return res[0][0]  # if we have more one with the same name, we take the first
+    query = """SELECT id_portfolio FROM portfolio WHERE name = %(name)s"""
+    return db.select_in_db(query, {'name': name})[0][0] # if we have more one with the same name, we take the first
 
 
 def insert_transaction_to_db(id_portfolio, symbol_company, quantity, value_current, transaction_date,
@@ -149,7 +139,8 @@ def insert_transaction_to_db(id_portfolio, symbol_company, quantity, value_curre
     :type id_simulation: int
     :param db: if we have already connexion in other function who cal this function
     :type db: DBConnection
-    :return: None
+    :return: number row affected
+    :rtype: int
     """
     if not id_portfolio:
         raise ValueError("Need to id_portfolio valid to create transaction. id_portfolio = %s" % id_portfolio)
@@ -159,7 +150,7 @@ def insert_transaction_to_db(id_portfolio, symbol_company, quantity, value_curre
     if not db:
         db = DBConnection(HOST, USER, PASSWORD, DATABASE)
 
-    query = """INSERT INTO market_analysis.transaction (id_portfolio, id_symbol, quantity, value_current,
+    query = """INSERT INTO transaction (id_portfolio, id_symbol, quantity, value_current,
                                                         transaction_date, id_simulation)
                 VALUES (%(id_portfolio)s, %(symbol_company)s, %(quantity)s, %(value_current)s, %(transaction_date)s,
                         %(id_simulation)s)
@@ -168,8 +159,7 @@ def insert_transaction_to_db(id_portfolio, symbol_company, quantity, value_curre
                                         id_simulation = %(id_simulation)s)"""
     params = {'id_portfolio': id_portfolio, 'symbol_company': symbol_company, 'quantity': quantity,
               'value_current': value_current, 'transaction_date': transaction_date, 'id_simulation': id_simulation}
-    db.modified_db(query, params)
-    db.close_connection()
+    return db.modified_db(query, params)
 
 
 # TODO: to complete
@@ -209,10 +199,8 @@ def get_info_simulation(id_simulation, db=None):
         db = DBConnection(HOST, USER, PASSWORD, DATABASE)
 
     query = """SELECT id_portfolio, parameters, results
-                FROM market_analysis.simulation WHERE id_simulation = %(id_simulation)s"""
-    res = db.select_in_db(query, {'id_simulation': id_simulation})
-    db.close_connection()
-    return res
+                FROM simulation WHERE id_simulation = %(id_simulation)s"""
+    return db.select_in_db(query, {'id_simulation': id_simulation})
 
 
 def get_transaction_simulation(id_simulation, db=None):
@@ -232,7 +220,5 @@ def get_transaction_simulation(id_simulation, db=None):
         db = DBConnection(HOST, USER, PASSWORD, DATABASE)
 
     query = """SELECT id_transaction, id_portfolio, id_symbol, quantity, value_current, transaction_date
-                FROM market_analysis."transaction" WHERE id_simulation = %(id_simulation)s"""
-    res = db.select_in_db(query, {'id_simulation': id_simulation})
-    db.close_connection()
-    return res
+                FROM "transaction" WHERE id_simulation = %(id_simulation)s"""
+    return db.select_in_db(query, {'id_simulation': id_simulation})
