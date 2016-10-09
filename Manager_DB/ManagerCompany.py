@@ -1,6 +1,5 @@
 #!/usr/bin/python
 import finsymbols
-
 from Manager_DB.DbConnection import DBConnection
 
 HOST = '127.0.0.1'
@@ -182,16 +181,11 @@ def insert_historic_value_to_db(symbol_company, list_values, db=None):
                                        net_income_usd_mil = %(income)s, earning_per_share_usd = %(earning)s,
                                        dividends_usd = %(dividends)s, book_value_per_share_usd = %(book_value)s,
                                        free_cash_flow_per_share_usd = %(cash_flow)s"""
-    for datetime_value, revenue, gross_margin, income, earning, dividends, book_value, cash_flow in list_values:
-        # check if datetime_value None, if None we continue with next row
-        if not datetime_value:
-            print("Value of date_daily_value is None for company %s. params = " % symbol_company,
-                (datetime_value, revenue, gross_margin, income, earning, dividends, book_value, cash_flow))
-            continue
-        params = {'datetime_value': datetime_value, 'symbol_company': symbol_company, 'revenue': revenue,
-                  'gross_margin': gross_margin, 'income': income, 'earning': earning, 'dividends': dividends,
-                  'book_value': book_value, 'cash_flow': cash_flow}
-        # TODO: check for multi-row to insert, maybe use connection.executemayny(query, list of tuple values)
-        db.modified_db(query, params)
+
+    params = {'datetime_value': list_values[0], 'symbol_company': symbol_company, 'revenue': list_values[1],
+            'gross_margin': list_values[2], 'income': list_values[3], 'earning': list_values[4], 'dividends': list_values[5],
+            'book_value': list_values[6], 'cash_flow': list_values[7]}
+    # TODO: check for multi-row to insert, maybe use connection.executemayny(query, list of tuple values)
+    db.modified_db(query, params)
 
     return 0

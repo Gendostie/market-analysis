@@ -15,15 +15,15 @@ DEBUG = True
 def print_message(message):
     print(LINE + message + '\n')
 
+# TODO : Add a comment
+print_message('Installing the database')
+idb.init_update_db_mysql()
+
+# TODO : Add a comment
+print_message('Loading the name of each company')
+idb.insert_company_snp500()
+
 if not DEBUG:
-    # TODO : Add a comment
-    print_message('Installing the database')
-    idb.init_update_db_mysql()
-
-    # TODO : Add a comment
-    print_message('Loading the name of each company')
-    idb.insert_company_snp500()
-
     # TODO : Make directory if it doesn't exist
     if not os.path.exists(DIR_PATH):
         print_message('Creating the directory SNP500 for the CSVs')

@@ -4,8 +4,16 @@ import os
 import glob
 import re
 import pandas as pd
+from datetime import datetime
 from time import localtime, strftime
 import numpy as np
+from Manager_DB.DbConnection import DBConnection
+from Manager_DB.ManagerCompany import insert_historic_value_to_db
+
+HOST = '127.0.0.1'
+USER = 'root'
+PASSWORD = 'root'
+DATABASE = 'market_analysis'
 
 PATH = os.getcwd()
 DIR_PATH = PATH + '/../SNP500/'
@@ -14,9 +22,10 @@ DIR_CLEAN_PATH = PATH + '/../Clean/'
 
 ROWS = ['Revenue USD Mil', 'Gross Margin %', 'Net Income USD Mil', 'Earnings Per Share USD',
         'Dividends USD', 'Book Value Per Share * USD', 'Free Cash Flow Per Share * USD']
-ROWS_TYPE = {'Revenue USD Mil': np.int32, 'Gross Margin %': np.float32, 'Net Income USD Mil': np.int32,
-             'Earnings Per Share USD': np.float32, 'Dividends USD': np.float32,
-             'Book Value Per Share * USD': np.float32, 'Free Cash Flow Per Share * USD': np.float32}
+ROWS_TYPE = {'Revenue USD Mil': lambda x: int(x.replace(",", "")), 'Gross Margin %': float,
+             'Net Income USD Mil': lambda x: int(x.replace(",", "")),
+             'Earnings Per Share USD': float, 'Dividends USD': float,
+             'Book Value Per Share * USD': float, 'Free Cash Flow Per Share * USD': float}
 
 DEBUG = True
 
@@ -27,26 +36,24 @@ def trim_csv(filename):
     :param filename:
     :return:
     """
+
+    db = DBConnection(HOST, USER, PASSWORD, DATABASE)
     reg_expr = re.compile('.{4}-.{2}')
-    df = pd.read_csv(filename, header=2, thousands=',', index_col=0)
-    for i in list(df.index.values):
-        df.loc[i] = pd.to_numeric(df.loc[i], errors='ignore')
+
+    df = pd.read_csv(filename, header=2, index_col=0)
+    df = df.loc[ROWS]
+
+    print(df)
+
+    for row, funct in ROWS_TYPE.items():
+        df.loc[row] = df.loc[row].apply(funct)
 
     for col in df.columns.values:
-        if reg_expr.match(col) is None:
-            del df[col]
-    print(df.loc[ROWS, :])
-    # Check Datetime is OKAY
-    for date in pd.to_datetime(df.columns.values, format='%Y-%m'):
-        print(date.strftime("%b %Y"))
-    # Check Thousands are OKAY
-    for row in ROWS:
-        print("Index : {}\t\tType : {}".format(row, df.loc[row].dtype))
-        # for revenue in df.loc['Revenue USD Mil']:
-        #    print(str(revenue * 1000000))
-
-        # with open(filename, 'w') as outFile:
-        #    df.loc[ROWS, :].to_csv(outFile)
+        if reg_expr.match(col) is not None:
+            date = pd.to_datetime(col, format='%Y-%m')
+            query_params = [datetime(date.year, date.month, date.day)] + list(df[col].values)
+            print(query_params)
+            insert_historic_value_to_db("DLR", query_params, db)
 
 
 def verify_data_frame(filename, cie_data_frame):
