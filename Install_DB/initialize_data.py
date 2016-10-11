@@ -6,7 +6,6 @@ import re
 import pandas as pd
 from datetime import datetime
 from time import localtime, strftime
-import numpy as np
 from Manager_DB.DbConnection import DBConnection
 from Manager_DB.ManagerCompany import insert_historic_value_to_db
 
@@ -22,10 +21,13 @@ DIR_CLEAN_PATH = PATH + '/../Clean/'
 
 ROWS = ['Revenue USD Mil', 'Gross Margin %', 'Net Income USD Mil', 'Earnings Per Share USD',
         'Dividends USD', 'Book Value Per Share * USD', 'Free Cash Flow Per Share * USD']
-ROWS_TYPE = {'Revenue USD Mil': lambda x: int(x.replace(",", "")), 'Gross Margin %': float,
-             'Net Income USD Mil': lambda x: int(x.replace(",", "")),
-             'Earnings Per Share USD': float, 'Dividends USD': float,
-             'Book Value Per Share * USD': float, 'Free Cash Flow Per Share * USD': float}
+ROWS_TYPE = {'Revenue USD Mil': lambda x: None if pd.isnull(x) else int(x.replace(",", "")),
+             'Gross Margin %': float,
+             'Net Income USD Mil': lambda x: None if pd.isnull(x) else int(x.replace(",", "")),
+             'Earnings Per Share USD': float,
+             'Dividends USD': float,
+             'Book Value Per Share * USD': float,
+             'Free Cash Flow Per Share * USD': float}
 
 DEBUG = True
 
@@ -36,23 +38,41 @@ def update_historical(filename, db):
     :param filename:
     :return:
     """
-
+    # The dates have the format YYYY-MM in the CVSs. We want to remove the TTM and errors if there are any.
     reg_expr = re.compile('.{4}-.{2}')
 
     df = pd.read_csv(filename, header=2, index_col=0)
     df = df.loc[ROWS]
 
-    print(df)
+    # Cut the filename to get the symbol of the company; which is always the name of the CSV file.
+    basename = os.path.splitext(filename)[0]
+    symbol = basename.rsplit('/', 1)[1]
 
+    # Since all elements are considered objects, we need to convert them into the type we need for our database.
+    # For integers, we also need to remove the comma or it will be interpreted incorrectly.
+    # The check for Null is important because the function replace() cannot be used on it. It will crash the program.
     for row, funct in ROWS_TYPE.items():
         df.loc[row] = df.loc[row].apply(funct)
 
-    for col in df.columns.values:
-        if reg_expr.match(col) is not None:
-            date = pd.to_datetime(col, format='%Y-%m')
-            query_params = [datetime(date.year, date.month, date.day)] + list(df[col].values)
-            print(query_params)
-            insert_historic_value_to_db("DLR", query_params, db)
+    # For every years (col), we insert its data in the db.
+    with open(LOG_PATH, 'a') as log_file:
+        for col in df.columns.values:
+            if reg_expr.match(col) is not None:
+                # Converting the NaN values into None for the sql query.
+                numerical_param = list(map(lambda n: None if pd.isnull(n) else n, list(df[col].values)))
+
+                # Skipping this column if all values are None
+                if all(num is None for num in numerical_param):
+                    log_file.write("{} = Skipping the year {} of the company {}. Data : {}\n"
+                                   .format(strftime("%d %b %Y %H:%M:%S", localtime()), col, symbol, numerical_param))
+                    continue
+
+                # Converting the date (str) into datetime for the sql query.
+                date = pd.to_datetime(col, format='%Y-%m')
+
+                query_params = [datetime(date.year, date.month, date.day)] + numerical_param
+
+                insert_historic_value_to_db(str(symbol), query_params, db)
 
 
 def verify_data_frame(filename, cie_data_frame):
@@ -104,17 +124,24 @@ def update_bd_with_csv():
     :return: Nothing.
     """
 
-
     # Open a database connection
     # TODO : Create a configuration file and fetch the data there.
     db = DBConnection(HOST, USER, PASSWORD, DATABASE)
+
+    # TODO : Remove. Only for testing.
+    cpt = 0
+
     with open(LOG_PATH, 'a') as logFile:
         for filename in glob.glob(DIR_PATH + '*.csv'):
             # If the file is not empty, call the function in charge of the update.
             if os.stat(filename).st_size != 0:
                 update_historical(filename, db)
-                if DEBUG:
+
+                # TODO : Remove. Only for testing
+                cpt += 1
+                if DEBUG and (cpt > 505):
                     break
+
             elif not DEBUG:
                 logFile.write("{} = The file \"{}\" was empty.\n" \
                               .format(strftime("%d %b %Y %H:%M:%S", localtime()), filename))
