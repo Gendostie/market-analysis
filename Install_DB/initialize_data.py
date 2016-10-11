@@ -30,14 +30,13 @@ ROWS_TYPE = {'Revenue USD Mil': lambda x: int(x.replace(",", "")), 'Gross Margin
 DEBUG = True
 
 
-def trim_csv(filename):
+def update_historical(filename, db):
     """
 
     :param filename:
     :return:
     """
 
-    db = DBConnection(HOST, USER, PASSWORD, DATABASE)
     reg_expr = re.compile('.{4}-.{2}')
 
     df = pd.read_csv(filename, header=2, index_col=0)
@@ -99,11 +98,21 @@ def get_all_csv():
 
 
 def update_bd_with_csv():
+    """ Use all the CSV in the directory SNP500 to update the historical data's table in our database.
+    :param: It assumes that we have a ... TODO
+    :
+    :return: Nothing.
+    """
+
+
+    # Open a database connection
+    # TODO : Create a configuration file and fetch the data there.
+    db = DBConnection(HOST, USER, PASSWORD, DATABASE)
     with open(LOG_PATH, 'a') as logFile:
         for filename in glob.glob(DIR_PATH + '*.csv'):
-            # Make sure that the file is not empty
+            # If the file is not empty, call the function in charge of the update.
             if os.stat(filename).st_size != 0:
-                trim_csv(filename)
+                update_historical(filename, db)
                 if DEBUG:
                     break
             elif not DEBUG:
