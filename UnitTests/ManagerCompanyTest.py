@@ -4,7 +4,7 @@ from copy import deepcopy
 
 from Manager_DB.DbConnection import DBConnection
 from Manager_DB import ManagerCompany
-from UnitTest import ManagerDbTest
+from UnitTests import ManagerDbTest
 
 HOST = '127.0.0.1'
 USER = 'root'
