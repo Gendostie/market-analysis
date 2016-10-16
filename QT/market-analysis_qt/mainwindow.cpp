@@ -19,7 +19,7 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-void /*QWidget*/ create_criteria(QString name_criteria, qint32 min_value, qint32 max_value, QString name_tag){
+//void /*QWidget*/ create_criteria(QString name_criteria, qint32 min_value, qint32 max_value, QString name_tag){
 //    QWidget *horizontalLayoutWidget = new QWidget(frame);
 //    horizontalLayoutWidget->setObjectName(QStringLiteral("hlw_" + name_tag));
 //    horizontalLayoutWidget->setGeometry(QRect());
@@ -95,4 +95,4 @@ void /*QWidget*/ create_criteria(QString name_criteria, qint32 min_value, qint32
 
 //    verticalLayout->addLayout(horizontalLayout_13);
 
-}
+//}
