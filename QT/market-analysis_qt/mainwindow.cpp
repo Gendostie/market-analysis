@@ -7,16 +7,75 @@
 #include <QHBoxLayout>
 #include <QLabel>
 
+#include <QTableWidgetItem>
+#include <QtDebug>
+#include <QCoreApplication>
+#include <QApplication>
+
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    create_data_table_stock_screener(ui->tableWidget_stockScreener);
 }
 
 MainWindow::~MainWindow()
 {
     delete ui;
+}
+
+void crreate_data_table_stock_screener(QTableWidget *tableWidget){
+    int nb_row_init = 13;
+
+    //TODO: change for call sql
+    QList<QStringList> *list_company = new QList<QStringList>;
+    QStringList *l = new QStringList;
+    l << "GOOGLE" << "GOOGL" << "1231" << "1231" << "1231" << "1231";
+    l << "1231" << "1231" << "1231" << "1231" << "1231" << "1231" << "1231";
+    list_company->append(l);
+
+    if (tableWidget->rowCount() < nb_row_init*1)
+            tableWidget->setRowCount(nb_row_init*1);
+
+    const bool sorting_enabled = tableWidget->isSortingEnabled();
+    tableWidget->setSortingEnabled(false);
+    int i = 0;
+    QString company;
+    foreach (company, list_company) {
+        //create new row
+        QTableWidgetItem *cell = new QTableWidgetItem();
+        tableWidget->setVerticalHeaderItem(i, cell);
+
+        int j = 0;
+        QString value;
+        foreach (value, company) {
+            //is last column, for checkbox
+            if(j < tableWidget->columnCount() - 1){
+                Q_ASSERT_X(j == 13, "create_data_table_stock_screener",
+                           QString("The index of column is more than 13, i = %1").arg(i));
+
+                QWidget * widget_cb = new QWidget();
+                QHBoxLayout *hBoxLayout_cb = new QHBoxLayout();
+                QCheckBox *cb = new QCheckBox();
+                hBoxLayout_cb->setMargin(1);
+                hBoxLayout_cb->setAlignment(Qt::AlignCenter);
+                hBoxLayout_cb->addWidget(cb);
+                widget_cb->setLayout(hBoxLayout_cb);
+                ui->tableWidget_stockScreener->setCellWidget(i, j, widget_cb);
+            }
+            else{
+                QTableWidgetItem *cell = new QTableWidgetItem();
+                //we don't want user can change value of cell in table
+                cell->setFlags(Qt::ItemIsSelectable|Qt::ItemIsUserCheckable|Qt::ItemIsEnabled);
+                cell->setText(QApplication::translate("MainWindow", value, 0);
+                tableWidget->setItem(i, j, cell);
+            }
+            j += 1;
+        }
+        i += 1;
+    }
+    tableWidget->setSortingEnabled(sorting_enabled);
 }
 
 //void /*QWidget*/ create_criteria(QString name_criteria, qint32 min_value, qint32 max_value, QString name_tag){
