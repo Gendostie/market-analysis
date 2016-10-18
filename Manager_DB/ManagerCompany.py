@@ -1,7 +1,7 @@
 #!/usr/bin/python
 import finsymbols
-
-from Manager_DB.DbConnection import DBConnection
+import sys
+from DbConnection import DBConnection
 
 HOST = '127.0.0.1'
 USER = 'root'
@@ -195,3 +195,8 @@ def insert_historic_value_to_db(symbol_company, list_values, db=None):
         db.modified_db(query, params)
 
     return 0
+
+if __name__ == '__main__':
+    if len(sys.argv) > 1:
+        res = locals()[sys.argv[1]](sys.argv[2:])
+        print(res)

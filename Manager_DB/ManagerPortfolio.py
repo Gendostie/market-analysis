@@ -1,5 +1,6 @@
 #!/usr/bin/python
-from Manager_DB.DbConnection import DBConnection
+import sys
+from DbConnection import DBConnection
 
 HOST = '127.0.0.1'
 USER = 'root'
@@ -222,3 +223,8 @@ def get_transaction_simulation(id_simulation, db=None):
     query = """SELECT id_transaction, id_portfolio, id_symbol, quantity, value_current, transaction_date
                 FROM "transaction" WHERE id_simulation = %(id_simulation)s"""
     return db.select_in_db(query, {'id_simulation': id_simulation})
+
+if __name__ == '__main__':
+    if len(sys.argv) > 1:
+        res = locals()[sys.argv[1]](sys.argv[2:])
+        print(res)
