@@ -11,7 +11,7 @@ int main(int argc, char *argv[])
 //    qDebug("Size windows: %d x %d", w.size().width(), w.size().height());
     w.setMinimumSize(w.size());
     w.setMaximumSize(w.size());
-//    w.showNormal();
+    w.showNormal();
 
     return app.exec();
 }
