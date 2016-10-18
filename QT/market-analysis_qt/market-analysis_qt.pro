@@ -15,8 +15,22 @@ TEMPLATE = app
 SOURCES += main.cpp \
     mainwindow.cpp
 
-HEADERS  += \
-    mainwindow.h
+HEADERS += \
+    mainwindow.h \
 
-FORMS    += \
+FORMS   += \
     mainwindow.ui
+
+CONFIG  += \
+    no_keywords
+
+INCLUDEPATH += \
+    /usr/include/python34
+
+LIBS     += \
+    -lpython34
+
+DISTFILES += \
+    ../../Manager_DB/DbConnection.py \
+    ../../Manager_DB/ManagerCompany.py \
+    ../../Manager_DB/ManagerPortfolio.py

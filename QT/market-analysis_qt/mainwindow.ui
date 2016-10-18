@@ -2471,13 +2471,13 @@
              <property name="minimumSize">
               <size>
                <width>145</width>
-               <height>40</height>
+               <height>30</height>
               </size>
              </property>
              <property name="maximumSize">
               <size>
                <width>145</width>
-               <height>40</height>
+               <height>30</height>
               </size>
              </property>
              <property name="text">
@@ -2506,13 +2506,13 @@
              <property name="minimumSize">
               <size>
                <width>145</width>
-               <height>40</height>
+               <height>30</height>
               </size>
              </property>
              <property name="maximumSize">
               <size>
                <width>145</width>
-               <height>40</height>
+               <height>30</height>
               </size>
              </property>
              <property name="text">
@@ -2548,14 +2548,42 @@
         <x>5</x>
         <y>170</y>
         <width>1245</width>
-        <height>400</height>
+        <height>421</height>
        </rect>
       </property>
-      <row>
-       <property name="text">
-        <string/>
-       </property>
-      </row>
+      <property name="alternatingRowColors">
+       <bool>true</bool>
+      </property>
+      <property name="gridStyle">
+       <enum>Qt::SolidLine</enum>
+      </property>
+      <property name="sortingEnabled">
+       <bool>true</bool>
+      </property>
+      <attribute name="horizontalHeaderCascadingSectionResizes">
+       <bool>true</bool>
+      </attribute>
+      <attribute name="horizontalHeaderDefaultSectionSize">
+       <number>120</number>
+      </attribute>
+      <attribute name="horizontalHeaderMinimumSectionSize">
+       <number>40</number>
+      </attribute>
+      <attribute name="horizontalHeaderShowSortIndicator" stdset="0">
+       <bool>true</bool>
+      </attribute>
+      <attribute name="horizontalHeaderStretchLastSection">
+       <bool>false</bool>
+      </attribute>
+      <attribute name="verticalHeaderVisible">
+       <bool>false</bool>
+      </attribute>
+      <attribute name="verticalHeaderCascadingSectionResizes">
+       <bool>true</bool>
+      </attribute>
+      <attribute name="verticalHeaderMinimumSectionSize">
+       <number>25</number>
+      </attribute>
       <column>
        <property name="text">
         <string>Company name</string>
@@ -2638,79 +2666,86 @@
         <string notr="true"/>
        </property>
       </column>
-      <item row="0" column="0">
+     </widget>
+     <widget class="QComboBox" name="comboBox_stockScreener_portfolio">
+      <property name="geometry">
+       <rect>
+        <x>980</x>
+        <y>605</y>
+        <width>160</width>
+        <height>30</height>
+       </rect>
+      </property>
+      <property name="minimumSize">
+       <size>
+        <width>160</width>
+        <height>30</height>
+       </size>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>160</width>
+        <height>30</height>
+       </size>
+      </property>
+      <property name="editable">
+       <bool>true</bool>
+      </property>
+      <item>
        <property name="text">
-        <string>1</string>
-       </property>
-       <property name="flags">
-        <set>ItemIsSelectable|ItemIsUserCheckable|ItemIsEnabled</set>
+        <string>Choose portfolio</string>
        </property>
       </item>
-      <item row="0" column="1">
+      <item>
        <property name="text">
-        <string>1</string>
+        <string>insect</string>
        </property>
       </item>
-      <item row="0" column="2">
+      <item>
        <property name="text">
-        <string>1</string>
+        <string>chat</string>
        </property>
       </item>
-      <item row="0" column="3">
+      <item>
        <property name="text">
-        <string>1</string>
+        <string>chien</string>
        </property>
       </item>
-      <item row="0" column="4">
+      <item>
        <property name="text">
-        <string>1</string>
+        <string>oiseau</string>
        </property>
       </item>
-      <item row="0" column="5">
+      <item>
        <property name="text">
-        <string>1</string>
+        <string>poisson</string>
        </property>
       </item>
-      <item row="0" column="6">
-       <property name="text">
-        <string>1</string>
-       </property>
-      </item>
-      <item row="0" column="7">
-       <property name="text">
-        <string>11</string>
-       </property>
-      </item>
-      <item row="0" column="8">
-       <property name="text">
-        <string>11</string>
-       </property>
-      </item>
-      <item row="0" column="9">
-       <property name="text">
-        <string>1</string>
-       </property>
-      </item>
-      <item row="0" column="10">
-       <property name="text">
-        <string>1</string>
-       </property>
-      </item>
-      <item row="0" column="11">
-       <property name="text">
-        <string>1</string>
-       </property>
-      </item>
-      <item row="0" column="12">
-       <property name="text">
-        <string>1</string>
-       </property>
-      </item>
-      <item row="0" column="13">
-       <property name="text">
-        <string/>
-       </property>
-      </item>
+     </widget>
+     <widget class="QPushButton" name="pushButton_stockScreener_addPortfolio">
+      <property name="geometry">
+       <rect>
+        <x>1150</x>
+        <y>605</y>
+        <width>90</width>
+        <height>30</height>
+       </rect>
+      </property>
+      <property name="minimumSize">
+       <size>
+        <width>90</width>
+        <height>30</height>
+       </size>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>90</width>
+        <height>30</height>
+       </size>
+      </property>
+      <property name="text">
+       <string>Add to portfolio</string>
+      </property>
      </widget>
     </widget>
     <widget class="QWidget" name="tabPortfolioManager">
@@ -5228,7 +5263,7 @@
      <x>0</x>
      <y>0</y>
      <width>1280</width>
-     <height>17</height>
+     <height>21</height>
     </rect>
    </property>
   </widget>
