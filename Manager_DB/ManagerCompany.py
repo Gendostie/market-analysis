@@ -154,7 +154,6 @@ def get_historic_value_all_company(db=None):
     return return_value
 
 
-
 def update_snp550_to_db(db=None):
     """
     Update data of table company to check if we have new company and remove company not in new list s&p500
