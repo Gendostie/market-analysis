@@ -250,7 +250,7 @@ def insert_historic_value_to_db(symbol_company, list_values, db=None):
         # check if datetime_value None, if None we continue with next row
         if not datetime_value:
             print("Value of date_daily_value is None for company %s. params = " % symbol_company,
-                (datetime_value, revenue, gross_margin, income, earning, dividends, book_value, cash_flow))
+                  (datetime_value, revenue, gross_margin, income, earning, dividends, book_value, cash_flow))
             continue
         params = {'datetime_value': datetime_value, 'symbol_company': symbol_company, 'revenue': revenue,
                   'gross_margin': gross_margin, 'income': income, 'earning': earning, 'dividends': dividends,
