@@ -24,7 +24,7 @@
      </rect>
     </property>
     <property name="currentIndex">
-     <number>0</number>
+     <number>2</number>
     </property>
     <widget class="QWidget" name="tabStockScreener">
      <attribute name="title">
@@ -66,9 +66,6 @@
       <property name="horizontalScrollBarPolicy">
        <enum>Qt::ScrollBarAlwaysOff</enum>
       </property>
-      <property name="sizeAdjustPolicy">
-       <enum>QAbstractScrollArea::AdjustToContents</enum>
-      </property>
       <property name="widgetResizable">
        <bool>false</bool>
       </property>
@@ -84,8 +81,8 @@
        <widget class="QWidget" name="horizontalLayoutWidget">
         <property name="geometry">
          <rect>
-          <x>-4</x>
-          <y>6</y>
+          <x>0</x>
+          <y>0</y>
           <width>1231</width>
           <height>186</height>
          </rect>
@@ -2670,7 +2667,7 @@
      <widget class="QComboBox" name="comboBox_stockScreener_portfolio">
       <property name="geometry">
        <rect>
-        <x>980</x>
+        <x>970</x>
         <y>605</y>
         <width>160</width>
         <height>30</height>
@@ -2722,24 +2719,24 @@
        </property>
       </item>
      </widget>
-     <widget class="QPushButton" name="pushButton_stockScreener_addPortfolio">
+     <widget class="QPushButton" name="btn_stockScreener_addPortfolio">
       <property name="geometry">
        <rect>
-        <x>1150</x>
+        <x>1140</x>
         <y>605</y>
-        <width>90</width>
+        <width>100</width>
         <height>30</height>
        </rect>
       </property>
       <property name="minimumSize">
        <size>
-        <width>90</width>
+        <width>100</width>
         <height>30</height>
        </size>
       </property>
       <property name="maximumSize">
        <size>
-        <width>90</width>
+        <width>100</width>
         <height>30</height>
        </size>
       </property>
@@ -2763,8 +2760,20 @@
         <x>5</x>
         <y>5</y>
         <width>1245</width>
-        <height>151</height>
+        <height>150</height>
        </rect>
+      </property>
+      <property name="minimumSize">
+       <size>
+        <width>1245</width>
+        <height>150</height>
+       </size>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>1245</width>
+        <height>150</height>
+       </size>
       </property>
       <property name="frameShape">
        <enum>QFrame::StyledPanel</enum>
@@ -2781,9 +2790,6 @@
       <property name="horizontalScrollBarPolicy">
        <enum>Qt::ScrollBarAlwaysOff</enum>
       </property>
-      <property name="sizeAdjustPolicy">
-       <enum>QAbstractScrollArea::AdjustToContents</enum>
-      </property>
       <property name="widgetResizable">
        <bool>false</bool>
       </property>
@@ -2799,8 +2805,8 @@
        <widget class="QWidget" name="horizontalLayoutWidget_2">
         <property name="geometry">
          <rect>
-          <x>-4</x>
-          <y>6</y>
+          <x>0</x>
+          <y>0</y>
           <width>1231</width>
           <height>186</height>
          </rect>
@@ -5186,13 +5192,13 @@
              <property name="minimumSize">
               <size>
                <width>145</width>
-               <height>40</height>
+               <height>30</height>
               </size>
              </property>
              <property name="maximumSize">
               <size>
                <width>145</width>
-               <height>40</height>
+               <height>30</height>
               </size>
              </property>
              <property name="text">
@@ -5221,13 +5227,13 @@
              <property name="minimumSize">
               <size>
                <width>145</width>
-               <height>40</height>
+               <height>30</height>
               </size>
              </property>
              <property name="maximumSize">
               <size>
                <width>145</width>
-               <height>40</height>
+               <height>30</height>
               </size>
              </property>
              <property name="text">
