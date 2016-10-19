@@ -18,9 +18,13 @@ class UiMainWindowAdjusted(mainwindow.Ui_MainWindow):
         MainWindow.setMinimumSize(MainWindow.size())
 
     def create_data_table_stock_screener(self):
+        """
+        Create data in table widget stock screener with data SQL
+        :return: None
+        """
         list_column_table = ['company_name', 'symbol', 'stock_value', 'income', 'gross_margin',
-                            'dividends', 'market_capitaisation', 'finantical_index', 'index_end', 'earning',
-                            'book_value', 'sales_value', 'cash_flow']
+                             'dividends', 'market_capitaisation', 'finantical_index', 'index_end', 'earning',
+                             'book_value', 'sales_value', 'cash_flow']
         list_company = ManagerCompany.get_historic_value_all_company()
 
         if self.tableWidget_stockScreener.rowCount() < len(list_company):
@@ -56,6 +60,8 @@ class UiMainWindowAdjusted(mainwindow.Ui_MainWindow):
                                                          self.tableWidget_stockScreener.columnCount() - 1,
                                                          widget_cd)
         self.tableWidget_stockScreener.setSortingEnabled(SORTING_ENABLE)
+
+    # def swap_row_table_widget(self):
 
 if __name__ == "__main__":
     import sys
