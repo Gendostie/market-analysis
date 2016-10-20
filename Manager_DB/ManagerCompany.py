@@ -1,4 +1,5 @@
 #!/usr/bin/python
+# -*- coding: utf-8 -*-
 import finsymbols
 import sys
 from DbConnection import DBConnection
