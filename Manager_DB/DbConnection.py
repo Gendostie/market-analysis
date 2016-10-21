@@ -2,7 +2,7 @@
 import pymysql
 
 
-class DBConnection:
+class DbConnection:
     """
     Create connection with db MySql and give possibility to execute query sql
     """

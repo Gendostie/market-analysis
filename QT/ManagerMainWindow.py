@@ -3,7 +3,7 @@
 from PyQt4 import QtCore, QtGui
 
 from MainWindow import Ui_MainWindow, _translate
-from Manager_DB import ManagerCompany
+import ManagerCompany
 import HelperFunctionQt
 
 
@@ -65,33 +65,60 @@ class ManagerMainWindow(Ui_MainWindow):
         self.tableWidget_stockScreener.setSortingEnabled(sorting_enable)
 
     def create_connexion_signal_slot(self):
-        self.btn_stockScreener_addPortfolio.clicked\
-            .connect(sort_column_checkbox_table_widget_stock_screener)
+        """
+        Add connection between signal (ex:click button) and slot (action to do, ex: open dialog box)
+        :return: None
+        """
+        self.tableWidget_stockScreener.horizontalHeader().sectionClicked\
+            .connect(Slots.sort_column_checkbox_table_widget_stock_screener)
+        self.tableWidget_stockScreener.cellClicked.connect(Slots.modify_checkbox_table_widget_stock_screener)
 
 
-def sort_column_checkbox_table_widget_stock_screener():
-    table_widget = ui.tableWidget_stockScreener
-    # sort_order = 0 => ascending ; Qt::Unchecked = 0  Qt::Checked = 2  Qt::PartiallyChecked = 1
-    sort_order = table_widget.horizontalHeader().sortIndicatorOrder()
-    sort_indicator = table_widget.horizontalHeader().sortIndicatorSection()
-    nb_column = table_widget.columnCount()
-    # put value of same scale of checkbox state
-    sort_order = 0 if sort_order == 1 or sort_indicator != nb_column - 1 else 2
-    if table_widget.rowCount() > 0:
-        list_row_remove = []
-        for idx in range(table_widget.rowCount()):
+class Slots:
+    @staticmethod
+    def modify_checkbox_table_widget_stock_screener(row, column):
+        """
+        Give possibility to user to click cell of checkbox fo check or uncheck case
+        :param row: row cell clicked
+        :type row: int
+        :param column: column of celll clicked
+        :type column: int
+        :return: None
+        """
+        if column == ui.tableWidget_stockScreener.columnCount() - 1:
             # get checkbox widget
-            cb = table_widget.cellWidget(idx, nb_column - 1).layout().itemAt(0).widget()
-            # ascending = Unchecked to Checked ; descending = Checked to Unchecked
-            if cb.checkState() != sort_order:
-                row = HelperFunctionQt.take_row_table_widget(table_widget, idx)
-                HelperFunctionQt.set_row_table_widget(table_widget, row)
-                list_row_remove.append(idx)
-        list_row_remove.reverse()
-        for idx in list_row_remove:
-            table_widget.removeRow(idx)
-    sort_order = 1 if sort_order == 2 else 0  # put value of sort state
-    table_widget.horizontalHeader().setSortIndicator(nb_column - 1, sort_order)  # set indicator column sort
+            cb = ui.tableWidget_stockScreener.cellWidget(row, column).layout().itemAt(0).widget()
+            cb.setChecked(not cb.isChecked())
+
+    @staticmethod
+    def sort_column_checkbox_table_widget_stock_screener(column):
+        """
+        Sorted column with checkbox, ascending = Unchecked to Checked ; descending = Checked to Unchecked
+        :param column: column of header cell clicked
+        :type column: int
+        :return: None
+        """
+        table_widget = ui.tableWidget_stockScreener
+        if column == table_widget.columnCount() - 1:
+            # sort_order = 0 => ascending ; Qt::Unchecked = 0  Qt::Checked = 2  Qt::PartiallyChecked = 1
+            sort_order = table_widget.horizontalHeader().sortIndicatorOrder()
+            # sort_indicator = table_widget.horizontalHeader().sortIndicatorSection()
+            # put value of same scale of checkbox state
+            sort_order = 2 if sort_order == 1 else sort_order
+            if table_widget.rowCount() > 0:
+                list_row_remove = []
+                for idx in range(table_widget.rowCount()):
+                    # get checkbox widget
+                    cb = table_widget.cellWidget(idx, column).layout().itemAt(0).widget()
+                    if cb.checkState() != sort_order:
+                        row = HelperFunctionQt.take_row_table_widget(table_widget, idx)
+                        HelperFunctionQt.set_row_table_widget(table_widget, row)
+                        list_row_remove.append(idx)
+                list_row_remove.reverse()
+                for idx in list_row_remove:
+                    table_widget.removeRow(idx)
+            sort_order = 1 if sort_order == 2 else sort_order  # put value of sort state
+            table_widget.horizontalHeader().setSortIndicator(column, sort_order)  # set indicator column sort
 
 
 if __name__ == "__main__":

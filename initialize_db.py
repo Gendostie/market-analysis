@@ -1,10 +1,11 @@
 #!/usr/bin/python
+# -*- coding: utf-8 -*-
 import finsymbols
 from os import listdir
 from os import path
 
 from Manager_DB import ManagerCompany
-from Manager_DB.DbConnection import DBConnection
+from Manager_DB.DbConnection import DbConnection
 
 HOST = '127.0.0.1'
 USER = 'root'
@@ -32,7 +33,7 @@ def init_update_db_mysql():
     :return: None
     """
     # Drop database if exists already
-    db = DBConnection(HOST, USER, PASSWORD, '')  # no database, because we don't know if database exists
+    db = DbConnection(HOST, USER, PASSWORD, '')  # no database, because we don't know if database exists
     query = """DROP DATABASE IF EXISTS %s""" % ('`' + DATABASE + '`')
     print('Number table remove: %s' % db.modified_db(query))
     # Create database
@@ -41,7 +42,7 @@ def init_update_db_mysql():
     db.close_connection()
 
     # Create another connection, because now we are sure that database exists
-    db = DBConnection(HOST, USER, PASSWORD, DATABASE)
+    db = DbConnection(HOST, USER, PASSWORD, DATABASE)
     # Create table
     for filename in listdir(path.join('Data_DB')):
         # Take just filename to finish by extension sql

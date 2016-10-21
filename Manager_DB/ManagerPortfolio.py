@@ -1,6 +1,6 @@
 #!/usr/bin/python
 import sys
-from DbConnection import DBConnection
+from DbConnection import DbConnection
 
 HOST = '127.0.0.1'
 USER = 'root'
@@ -14,15 +14,15 @@ def get_id_portfolio(name, db=None):
     :param name: name of portfolio
     :type name: str
     :param db: if we have already connexion in other function who cal this function
-    :type db: DBConnection
+    :type db: DbConnection
     :return: result in list of dict
     :rtype: list[dict]
     """
     if not name:
         raise ValueError('Name portfolio is None.')
 
-    if not db or type(db) is not DBConnection:
-        db = DBConnection(HOST, USER, PASSWORD, DATABASE)
+    if not db or type(db) is not DbConnection:
+        db = DbConnection(HOST, USER, PASSWORD, DATABASE)
 
     query = """SELECT id_portfolio FROM portfolio WHERE name = %(name)s"""
     res = db.select_in_db(query, {'name': name})
@@ -38,15 +38,15 @@ def get_name_portfolio_name(id_portfolio, db=None):
     :param id_portfolio: id of portfolio
     :type id_portfolio: int
     :param db: if we have already connexion in other function who cal this function
-    :type db: DBConnection
+    :type db: DbConnection
     :return: result in list of dict
     :rtype: list[dict]
     """
     if not id_portfolio:
         raise ValueError('ID portfolio is None.')
 
-    if not db or type(db) is not DBConnection:
-        db = DBConnection(HOST, USER, PASSWORD, DATABASE)
+    if not db or type(db) is not DbConnection:
+        db = DbConnection(HOST, USER, PASSWORD, DATABASE)
 
     query = """SELECT name FROM portfolio WHERE id_portfolio = %(id)s"""
     res = db.select_in_db(query, {'id': id_portfolio})
@@ -64,15 +64,15 @@ def get_transaction_portfolio(id_portfolio, symbol_company=None, db=None):
     :param symbol_company: symbol of company in stock market
     :type symbol_company: str
     :param db: if we have already connexion in other function who cal this function
-    :type db: DBConnection
+    :type db: DbConnection
     :return: result in list of dict
     :rtype: list[dict]
     """
     if not id_portfolio:
         raise ValueError('ID portfolio is None.')
 
-    if not db or type(db) is not DBConnection:
-        db = DBConnection(HOST, USER, PASSWORD, DATABASE)
+    if not db or type(db) is not DbConnection:
+        db = DbConnection(HOST, USER, PASSWORD, DATABASE)
 
     query = """SELECT id_transaction, id_symbol, quantity, value_current, transaction_date, id_simulation
                 FROM transaction WHERE id_portfolio = %(id_portfolio)s"""
@@ -95,15 +95,15 @@ def get_simulation_portfolio(id_portfolio, db=None):
     :param id_portfolio: id of portfolio
     :type id_portfolio: int
     :param db: if we have already connexion in other function who cal this function
-    :type db: DBConnection
+    :type db: DbConnection
     :return: result in list of dict
     :rtype: list[dict]
     """
     if not id_portfolio:
         raise ValueError('ID portfolio is None.')
 
-    if not db or type(db) is not DBConnection:
-        db = DBConnection(HOST, USER, PASSWORD, DATABASE)
+    if not db or type(db) is not DbConnection:
+        db = DbConnection(HOST, USER, PASSWORD, DATABASE)
 
     query = """SELECT id_simulation, parameters, results
                 FROM simulation WHERE id_portfolio = %(id_portfolio)s"""
@@ -120,12 +120,12 @@ def create_portfolio(name=None, db=None):
     Create new portfolio
     :param name:
     :param db: if we have already connexion in other function who cal this function
-    :type db: DBConnection
+    :type db: DbConnection
     :return: id of portfolio
     :rtype int
     """
-    if not db or type(db) is not DBConnection:
-        db = DBConnection(HOST, USER, PASSWORD, DATABASE)
+    if not db or type(db) is not DbConnection:
+        db = DbConnection(HOST, USER, PASSWORD, DATABASE)
 
     if not name:
         query = """SELECT (CASE COUNT(id_portfolio) WHEN 0 THEN 1 ELSE COUNT(id_portfolio)+1 END) AS new_id
@@ -156,7 +156,7 @@ def insert_transaction_to_db(id_portfolio, symbol_company, quantity, value_curre
     :param id_simulation: if transaction is during simulation
     :type id_simulation: int
     :param db: if we have already connexion in other function who cal this function
-    :type db: DBConnection
+    :type db: DbConnection
     :return: number row affected
     :rtype: int
     """
@@ -165,8 +165,8 @@ def insert_transaction_to_db(id_portfolio, symbol_company, quantity, value_curre
     if not symbol_company:
         raise ValueError("Need to symbol_company valid to create transaction. symbol_company = %s" % symbol_company)
 
-    if not db or type(db) is not DBConnection:
-        db = DBConnection(HOST, USER, PASSWORD, DATABASE)
+    if not db or type(db) is not DbConnection:
+        db = DbConnection(HOST, USER, PASSWORD, DATABASE)
 
     query = """INSERT INTO transaction (id_portfolio, id_symbol, quantity, value_current,
                                                         transaction_date, id_simulation)
@@ -189,11 +189,11 @@ def start_simulation(dict_params, id_portfolio=None, db=None):
     :param id_portfolio: id of portfolio
     :type id_portfolio: int
     :param db: if we have already connexion in other function who cal this function
-    :type db: DBConnection
+    :type db: DbConnection
     :return:
     """
-    if not db or type(db) is not DBConnection:
-        db = DBConnection(HOST, USER, PASSWORD, DATABASE)
+    if not db or type(db) is not DbConnection:
+        db = DbConnection(HOST, USER, PASSWORD, DATABASE)
     if not id_portfolio:
         id_portfolio = create_portfolio()
 
@@ -206,15 +206,15 @@ def get_info_simulation(id_simulation, db=None):
     :param id_simulation: id of simulation
     :type id_simulation: int
     :param db: if we have already connexion in other function who cal this function
-    :type db: DBConnection
+    :type db: DbConnection
     :return: information on simulation
     :rtype: list[dict]
     """
     if not id_simulation:
         raise ValueError('ID simulation is None.')
 
-    if not db or type(db) is not DBConnection:
-        db = DBConnection(HOST, USER, PASSWORD, DATABASE)
+    if not db or type(db) is not DbConnection:
+        db = DbConnection(HOST, USER, PASSWORD, DATABASE)
 
     query = """SELECT id_portfolio, parameters, results
                 FROM simulation WHERE id_simulation = %(id_simulation)s"""
@@ -231,15 +231,15 @@ def get_transaction_simulation(id_simulation, db=None):
     :param id_simulation: id of simulation
     :type id_simulation: int
     :param db: if we have already connexion in other function who cal this function
-    :type db: DBConnection
+    :type db: DbConnection
     :return: transaction of simulation
     :rtype: list[dict]
     """
     if not id_simulation:
         raise ValueError('ID simulation is None.')
 
-    if not db or type(db) is not DBConnection:
-        db = DBConnection(HOST, USER, PASSWORD, DATABASE)
+    if not db or type(db) is not DbConnection:
+        db = DbConnection(HOST, USER, PASSWORD, DATABASE)
 
     query = """SELECT id_transaction, id_portfolio, id_symbol, quantity, value_current, transaction_date
                 FROM "transaction" WHERE id_simulation = %(id_simulation)s"""
