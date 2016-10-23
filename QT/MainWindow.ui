@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1280</width>
-    <height>720</height>
+    <height>800</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -17,11 +17,23 @@
    <widget class="QTabWidget" name="tab">
     <property name="geometry">
      <rect>
-      <x>10</x>
-      <y>7</y>
-      <width>1260</width>
-      <height>670</height>
+      <x>5</x>
+      <y>5</y>
+      <width>1270</width>
+      <height>740</height>
      </rect>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>0</width>
+      <height>0</height>
+     </size>
+    </property>
+    <property name="maximumSize">
+     <size>
+      <width>16777215</width>
+      <height>16777215</height>
+     </size>
     </property>
     <property name="currentIndex">
      <number>0</number>
@@ -35,20 +47,20 @@
        <rect>
         <x>5</x>
         <y>5</y>
-        <width>1245</width>
-        <height>150</height>
+        <width>1255</width>
+        <height>180</height>
        </rect>
       </property>
       <property name="minimumSize">
        <size>
-        <width>1245</width>
-        <height>150</height>
+        <width>1255</width>
+        <height>180</height>
        </size>
       </property>
       <property name="maximumSize">
        <size>
-        <width>1245</width>
-        <height>150</height>
+        <width>1255</width>
+        <height>180</height>
        </size>
       </property>
       <property name="frameShape">
@@ -66,9 +78,6 @@
       <property name="horizontalScrollBarPolicy">
        <enum>Qt::ScrollBarAlwaysOff</enum>
       </property>
-      <property name="sizeAdjustPolicy">
-       <enum>QAbstractScrollArea::AdjustToContents</enum>
-      </property>
       <property name="widgetResizable">
        <bool>false</bool>
       </property>
@@ -77,22 +86,37 @@
         <rect>
          <x>0</x>
          <y>0</y>
-         <width>1229</width>
-         <height>189</height>
+         <width>1260</width>
+         <height>250</height>
         </rect>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>1260</width>
+         <height>250</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>1260</width>
+         <height>16777215</height>
+        </size>
        </property>
        <widget class="QWidget" name="horizontalLayoutWidget">
         <property name="geometry">
          <rect>
-          <x>-4</x>
-          <y>6</y>
-          <width>1231</width>
-          <height>186</height>
+          <x>0</x>
+          <y>0</y>
+          <width>1234</width>
+          <height>251</height>
          </rect>
         </property>
         <layout class="QHBoxLayout" name="horizontalLayout">
          <property name="spacing">
-          <number>3</number>
+          <number>10</number>
+         </property>
+         <property name="topMargin">
+          <number>0</number>
          </property>
          <item>
           <layout class="QVBoxLayout" name="verticalLayout_left">
@@ -105,13 +129,13 @@
               <widget class="QCheckBox" name="checkBox_stockValue">
                <property name="minimumSize">
                 <size>
-                 <width>172</width>
+                 <width>170</width>
                  <height>20</height>
                 </size>
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>172</width>
+                 <width>175</width>
                  <height>20</height>
                 </size>
                </property>
@@ -126,7 +150,7 @@
                 <enum>Qt::Horizontal</enum>
                </property>
                <property name="sizeType">
-                <enum>QSizePolicy::Fixed</enum>
+                <enum>QSizePolicy::Minimum</enum>
                </property>
                <property name="sizeHint" stdset="0">
                 <size>
@@ -146,7 +170,7 @@
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>25</width>
+                 <width>35</width>
                  <height>20</height>
                 </size>
                </property>
@@ -168,7 +192,7 @@
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>35</width>
+                 <width>40</width>
                  <height>20</height>
                 </size>
                </property>
@@ -196,7 +220,7 @@
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>65</width>
+                 <width>120</width>
                  <height>10</height>
                 </size>
                </property>
@@ -237,7 +261,7 @@
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>30</width>
+                 <width>35</width>
                  <height>20</height>
                 </size>
                </property>
@@ -259,7 +283,7 @@
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>35</width>
+                 <width>40</width>
                  <height>20</height>
                 </size>
                </property>
@@ -281,7 +305,7 @@
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>65</width>
+                 <width>120</width>
                  <height>10</height>
                 </size>
                </property>
@@ -313,13 +337,13 @@
               <widget class="QCheckBox" name="checkBox_income">
                <property name="minimumSize">
                 <size>
-                 <width>172</width>
+                 <width>170</width>
                  <height>20</height>
                 </size>
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>172</width>
+                 <width>175</width>
                  <height>20</height>
                 </size>
                </property>
@@ -334,7 +358,7 @@
                 <enum>Qt::Horizontal</enum>
                </property>
                <property name="sizeType">
-                <enum>QSizePolicy::Fixed</enum>
+                <enum>QSizePolicy::Minimum</enum>
                </property>
                <property name="sizeHint" stdset="0">
                 <size>
@@ -354,7 +378,7 @@
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>25</width>
+                 <width>35</width>
                  <height>20</height>
                 </size>
                </property>
@@ -376,7 +400,7 @@
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>35</width>
+                 <width>40</width>
                  <height>20</height>
                 </size>
                </property>
@@ -404,7 +428,7 @@
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>65</width>
+                 <width>120</width>
                  <height>10</height>
                 </size>
                </property>
@@ -445,7 +469,7 @@
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>30</width>
+                 <width>35</width>
                  <height>20</height>
                 </size>
                </property>
@@ -467,7 +491,7 @@
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>35</width>
+                 <width>40</width>
                  <height>20</height>
                 </size>
                </property>
@@ -489,7 +513,7 @@
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>65</width>
+                 <width>120</width>
                  <height>10</height>
                 </size>
                </property>
@@ -521,13 +545,13 @@
               <widget class="QCheckBox" name="checkBox_profitMargin">
                <property name="minimumSize">
                 <size>
-                 <width>172</width>
+                 <width>170</width>
                  <height>20</height>
                 </size>
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>172</width>
+                 <width>175</width>
                  <height>20</height>
                 </size>
                </property>
@@ -542,7 +566,7 @@
                 <enum>Qt::Horizontal</enum>
                </property>
                <property name="sizeType">
-                <enum>QSizePolicy::Fixed</enum>
+                <enum>QSizePolicy::Minimum</enum>
                </property>
                <property name="sizeHint" stdset="0">
                 <size>
@@ -562,7 +586,7 @@
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>25</width>
+                 <width>35</width>
                  <height>20</height>
                 </size>
                </property>
@@ -584,7 +608,7 @@
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>35</width>
+                 <width>40</width>
                  <height>20</height>
                 </size>
                </property>
@@ -612,7 +636,7 @@
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>65</width>
+                 <width>120</width>
                  <height>10</height>
                 </size>
                </property>
@@ -653,7 +677,7 @@
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>30</width>
+                 <width>35</width>
                  <height>20</height>
                 </size>
                </property>
@@ -675,7 +699,7 @@
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>35</width>
+                 <width>40</width>
                  <height>20</height>
                 </size>
                </property>
@@ -697,7 +721,7 @@
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>65</width>
+                 <width>120</width>
                  <height>10</height>
                 </size>
                </property>
@@ -729,13 +753,13 @@
               <widget class="QCheckBox" name="checkBox_dividendYield">
                <property name="minimumSize">
                 <size>
-                 <width>172</width>
+                 <width>170</width>
                  <height>20</height>
                 </size>
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>172</width>
+                 <width>175</width>
                  <height>20</height>
                 </size>
                </property>
@@ -750,7 +774,7 @@
                 <enum>Qt::Horizontal</enum>
                </property>
                <property name="sizeType">
-                <enum>QSizePolicy::Fixed</enum>
+                <enum>QSizePolicy::Minimum</enum>
                </property>
                <property name="sizeHint" stdset="0">
                 <size>
@@ -770,7 +794,7 @@
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>25</width>
+                 <width>35</width>
                  <height>20</height>
                 </size>
                </property>
@@ -792,7 +816,7 @@
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>35</width>
+                 <width>40</width>
                  <height>20</height>
                 </size>
                </property>
@@ -820,7 +844,7 @@
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>65</width>
+                 <width>120</width>
                  <height>10</height>
                 </size>
                </property>
@@ -861,7 +885,7 @@
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>30</width>
+                 <width>35</width>
                  <height>20</height>
                 </size>
                </property>
@@ -883,7 +907,7 @@
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>35</width>
+                 <width>40</width>
                  <height>20</height>
                 </size>
                </property>
@@ -905,7 +929,7 @@
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>65</width>
+                 <width>120</width>
                  <height>10</height>
                 </size>
                </property>
@@ -937,13 +961,13 @@
               <widget class="QCheckBox" name="checkBox_marketCapitalisation">
                <property name="minimumSize">
                 <size>
-                 <width>172</width>
+                 <width>170</width>
                  <height>20</height>
                 </size>
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>172</width>
+                 <width>175</width>
                  <height>20</height>
                 </size>
                </property>
@@ -958,7 +982,7 @@
                 <enum>Qt::Horizontal</enum>
                </property>
                <property name="sizeType">
-                <enum>QSizePolicy::Fixed</enum>
+                <enum>QSizePolicy::Minimum</enum>
                </property>
                <property name="sizeHint" stdset="0">
                 <size>
@@ -978,7 +1002,7 @@
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>25</width>
+                 <width>35</width>
                  <height>20</height>
                 </size>
                </property>
@@ -1000,7 +1024,7 @@
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>35</width>
+                 <width>40</width>
                  <height>20</height>
                 </size>
                </property>
@@ -1028,7 +1052,7 @@
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>65</width>
+                 <width>120</width>
                  <height>10</height>
                 </size>
                </property>
@@ -1049,7 +1073,7 @@
                 <enum>Qt::Horizontal</enum>
                </property>
                <property name="sizeType">
-                <enum>QSizePolicy::Fixed</enum>
+                <enum>QSizePolicy::Minimum</enum>
                </property>
                <property name="sizeHint" stdset="0">
                 <size>
@@ -1069,7 +1093,7 @@
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>30</width>
+                 <width>35</width>
                  <height>20</height>
                 </size>
                </property>
@@ -1091,7 +1115,7 @@
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>35</width>
+                 <width>40</width>
                  <height>20</height>
                 </size>
                </property>
@@ -1113,7 +1137,7 @@
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>65</width>
+                 <width>120</width>
                  <height>10</height>
                 </size>
                </property>
@@ -1145,13 +1169,13 @@
               <widget class="QCheckBox" name="checkBox_financicalIndex">
                <property name="minimumSize">
                 <size>
-                 <width>172</width>
+                 <width>170</width>
                  <height>20</height>
                 </size>
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>172</width>
+                 <width>175</width>
                  <height>20</height>
                 </size>
                </property>
@@ -1166,7 +1190,7 @@
                 <enum>Qt::Horizontal</enum>
                </property>
                <property name="sizeType">
-                <enum>QSizePolicy::Fixed</enum>
+                <enum>QSizePolicy::Minimum</enum>
                </property>
                <property name="sizeHint" stdset="0">
                 <size>
@@ -1186,7 +1210,7 @@
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>25</width>
+                 <width>35</width>
                  <height>20</height>
                 </size>
                </property>
@@ -1208,7 +1232,7 @@
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>35</width>
+                 <width>40</width>
                  <height>20</height>
                 </size>
                </property>
@@ -1236,7 +1260,7 @@
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>65</width>
+                 <width>120</width>
                  <height>10</height>
                 </size>
                </property>
@@ -1257,7 +1281,7 @@
                 <enum>Qt::Horizontal</enum>
                </property>
                <property name="sizeType">
-                <enum>QSizePolicy::Fixed</enum>
+                <enum>QSizePolicy::Minimum</enum>
                </property>
                <property name="sizeHint" stdset="0">
                 <size>
@@ -1277,7 +1301,7 @@
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>30</width>
+                 <width>35</width>
                  <height>20</height>
                 </size>
                </property>
@@ -1299,7 +1323,7 @@
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>35</width>
+                 <width>40</width>
                  <height>20</height>
                 </size>
                </property>
@@ -1321,7 +1345,7 @@
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>65</width>
+                 <width>120</width>
                  <height>10</height>
                 </size>
                </property>
@@ -1347,12 +1371,12 @@
           </layout>
          </item>
          <item>
-          <spacer name="horizontalSpacer1">
+          <spacer name="horizontalSpacer1_1">
            <property name="orientation">
             <enum>Qt::Horizontal</enum>
            </property>
            <property name="sizeType">
-            <enum>QSizePolicy::Fixed</enum>
+            <enum>QSizePolicy::Minimum</enum>
            </property>
            <property name="sizeHint" stdset="0">
             <size>
@@ -1370,12 +1394,12 @@
           </widget>
          </item>
          <item>
-          <spacer name="horizontalSpacer1_3">
+          <spacer name="horizontalSpacer1_2">
            <property name="orientation">
             <enum>Qt::Horizontal</enum>
            </property>
            <property name="sizeType">
-            <enum>QSizePolicy::Fixed</enum>
+            <enum>QSizePolicy::Minimum</enum>
            </property>
            <property name="sizeHint" stdset="0">
             <size>
@@ -1399,7 +1423,7 @@
                </property>
                <property name="minimumSize">
                 <size>
-                 <width>140</width>
+                 <width>130</width>
                  <height>16</height>
                 </size>
                </property>
@@ -1420,7 +1444,7 @@
                 <enum>Qt::Horizontal</enum>
                </property>
                <property name="sizeType">
-                <enum>QSizePolicy::Fixed</enum>
+                <enum>QSizePolicy::Minimum</enum>
                </property>
                <property name="sizeHint" stdset="0">
                 <size>
@@ -1440,7 +1464,7 @@
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>25</width>
+                 <width>35</width>
                  <height>20</height>
                 </size>
                </property>
@@ -1462,7 +1486,7 @@
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>35</width>
+                 <width>40</width>
                  <height>20</height>
                 </size>
                </property>
@@ -1490,7 +1514,7 @@
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>65</width>
+                 <width>120</width>
                  <height>10</height>
                 </size>
                </property>
@@ -1511,7 +1535,7 @@
                 <enum>Qt::Horizontal</enum>
                </property>
                <property name="sizeType">
-                <enum>QSizePolicy::Fixed</enum>
+                <enum>QSizePolicy::Minimum</enum>
                </property>
                <property name="sizeHint" stdset="0">
                 <size>
@@ -1531,7 +1555,7 @@
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>30</width>
+                 <width>35</width>
                  <height>20</height>
                 </size>
                </property>
@@ -1553,7 +1577,7 @@
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>35</width>
+                 <width>40</width>
                  <height>20</height>
                 </size>
                </property>
@@ -1575,7 +1599,7 @@
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>65</width>
+                 <width>120</width>
                  <height>10</height>
                 </size>
                </property>
@@ -1607,7 +1631,7 @@
               <widget class="QCheckBox" name="checkBox_priceByEarnings">
                <property name="minimumSize">
                 <size>
-                 <width>140</width>
+                 <width>130</width>
                  <height>16</height>
                 </size>
                </property>
@@ -1628,7 +1652,7 @@
                 <enum>Qt::Horizontal</enum>
                </property>
                <property name="sizeType">
-                <enum>QSizePolicy::Fixed</enum>
+                <enum>QSizePolicy::Minimum</enum>
                </property>
                <property name="sizeHint" stdset="0">
                 <size>
@@ -1648,7 +1672,7 @@
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>25</width>
+                 <width>35</width>
                  <height>20</height>
                 </size>
                </property>
@@ -1670,7 +1694,7 @@
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>35</width>
+                 <width>40</width>
                  <height>20</height>
                 </size>
                </property>
@@ -1698,7 +1722,7 @@
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>65</width>
+                 <width>120</width>
                  <height>10</height>
                 </size>
                </property>
@@ -1719,7 +1743,7 @@
                 <enum>Qt::Horizontal</enum>
                </property>
                <property name="sizeType">
-                <enum>QSizePolicy::Fixed</enum>
+                <enum>QSizePolicy::Minimum</enum>
                </property>
                <property name="sizeHint" stdset="0">
                 <size>
@@ -1739,7 +1763,7 @@
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>30</width>
+                 <width>35</width>
                  <height>20</height>
                 </size>
                </property>
@@ -1761,7 +1785,7 @@
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>35</width>
+                 <width>40</width>
                  <height>20</height>
                 </size>
                </property>
@@ -1783,7 +1807,7 @@
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>65</width>
+                 <width>120</width>
                  <height>10</height>
                 </size>
                </property>
@@ -1815,7 +1839,7 @@
               <widget class="QCheckBox" name="checkBox_priceByBook">
                <property name="minimumSize">
                 <size>
-                 <width>140</width>
+                 <width>130</width>
                  <height>16</height>
                 </size>
                </property>
@@ -1836,7 +1860,7 @@
                 <enum>Qt::Horizontal</enum>
                </property>
                <property name="sizeType">
-                <enum>QSizePolicy::Fixed</enum>
+                <enum>QSizePolicy::Minimum</enum>
                </property>
                <property name="sizeHint" stdset="0">
                 <size>
@@ -1856,7 +1880,7 @@
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>25</width>
+                 <width>35</width>
                  <height>20</height>
                 </size>
                </property>
@@ -1878,7 +1902,7 @@
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>35</width>
+                 <width>40</width>
                  <height>20</height>
                 </size>
                </property>
@@ -1906,7 +1930,7 @@
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>65</width>
+                 <width>120</width>
                  <height>10</height>
                 </size>
                </property>
@@ -1927,7 +1951,7 @@
                 <enum>Qt::Horizontal</enum>
                </property>
                <property name="sizeType">
-                <enum>QSizePolicy::Fixed</enum>
+                <enum>QSizePolicy::Minimum</enum>
                </property>
                <property name="sizeHint" stdset="0">
                 <size>
@@ -1947,7 +1971,7 @@
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>30</width>
+                 <width>35</width>
                  <height>20</height>
                 </size>
                </property>
@@ -1969,7 +1993,7 @@
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>35</width>
+                 <width>40</width>
                  <height>20</height>
                 </size>
                </property>
@@ -1991,7 +2015,7 @@
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>65</width>
+                 <width>120</width>
                  <height>10</height>
                 </size>
                </property>
@@ -2023,7 +2047,7 @@
               <widget class="QCheckBox" name="checkBox_priceBySales">
                <property name="minimumSize">
                 <size>
-                 <width>140</width>
+                 <width>130</width>
                  <height>16</height>
                 </size>
                </property>
@@ -2044,7 +2068,7 @@
                 <enum>Qt::Horizontal</enum>
                </property>
                <property name="sizeType">
-                <enum>QSizePolicy::Fixed</enum>
+                <enum>QSizePolicy::Minimum</enum>
                </property>
                <property name="sizeHint" stdset="0">
                 <size>
@@ -2064,7 +2088,7 @@
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>25</width>
+                 <width>35</width>
                  <height>20</height>
                 </size>
                </property>
@@ -2086,7 +2110,7 @@
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>35</width>
+                 <width>40</width>
                  <height>20</height>
                 </size>
                </property>
@@ -2114,7 +2138,7 @@
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>65</width>
+                 <width>120</width>
                  <height>10</height>
                 </size>
                </property>
@@ -2135,7 +2159,7 @@
                 <enum>Qt::Horizontal</enum>
                </property>
                <property name="sizeType">
-                <enum>QSizePolicy::Fixed</enum>
+                <enum>QSizePolicy::Minimum</enum>
                </property>
                <property name="sizeHint" stdset="0">
                 <size>
@@ -2155,7 +2179,7 @@
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>30</width>
+                 <width>35</width>
                  <height>20</height>
                 </size>
                </property>
@@ -2177,7 +2201,7 @@
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>35</width>
+                 <width>40</width>
                  <height>20</height>
                 </size>
                </property>
@@ -2199,7 +2223,7 @@
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>65</width>
+                 <width>120</width>
                  <height>10</height>
                 </size>
                </property>
@@ -2231,7 +2255,7 @@
               <widget class="QCheckBox" name="checkBox_priceByCashFlow">
                <property name="minimumSize">
                 <size>
-                 <width>140</width>
+                 <width>130</width>
                  <height>16</height>
                 </size>
                </property>
@@ -2252,7 +2276,7 @@
                 <enum>Qt::Horizontal</enum>
                </property>
                <property name="sizeType">
-                <enum>QSizePolicy::Fixed</enum>
+                <enum>QSizePolicy::Minimum</enum>
                </property>
                <property name="sizeHint" stdset="0">
                 <size>
@@ -2272,7 +2296,7 @@
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>25</width>
+                 <width>35</width>
                  <height>20</height>
                 </size>
                </property>
@@ -2294,7 +2318,7 @@
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>35</width>
+                 <width>40</width>
                  <height>20</height>
                 </size>
                </property>
@@ -2322,7 +2346,7 @@
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>65</width>
+                 <width>120</width>
                  <height>10</height>
                 </size>
                </property>
@@ -2343,7 +2367,7 @@
                 <enum>Qt::Horizontal</enum>
                </property>
                <property name="sizeType">
-                <enum>QSizePolicy::Fixed</enum>
+                <enum>QSizePolicy::Minimum</enum>
                </property>
                <property name="sizeHint" stdset="0">
                 <size>
@@ -2363,7 +2387,7 @@
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>30</width>
+                 <width>35</width>
                  <height>20</height>
                 </size>
                </property>
@@ -2385,7 +2409,7 @@
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>35</width>
+                 <width>40</width>
                  <height>20</height>
                 </size>
                </property>
@@ -2407,7 +2431,7 @@
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>65</width>
+                 <width>120</width>
                  <height>10</height>
                 </size>
                </property>
@@ -2433,12 +2457,12 @@
           </layout>
          </item>
          <item>
-          <spacer name="horizontalSpacer2">
+          <spacer name="horizontalSpacer1_3">
            <property name="orientation">
             <enum>Qt::Horizontal</enum>
            </property>
            <property name="sizeType">
-            <enum>QSizePolicy::Fixed</enum>
+            <enum>QSizePolicy::Minimum</enum>
            </property>
            <property name="sizeHint" stdset="0">
             <size>
@@ -2471,13 +2495,13 @@
              <property name="minimumSize">
               <size>
                <width>145</width>
-               <height>40</height>
+               <height>30</height>
               </size>
              </property>
              <property name="maximumSize">
               <size>
                <width>145</width>
-               <height>40</height>
+               <height>30</height>
               </size>
              </property>
              <property name="text">
@@ -2506,13 +2530,13 @@
              <property name="minimumSize">
               <size>
                <width>145</width>
-               <height>40</height>
+               <height>30</height>
               </size>
              </property>
              <property name="maximumSize">
               <size>
                <width>145</width>
-               <height>40</height>
+               <height>30</height>
               </size>
              </property>
              <property name="text">
@@ -2546,16 +2570,53 @@
       <property name="geometry">
        <rect>
         <x>5</x>
-        <y>170</y>
-        <width>1245</width>
-        <height>400</height>
+        <y>195</y>
+        <width>1255</width>
+        <height>460</height>
        </rect>
       </property>
-      <row>
-       <property name="text">
-        <string/>
-       </property>
-      </row>
+      <property name="minimumSize">
+       <size>
+        <width>1255</width>
+        <height>460</height>
+       </size>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>1255</width>
+        <height>460</height>
+       </size>
+      </property>
+      <property name="alternatingRowColors">
+       <bool>true</bool>
+      </property>
+      <property name="gridStyle">
+       <enum>Qt::SolidLine</enum>
+      </property>
+      <property name="sortingEnabled">
+       <bool>true</bool>
+      </property>
+      <attribute name="horizontalHeaderCascadingSectionResizes">
+       <bool>true</bool>
+      </attribute>
+      <attribute name="horizontalHeaderMinimumSectionSize">
+       <number>50</number>
+      </attribute>
+      <attribute name="horizontalHeaderShowSortIndicator" stdset="0">
+       <bool>true</bool>
+      </attribute>
+      <attribute name="horizontalHeaderStretchLastSection">
+       <bool>false</bool>
+      </attribute>
+      <attribute name="verticalHeaderVisible">
+       <bool>false</bool>
+      </attribute>
+      <attribute name="verticalHeaderCascadingSectionResizes">
+       <bool>true</bool>
+      </attribute>
+      <attribute name="verticalHeaderMinimumSectionSize">
+       <number>30</number>
+      </attribute>
       <column>
        <property name="text">
         <string>Company name</string>
@@ -2638,79 +2699,86 @@
         <string notr="true"/>
        </property>
       </column>
-      <item row="0" column="0">
+     </widget>
+     <widget class="QComboBox" name="comboBox_stockScreener_portfolio">
+      <property name="geometry">
+       <rect>
+        <x>960</x>
+        <y>670</y>
+        <width>160</width>
+        <height>30</height>
+       </rect>
+      </property>
+      <property name="minimumSize">
+       <size>
+        <width>160</width>
+        <height>30</height>
+       </size>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>160</width>
+        <height>30</height>
+       </size>
+      </property>
+      <property name="editable">
+       <bool>true</bool>
+      </property>
+      <item>
        <property name="text">
-        <string>1</string>
-       </property>
-       <property name="flags">
-        <set>ItemIsSelectable|ItemIsUserCheckable|ItemIsEnabled</set>
+        <string>Choose portfolio</string>
        </property>
       </item>
-      <item row="0" column="1">
+      <item>
        <property name="text">
-        <string>1</string>
+        <string>insect</string>
        </property>
       </item>
-      <item row="0" column="2">
+      <item>
        <property name="text">
-        <string>1</string>
+        <string>chat</string>
        </property>
       </item>
-      <item row="0" column="3">
+      <item>
        <property name="text">
-        <string>1</string>
+        <string>chien</string>
        </property>
       </item>
-      <item row="0" column="4">
+      <item>
        <property name="text">
-        <string>1</string>
+        <string>oiseau</string>
        </property>
       </item>
-      <item row="0" column="5">
+      <item>
        <property name="text">
-        <string>1</string>
+        <string>poisson</string>
        </property>
       </item>
-      <item row="0" column="6">
-       <property name="text">
-        <string>1</string>
-       </property>
-      </item>
-      <item row="0" column="7">
-       <property name="text">
-        <string>11</string>
-       </property>
-      </item>
-      <item row="0" column="8">
-       <property name="text">
-        <string>11</string>
-       </property>
-      </item>
-      <item row="0" column="9">
-       <property name="text">
-        <string>1</string>
-       </property>
-      </item>
-      <item row="0" column="10">
-       <property name="text">
-        <string>1</string>
-       </property>
-      </item>
-      <item row="0" column="11">
-       <property name="text">
-        <string>1</string>
-       </property>
-      </item>
-      <item row="0" column="12">
-       <property name="text">
-        <string>1</string>
-       </property>
-      </item>
-      <item row="0" column="13">
-       <property name="text">
-        <string/>
-       </property>
-      </item>
+     </widget>
+     <widget class="QPushButton" name="btn_stockScreener_addPortfolio">
+      <property name="geometry">
+       <rect>
+        <x>1130</x>
+        <y>670</y>
+        <width>125</width>
+        <height>30</height>
+       </rect>
+      </property>
+      <property name="minimumSize">
+       <size>
+        <width>90</width>
+        <height>30</height>
+       </size>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>125</width>
+        <height>30</height>
+       </size>
+      </property>
+      <property name="text">
+       <string>Add to portfolio</string>
+      </property>
      </widget>
     </widget>
     <widget class="QWidget" name="tabPortfolioManager">
@@ -2722,14 +2790,26 @@
      <attribute name="title">
       <string>Simmulator</string>
      </attribute>
-     <widget class="QScrollArea" name="scrollArea_2">
+     <widget class="QScrollArea" name="scrollArea_4">
       <property name="geometry">
        <rect>
         <x>5</x>
         <y>5</y>
-        <width>1245</width>
-        <height>151</height>
+        <width>1255</width>
+        <height>180</height>
        </rect>
+      </property>
+      <property name="minimumSize">
+       <size>
+        <width>1255</width>
+        <height>180</height>
+       </size>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>1255</width>
+        <height>180</height>
+       </size>
       </property>
       <property name="frameShape">
        <enum>QFrame::StyledPanel</enum>
@@ -2746,52 +2826,64 @@
       <property name="horizontalScrollBarPolicy">
        <enum>Qt::ScrollBarAlwaysOff</enum>
       </property>
-      <property name="sizeAdjustPolicy">
-       <enum>QAbstractScrollArea::AdjustToContents</enum>
-      </property>
       <property name="widgetResizable">
        <bool>false</bool>
       </property>
-      <widget class="QWidget" name="scrollAreaWidgetContents_2">
+      <widget class="QWidget" name="scrollAreaWidgetContents_4">
        <property name="geometry">
         <rect>
          <x>0</x>
          <y>0</y>
-         <width>1229</width>
-         <height>189</height>
+         <width>1260</width>
+         <height>250</height>
         </rect>
        </property>
-       <widget class="QWidget" name="horizontalLayoutWidget_2">
+       <property name="minimumSize">
+        <size>
+         <width>1260</width>
+         <height>250</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>1260</width>
+         <height>16777215</height>
+        </size>
+       </property>
+       <widget class="QWidget" name="horizontalLayoutWidget_4">
         <property name="geometry">
          <rect>
-          <x>-4</x>
-          <y>6</y>
-          <width>1231</width>
-          <height>186</height>
+          <x>0</x>
+          <y>0</y>
+          <width>1234</width>
+          <height>251</height>
          </rect>
         </property>
-        <layout class="QHBoxLayout" name="horizontalLayout_2">
+        <layout class="QHBoxLayout" name="horizontalLayout_4">
          <property name="spacing">
-          <number>3</number>
+          <number>10</number>
+         </property>
+         <property name="topMargin">
+          <number>0</number>
          </property>
          <item>
-          <layout class="QVBoxLayout" name="verticalLayout_left_2">
+          <layout class="QVBoxLayout" name="verticalLayout_left_4">
            <item>
-            <layout class="QHBoxLayout" name="horizontalLayout_stockValue_2">
+            <layout class="QHBoxLayout" name="horizontalLayout_stockValue_4">
              <property name="sizeConstraint">
               <enum>QLayout::SetDefaultConstraint</enum>
              </property>
              <item>
-              <widget class="QCheckBox" name="checkBox_stockValue_2">
+              <widget class="QCheckBox" name="checkBox_stockValue_4">
                <property name="minimumSize">
                 <size>
-                 <width>172</width>
+                 <width>170</width>
                  <height>20</height>
                 </size>
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>172</width>
+                 <width>175</width>
                  <height>20</height>
                 </size>
                </property>
@@ -2801,12 +2893,12 @@
               </widget>
              </item>
              <item>
-              <spacer name="horizontalSpacer_stockValue1_2">
+              <spacer name="horizontalSpacer_stockValue1_4">
                <property name="orientation">
                 <enum>Qt::Horizontal</enum>
                </property>
                <property name="sizeType">
-                <enum>QSizePolicy::Fixed</enum>
+                <enum>QSizePolicy::Minimum</enum>
                </property>
                <property name="sizeHint" stdset="0">
                 <size>
@@ -2817,7 +2909,7 @@
               </spacer>
              </item>
              <item>
-              <widget class="QLabel" name="label_min_stockValue_2">
+              <widget class="QLabel" name="label_min_stockValue_4">
                <property name="minimumSize">
                 <size>
                  <width>25</width>
@@ -2826,7 +2918,7 @@
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>25</width>
+                 <width>35</width>
                  <height>20</height>
                 </size>
                </property>
@@ -2839,7 +2931,7 @@
               </widget>
              </item>
              <item>
-              <widget class="QLineEdit" name="lineEdit_min_stockValue_2">
+              <widget class="QLineEdit" name="lineEdit_min_stockValue_4">
                <property name="minimumSize">
                 <size>
                  <width>35</width>
@@ -2848,7 +2940,7 @@
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>35</width>
+                 <width>40</width>
                  <height>20</height>
                 </size>
                </property>
@@ -2867,7 +2959,7 @@
               </widget>
              </item>
              <item>
-              <widget class="QSlider" name="horizontalSlider_min_stockValue_2">
+              <widget class="QSlider" name="horizontalSlider_min_stockValue_4">
                <property name="minimumSize">
                 <size>
                  <width>65</width>
@@ -2876,7 +2968,7 @@
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>65</width>
+                 <width>120</width>
                  <height>10</height>
                 </size>
                </property>
@@ -2892,7 +2984,7 @@
               </widget>
              </item>
              <item>
-              <spacer name="horizontalSpacer_stockValue2_2">
+              <spacer name="horizontalSpacer_stockValue2_4">
                <property name="orientation">
                 <enum>Qt::Horizontal</enum>
                </property>
@@ -2908,7 +3000,7 @@
               </spacer>
              </item>
              <item>
-              <widget class="QLabel" name="label_max_stockValue_2">
+              <widget class="QLabel" name="label_max_stockValue_4">
                <property name="minimumSize">
                 <size>
                  <width>30</width>
@@ -2917,7 +3009,7 @@
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>30</width>
+                 <width>35</width>
                  <height>20</height>
                 </size>
                </property>
@@ -2930,7 +3022,7 @@
               </widget>
              </item>
              <item>
-              <widget class="QLineEdit" name="lineEdit_max_stockValue_2">
+              <widget class="QLineEdit" name="lineEdit_max_stockValue_4">
                <property name="minimumSize">
                 <size>
                  <width>35</width>
@@ -2939,7 +3031,7 @@
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>35</width>
+                 <width>40</width>
                  <height>20</height>
                 </size>
                </property>
@@ -2952,7 +3044,7 @@
               </widget>
              </item>
              <item>
-              <widget class="QSlider" name="horizontalSlider_max_stockValue_2">
+              <widget class="QSlider" name="horizontalSlider_max_stockValue_4">
                <property name="minimumSize">
                 <size>
                  <width>65</width>
@@ -2961,7 +3053,7 @@
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>65</width>
+                 <width>120</width>
                  <height>10</height>
                 </size>
                </property>
@@ -2985,21 +3077,21 @@
             </layout>
            </item>
            <item>
-            <layout class="QHBoxLayout" name="horizontalLayout_income_2">
+            <layout class="QHBoxLayout" name="horizontalLayout_income_4">
              <property name="sizeConstraint">
               <enum>QLayout::SetDefaultConstraint</enum>
              </property>
              <item>
-              <widget class="QCheckBox" name="checkBox_income_2">
+              <widget class="QCheckBox" name="checkBox_income_4">
                <property name="minimumSize">
                 <size>
-                 <width>172</width>
+                 <width>170</width>
                  <height>20</height>
                 </size>
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>172</width>
+                 <width>175</width>
                  <height>20</height>
                 </size>
                </property>
@@ -3009,12 +3101,12 @@
               </widget>
              </item>
              <item>
-              <spacer name="horizontalSpacer_income1_2">
+              <spacer name="horizontalSpacer_income1_4">
                <property name="orientation">
                 <enum>Qt::Horizontal</enum>
                </property>
                <property name="sizeType">
-                <enum>QSizePolicy::Fixed</enum>
+                <enum>QSizePolicy::Minimum</enum>
                </property>
                <property name="sizeHint" stdset="0">
                 <size>
@@ -3025,7 +3117,7 @@
               </spacer>
              </item>
              <item>
-              <widget class="QLabel" name="label_min_income_2">
+              <widget class="QLabel" name="label_min_income_4">
                <property name="minimumSize">
                 <size>
                  <width>25</width>
@@ -3034,7 +3126,7 @@
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>25</width>
+                 <width>35</width>
                  <height>20</height>
                 </size>
                </property>
@@ -3047,7 +3139,7 @@
               </widget>
              </item>
              <item>
-              <widget class="QLineEdit" name="lineEdit_min_income_2">
+              <widget class="QLineEdit" name="lineEdit_min_income_4">
                <property name="minimumSize">
                 <size>
                  <width>35</width>
@@ -3056,7 +3148,7 @@
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>35</width>
+                 <width>40</width>
                  <height>20</height>
                 </size>
                </property>
@@ -3075,7 +3167,7 @@
               </widget>
              </item>
              <item>
-              <widget class="QSlider" name="horizontalSlider_min_income_2">
+              <widget class="QSlider" name="horizontalSlider_min_income_4">
                <property name="minimumSize">
                 <size>
                  <width>65</width>
@@ -3084,7 +3176,7 @@
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>65</width>
+                 <width>120</width>
                  <height>10</height>
                 </size>
                </property>
@@ -3100,7 +3192,7 @@
               </widget>
              </item>
              <item>
-              <spacer name="horizontalSpacer_income2_2">
+              <spacer name="horizontalSpacer_income2_4">
                <property name="orientation">
                 <enum>Qt::Horizontal</enum>
                </property>
@@ -3116,7 +3208,7 @@
               </spacer>
              </item>
              <item>
-              <widget class="QLabel" name="label_max_income_2">
+              <widget class="QLabel" name="label_max_income_4">
                <property name="minimumSize">
                 <size>
                  <width>30</width>
@@ -3125,7 +3217,7 @@
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>30</width>
+                 <width>35</width>
                  <height>20</height>
                 </size>
                </property>
@@ -3138,7 +3230,7 @@
               </widget>
              </item>
              <item>
-              <widget class="QLineEdit" name="lineEdit_max_income_2">
+              <widget class="QLineEdit" name="lineEdit_max_income_4">
                <property name="minimumSize">
                 <size>
                  <width>35</width>
@@ -3147,7 +3239,7 @@
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>35</width>
+                 <width>40</width>
                  <height>20</height>
                 </size>
                </property>
@@ -3160,7 +3252,7 @@
               </widget>
              </item>
              <item>
-              <widget class="QSlider" name="horizontalSlider_max_income_2">
+              <widget class="QSlider" name="horizontalSlider_max_income_4">
                <property name="minimumSize">
                 <size>
                  <width>65</width>
@@ -3169,7 +3261,7 @@
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>65</width>
+                 <width>120</width>
                  <height>10</height>
                 </size>
                </property>
@@ -3193,21 +3285,21 @@
             </layout>
            </item>
            <item>
-            <layout class="QHBoxLayout" name="horizontalLayout_profitMargin_2">
+            <layout class="QHBoxLayout" name="horizontalLayout_profitMargin_4">
              <property name="sizeConstraint">
               <enum>QLayout::SetDefaultConstraint</enum>
              </property>
              <item>
-              <widget class="QCheckBox" name="checkBox_profitMargin_2">
+              <widget class="QCheckBox" name="checkBox_profitMargin_4">
                <property name="minimumSize">
                 <size>
-                 <width>172</width>
+                 <width>170</width>
                  <height>20</height>
                 </size>
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>172</width>
+                 <width>175</width>
                  <height>20</height>
                 </size>
                </property>
@@ -3217,12 +3309,12 @@
               </widget>
              </item>
              <item>
-              <spacer name="horizontalSpacer_profitMargin1_2">
+              <spacer name="horizontalSpacer_profitMargin1_4">
                <property name="orientation">
                 <enum>Qt::Horizontal</enum>
                </property>
                <property name="sizeType">
-                <enum>QSizePolicy::Fixed</enum>
+                <enum>QSizePolicy::Minimum</enum>
                </property>
                <property name="sizeHint" stdset="0">
                 <size>
@@ -3233,7 +3325,7 @@
               </spacer>
              </item>
              <item>
-              <widget class="QLabel" name="label_min_profitMargin_2">
+              <widget class="QLabel" name="label_min_profitMargin_4">
                <property name="minimumSize">
                 <size>
                  <width>25</width>
@@ -3242,7 +3334,7 @@
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>25</width>
+                 <width>35</width>
                  <height>20</height>
                 </size>
                </property>
@@ -3255,7 +3347,7 @@
               </widget>
              </item>
              <item>
-              <widget class="QLineEdit" name="lineEdit_min_profitMargin_2">
+              <widget class="QLineEdit" name="lineEdit_min_profitMargin_4">
                <property name="minimumSize">
                 <size>
                  <width>35</width>
@@ -3264,7 +3356,7 @@
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>35</width>
+                 <width>40</width>
                  <height>20</height>
                 </size>
                </property>
@@ -3283,7 +3375,7 @@
               </widget>
              </item>
              <item>
-              <widget class="QSlider" name="horizontalSlider_min_profitMargin_2">
+              <widget class="QSlider" name="horizontalSlider_min_profitMargin_4">
                <property name="minimumSize">
                 <size>
                  <width>65</width>
@@ -3292,7 +3384,7 @@
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>65</width>
+                 <width>120</width>
                  <height>10</height>
                 </size>
                </property>
@@ -3308,7 +3400,7 @@
               </widget>
              </item>
              <item>
-              <spacer name="horizontalSpacer_profitMargin2_2">
+              <spacer name="horizontalSpacer_profitMargin2_4">
                <property name="orientation">
                 <enum>Qt::Horizontal</enum>
                </property>
@@ -3324,7 +3416,7 @@
               </spacer>
              </item>
              <item>
-              <widget class="QLabel" name="label_max_profitMargin_2">
+              <widget class="QLabel" name="label_max_profitMargin_4">
                <property name="minimumSize">
                 <size>
                  <width>30</width>
@@ -3333,7 +3425,7 @@
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>30</width>
+                 <width>35</width>
                  <height>20</height>
                 </size>
                </property>
@@ -3346,7 +3438,7 @@
               </widget>
              </item>
              <item>
-              <widget class="QLineEdit" name="lineEdit_max_profitMargin_2">
+              <widget class="QLineEdit" name="lineEdit_max_profitMargin_4">
                <property name="minimumSize">
                 <size>
                  <width>35</width>
@@ -3355,7 +3447,7 @@
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>35</width>
+                 <width>40</width>
                  <height>20</height>
                 </size>
                </property>
@@ -3368,7 +3460,7 @@
               </widget>
              </item>
              <item>
-              <widget class="QSlider" name="horizontalSlider_max_profitMargin_2">
+              <widget class="QSlider" name="horizontalSlider_max_profitMargin_4">
                <property name="minimumSize">
                 <size>
                  <width>65</width>
@@ -3377,7 +3469,7 @@
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>65</width>
+                 <width>120</width>
                  <height>10</height>
                 </size>
                </property>
@@ -3401,21 +3493,21 @@
             </layout>
            </item>
            <item>
-            <layout class="QHBoxLayout" name="horizontalLayout_dividendYield_2">
+            <layout class="QHBoxLayout" name="horizontalLayout_dividendYield_4">
              <property name="sizeConstraint">
               <enum>QLayout::SetDefaultConstraint</enum>
              </property>
              <item>
-              <widget class="QCheckBox" name="checkBox_dividendYield_2">
+              <widget class="QCheckBox" name="checkBox_dividendYield_4">
                <property name="minimumSize">
                 <size>
-                 <width>172</width>
+                 <width>170</width>
                  <height>20</height>
                 </size>
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>172</width>
+                 <width>175</width>
                  <height>20</height>
                 </size>
                </property>
@@ -3425,12 +3517,12 @@
               </widget>
              </item>
              <item>
-              <spacer name="horizontalSpacer_dividendYield1_2">
+              <spacer name="horizontalSpacer_dividendYield1_4">
                <property name="orientation">
                 <enum>Qt::Horizontal</enum>
                </property>
                <property name="sizeType">
-                <enum>QSizePolicy::Fixed</enum>
+                <enum>QSizePolicy::Minimum</enum>
                </property>
                <property name="sizeHint" stdset="0">
                 <size>
@@ -3441,7 +3533,7 @@
               </spacer>
              </item>
              <item>
-              <widget class="QLabel" name="label_min_dividendYield_2">
+              <widget class="QLabel" name="label_min_dividendYield_4">
                <property name="minimumSize">
                 <size>
                  <width>25</width>
@@ -3450,7 +3542,7 @@
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>25</width>
+                 <width>35</width>
                  <height>20</height>
                 </size>
                </property>
@@ -3463,7 +3555,7 @@
               </widget>
              </item>
              <item>
-              <widget class="QLineEdit" name="lineEdit_min_dividendYield_2">
+              <widget class="QLineEdit" name="lineEdit_min_dividendYield_4">
                <property name="minimumSize">
                 <size>
                  <width>35</width>
@@ -3472,7 +3564,7 @@
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>35</width>
+                 <width>40</width>
                  <height>20</height>
                 </size>
                </property>
@@ -3491,7 +3583,7 @@
               </widget>
              </item>
              <item>
-              <widget class="QSlider" name="horizontalSlider_min_dividendYield_2">
+              <widget class="QSlider" name="horizontalSlider_min_dividendYield_4">
                <property name="minimumSize">
                 <size>
                  <width>65</width>
@@ -3500,7 +3592,7 @@
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>65</width>
+                 <width>120</width>
                  <height>10</height>
                 </size>
                </property>
@@ -3516,7 +3608,7 @@
               </widget>
              </item>
              <item>
-              <spacer name="horizontalSpacer_dividendYield2_2">
+              <spacer name="horizontalSpacer_dividendYield2_4">
                <property name="orientation">
                 <enum>Qt::Horizontal</enum>
                </property>
@@ -3532,7 +3624,7 @@
               </spacer>
              </item>
              <item>
-              <widget class="QLabel" name="label_max_dividendYield_2">
+              <widget class="QLabel" name="label_max_dividendYield_4">
                <property name="minimumSize">
                 <size>
                  <width>30</width>
@@ -3541,7 +3633,7 @@
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>30</width>
+                 <width>35</width>
                  <height>20</height>
                 </size>
                </property>
@@ -3554,7 +3646,7 @@
               </widget>
              </item>
              <item>
-              <widget class="QLineEdit" name="lineEdit_max_dividendYield_2">
+              <widget class="QLineEdit" name="lineEdit_max_dividendYield_4">
                <property name="minimumSize">
                 <size>
                  <width>35</width>
@@ -3563,7 +3655,7 @@
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>35</width>
+                 <width>40</width>
                  <height>20</height>
                 </size>
                </property>
@@ -3576,7 +3668,7 @@
               </widget>
              </item>
              <item>
-              <widget class="QSlider" name="horizontalSlider_max_dividendYield_2">
+              <widget class="QSlider" name="horizontalSlider_max_dividendYield_4">
                <property name="minimumSize">
                 <size>
                  <width>65</width>
@@ -3585,7 +3677,7 @@
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>65</width>
+                 <width>120</width>
                  <height>10</height>
                 </size>
                </property>
@@ -3609,21 +3701,21 @@
             </layout>
            </item>
            <item>
-            <layout class="QHBoxLayout" name="horizontalLayout_marketCapitalisation_2">
+            <layout class="QHBoxLayout" name="horizontalLayout_marketCapitalisation_4">
              <property name="sizeConstraint">
               <enum>QLayout::SetDefaultConstraint</enum>
              </property>
              <item>
-              <widget class="QCheckBox" name="checkBox_marketCapitalisation_2">
+              <widget class="QCheckBox" name="checkBox_marketCapitalisation_4">
                <property name="minimumSize">
                 <size>
-                 <width>172</width>
+                 <width>170</width>
                  <height>20</height>
                 </size>
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>172</width>
+                 <width>175</width>
                  <height>20</height>
                 </size>
                </property>
@@ -3633,12 +3725,12 @@
               </widget>
              </item>
              <item>
-              <spacer name="horizontalSpacer_marketCapitalisation1_2">
+              <spacer name="horizontalSpacer_marketCapitalisation1_4">
                <property name="orientation">
                 <enum>Qt::Horizontal</enum>
                </property>
                <property name="sizeType">
-                <enum>QSizePolicy::Fixed</enum>
+                <enum>QSizePolicy::Minimum</enum>
                </property>
                <property name="sizeHint" stdset="0">
                 <size>
@@ -3649,7 +3741,7 @@
               </spacer>
              </item>
              <item>
-              <widget class="QLabel" name="label_min_marketCapitalisation_2">
+              <widget class="QLabel" name="label_min_marketCapitalisation_4">
                <property name="minimumSize">
                 <size>
                  <width>25</width>
@@ -3658,7 +3750,7 @@
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>25</width>
+                 <width>35</width>
                  <height>20</height>
                 </size>
                </property>
@@ -3671,7 +3763,7 @@
               </widget>
              </item>
              <item>
-              <widget class="QLineEdit" name="lineEdit_min_marketCapitalisation_2">
+              <widget class="QLineEdit" name="lineEdit_min_marketCapitalisation_4">
                <property name="minimumSize">
                 <size>
                  <width>35</width>
@@ -3680,7 +3772,7 @@
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>35</width>
+                 <width>40</width>
                  <height>20</height>
                 </size>
                </property>
@@ -3699,7 +3791,7 @@
               </widget>
              </item>
              <item>
-              <widget class="QSlider" name="horizontalSlider_min_marketCapitalisation_2">
+              <widget class="QSlider" name="horizontalSlider_min_marketCapitalisation_4">
                <property name="minimumSize">
                 <size>
                  <width>65</width>
@@ -3708,7 +3800,7 @@
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>65</width>
+                 <width>120</width>
                  <height>10</height>
                 </size>
                </property>
@@ -3724,12 +3816,12 @@
               </widget>
              </item>
              <item>
-              <spacer name="horizontalSpacer_marketCapitalisation2_2">
+              <spacer name="horizontalSpacer_marketCapitalisation2_4">
                <property name="orientation">
                 <enum>Qt::Horizontal</enum>
                </property>
                <property name="sizeType">
-                <enum>QSizePolicy::Fixed</enum>
+                <enum>QSizePolicy::Minimum</enum>
                </property>
                <property name="sizeHint" stdset="0">
                 <size>
@@ -3740,7 +3832,7 @@
               </spacer>
              </item>
              <item>
-              <widget class="QLabel" name="label_max_marketCapitalisation_2">
+              <widget class="QLabel" name="label_max_marketCapitalisation_4">
                <property name="minimumSize">
                 <size>
                  <width>30</width>
@@ -3749,7 +3841,7 @@
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>30</width>
+                 <width>35</width>
                  <height>20</height>
                 </size>
                </property>
@@ -3762,7 +3854,7 @@
               </widget>
              </item>
              <item>
-              <widget class="QLineEdit" name="lineEdit_max_marketCapitalisation_2">
+              <widget class="QLineEdit" name="lineEdit_max_marketCapitalisation_4">
                <property name="minimumSize">
                 <size>
                  <width>35</width>
@@ -3771,7 +3863,7 @@
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>35</width>
+                 <width>40</width>
                  <height>20</height>
                 </size>
                </property>
@@ -3784,7 +3876,7 @@
               </widget>
              </item>
              <item>
-              <widget class="QSlider" name="horizontalSlider_max_marketCapitalisation_2">
+              <widget class="QSlider" name="horizontalSlider_max_marketCapitalisation_4">
                <property name="minimumSize">
                 <size>
                  <width>65</width>
@@ -3793,7 +3885,7 @@
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>65</width>
+                 <width>120</width>
                  <height>10</height>
                 </size>
                </property>
@@ -3817,21 +3909,21 @@
             </layout>
            </item>
            <item>
-            <layout class="QHBoxLayout" name="horizontalLayout_financicalIndex_2">
+            <layout class="QHBoxLayout" name="horizontalLayout_financicalIndex_4">
              <property name="sizeConstraint">
               <enum>QLayout::SetDefaultConstraint</enum>
              </property>
              <item>
-              <widget class="QCheckBox" name="checkBox_financicalIndex_2">
+              <widget class="QCheckBox" name="checkBox_financicalIndex_4">
                <property name="minimumSize">
                 <size>
-                 <width>172</width>
+                 <width>170</width>
                  <height>20</height>
                 </size>
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>172</width>
+                 <width>175</width>
                  <height>20</height>
                 </size>
                </property>
@@ -3841,12 +3933,12 @@
               </widget>
              </item>
              <item>
-              <spacer name="horizontalSpacer_financicalIndex1_2">
+              <spacer name="horizontalSpacer_financicalIndex1_4">
                <property name="orientation">
                 <enum>Qt::Horizontal</enum>
                </property>
                <property name="sizeType">
-                <enum>QSizePolicy::Fixed</enum>
+                <enum>QSizePolicy::Minimum</enum>
                </property>
                <property name="sizeHint" stdset="0">
                 <size>
@@ -3857,7 +3949,7 @@
               </spacer>
              </item>
              <item>
-              <widget class="QLabel" name="label_min_financicalIndex_2">
+              <widget class="QLabel" name="label_min_financicalIndex_4">
                <property name="minimumSize">
                 <size>
                  <width>25</width>
@@ -3866,7 +3958,7 @@
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>25</width>
+                 <width>35</width>
                  <height>20</height>
                 </size>
                </property>
@@ -3879,7 +3971,7 @@
               </widget>
              </item>
              <item>
-              <widget class="QLineEdit" name="lineEdit_min_financicalIndex_2">
+              <widget class="QLineEdit" name="lineEdit_min_financicalIndex_4">
                <property name="minimumSize">
                 <size>
                  <width>35</width>
@@ -3888,7 +3980,7 @@
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>35</width>
+                 <width>40</width>
                  <height>20</height>
                 </size>
                </property>
@@ -3907,7 +3999,7 @@
               </widget>
              </item>
              <item>
-              <widget class="QSlider" name="horizontalSlider_min_financicalIndex_2">
+              <widget class="QSlider" name="horizontalSlider_min_financicalIndex_4">
                <property name="minimumSize">
                 <size>
                  <width>65</width>
@@ -3916,7 +4008,7 @@
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>65</width>
+                 <width>120</width>
                  <height>10</height>
                 </size>
                </property>
@@ -3932,12 +4024,12 @@
               </widget>
              </item>
              <item>
-              <spacer name="horizontalSpacer_financicalIndex2_2">
+              <spacer name="horizontalSpacer_financicalIndex2_4">
                <property name="orientation">
                 <enum>Qt::Horizontal</enum>
                </property>
                <property name="sizeType">
-                <enum>QSizePolicy::Fixed</enum>
+                <enum>QSizePolicy::Minimum</enum>
                </property>
                <property name="sizeHint" stdset="0">
                 <size>
@@ -3948,7 +4040,7 @@
               </spacer>
              </item>
              <item>
-              <widget class="QLabel" name="label_max_financicalIndex_2">
+              <widget class="QLabel" name="label_max_financicalIndex_4">
                <property name="minimumSize">
                 <size>
                  <width>30</width>
@@ -3957,7 +4049,7 @@
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>30</width>
+                 <width>35</width>
                  <height>20</height>
                 </size>
                </property>
@@ -3970,7 +4062,7 @@
               </widget>
              </item>
              <item>
-              <widget class="QLineEdit" name="lineEdit_max_financicalIndex_2">
+              <widget class="QLineEdit" name="lineEdit_max_financicalIndex_4">
                <property name="minimumSize">
                 <size>
                  <width>35</width>
@@ -3979,7 +4071,7 @@
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>35</width>
+                 <width>40</width>
                  <height>20</height>
                 </size>
                </property>
@@ -3992,7 +4084,7 @@
               </widget>
              </item>
              <item>
-              <widget class="QSlider" name="horizontalSlider_max_financicalIndex_2">
+              <widget class="QSlider" name="horizontalSlider_max_financicalIndex_4">
                <property name="minimumSize">
                 <size>
                  <width>65</width>
@@ -4001,7 +4093,7 @@
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>65</width>
+                 <width>120</width>
                  <height>10</height>
                 </size>
                </property>
@@ -4027,12 +4119,12 @@
           </layout>
          </item>
          <item>
-          <spacer name="horizontalSpacer1_2">
+          <spacer name="horizontalSpacer1_10">
            <property name="orientation">
             <enum>Qt::Horizontal</enum>
            </property>
            <property name="sizeType">
-            <enum>QSizePolicy::Fixed</enum>
+            <enum>QSizePolicy::Minimum</enum>
            </property>
            <property name="sizeHint" stdset="0">
             <size>
@@ -4043,19 +4135,19 @@
           </spacer>
          </item>
          <item>
-          <widget class="Line" name="line_2">
+          <widget class="Line" name="line_4">
            <property name="orientation">
             <enum>Qt::Vertical</enum>
            </property>
           </widget>
          </item>
          <item>
-          <spacer name="horizontalSpacer1_4">
+          <spacer name="horizontalSpacer1_11">
            <property name="orientation">
             <enum>Qt::Horizontal</enum>
            </property>
            <property name="sizeType">
-            <enum>QSizePolicy::Fixed</enum>
+            <enum>QSizePolicy::Minimum</enum>
            </property>
            <property name="sizeHint" stdset="0">
             <size>
@@ -4066,20 +4158,20 @@
           </spacer>
          </item>
          <item>
-          <layout class="QVBoxLayout" name="verticalLayout_rigth_2">
+          <layout class="QVBoxLayout" name="verticalLayout_rigth_4">
            <item>
-            <layout class="QHBoxLayout" name="horizontalLayout_indexEnd_2">
+            <layout class="QHBoxLayout" name="horizontalLayout_indexEnd_4">
              <property name="sizeConstraint">
               <enum>QLayout::SetDefaultConstraint</enum>
              </property>
              <item>
-              <widget class="QCheckBox" name="checkBox_indexEnd_2">
+              <widget class="QCheckBox" name="checkBox_indexEnd_4">
                <property name="enabled">
                 <bool>true</bool>
                </property>
                <property name="minimumSize">
                 <size>
-                 <width>140</width>
+                 <width>130</width>
                  <height>16</height>
                 </size>
                </property>
@@ -4095,12 +4187,12 @@
               </widget>
              </item>
              <item>
-              <spacer name="horizontalSpacer_indexEnd1_2">
+              <spacer name="horizontalSpacer_indexEnd1_4">
                <property name="orientation">
                 <enum>Qt::Horizontal</enum>
                </property>
                <property name="sizeType">
-                <enum>QSizePolicy::Fixed</enum>
+                <enum>QSizePolicy::Minimum</enum>
                </property>
                <property name="sizeHint" stdset="0">
                 <size>
@@ -4111,7 +4203,7 @@
               </spacer>
              </item>
              <item>
-              <widget class="QLabel" name="label_min_indexEnd_2">
+              <widget class="QLabel" name="label_min_indexEnd_4">
                <property name="minimumSize">
                 <size>
                  <width>25</width>
@@ -4120,7 +4212,7 @@
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>25</width>
+                 <width>35</width>
                  <height>20</height>
                 </size>
                </property>
@@ -4133,7 +4225,7 @@
               </widget>
              </item>
              <item>
-              <widget class="QLineEdit" name="lineEdit_min_indexEnd_2">
+              <widget class="QLineEdit" name="lineEdit_min_indexEnd_4">
                <property name="minimumSize">
                 <size>
                  <width>35</width>
@@ -4142,7 +4234,7 @@
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>35</width>
+                 <width>40</width>
                  <height>20</height>
                 </size>
                </property>
@@ -4161,7 +4253,7 @@
               </widget>
              </item>
              <item>
-              <widget class="QSlider" name="horizontalSlider_min_indexEnd_2">
+              <widget class="QSlider" name="horizontalSlider_min_indexEnd_4">
                <property name="minimumSize">
                 <size>
                  <width>65</width>
@@ -4170,7 +4262,7 @@
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>65</width>
+                 <width>120</width>
                  <height>10</height>
                 </size>
                </property>
@@ -4186,12 +4278,12 @@
               </widget>
              </item>
              <item>
-              <spacer name="horizontalSpacer_indexEnd2_2">
+              <spacer name="horizontalSpacer_indexEnd2_4">
                <property name="orientation">
                 <enum>Qt::Horizontal</enum>
                </property>
                <property name="sizeType">
-                <enum>QSizePolicy::Fixed</enum>
+                <enum>QSizePolicy::Minimum</enum>
                </property>
                <property name="sizeHint" stdset="0">
                 <size>
@@ -4202,7 +4294,7 @@
               </spacer>
              </item>
              <item>
-              <widget class="QLabel" name="label_max_indexEnd_2">
+              <widget class="QLabel" name="label_max_indexEnd_4">
                <property name="minimumSize">
                 <size>
                  <width>30</width>
@@ -4211,7 +4303,7 @@
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>30</width>
+                 <width>35</width>
                  <height>20</height>
                 </size>
                </property>
@@ -4224,7 +4316,7 @@
               </widget>
              </item>
              <item>
-              <widget class="QLineEdit" name="lineEdit_max_indexEnd_2">
+              <widget class="QLineEdit" name="lineEdit_max_indexEnd_4">
                <property name="minimumSize">
                 <size>
                  <width>35</width>
@@ -4233,7 +4325,7 @@
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>35</width>
+                 <width>40</width>
                  <height>20</height>
                 </size>
                </property>
@@ -4246,7 +4338,7 @@
               </widget>
              </item>
              <item>
-              <widget class="QSlider" name="horizontalSlider_max_indexEnd_2">
+              <widget class="QSlider" name="horizontalSlider_max_indexEnd_4">
                <property name="minimumSize">
                 <size>
                  <width>65</width>
@@ -4255,7 +4347,7 @@
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>65</width>
+                 <width>120</width>
                  <height>10</height>
                 </size>
                </property>
@@ -4279,15 +4371,15 @@
             </layout>
            </item>
            <item>
-            <layout class="QHBoxLayout" name="horizontalLayout_priceByEarnings_2">
+            <layout class="QHBoxLayout" name="horizontalLayout_priceByEarnings_4">
              <property name="sizeConstraint">
               <enum>QLayout::SetDefaultConstraint</enum>
              </property>
              <item>
-              <widget class="QCheckBox" name="checkBox_priceByEarnings_2">
+              <widget class="QCheckBox" name="checkBox_priceByEarnings_4">
                <property name="minimumSize">
                 <size>
-                 <width>140</width>
+                 <width>130</width>
                  <height>16</height>
                 </size>
                </property>
@@ -4303,12 +4395,12 @@
               </widget>
              </item>
              <item>
-              <spacer name="horizontalSpacer_priceByEarnings1_2">
+              <spacer name="horizontalSpacer_priceByEarnings1_4">
                <property name="orientation">
                 <enum>Qt::Horizontal</enum>
                </property>
                <property name="sizeType">
-                <enum>QSizePolicy::Fixed</enum>
+                <enum>QSizePolicy::Minimum</enum>
                </property>
                <property name="sizeHint" stdset="0">
                 <size>
@@ -4319,7 +4411,7 @@
               </spacer>
              </item>
              <item>
-              <widget class="QLabel" name="label_min_priceByEarnings_2">
+              <widget class="QLabel" name="label_min_priceByEarnings_4">
                <property name="minimumSize">
                 <size>
                  <width>25</width>
@@ -4328,7 +4420,7 @@
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>25</width>
+                 <width>35</width>
                  <height>20</height>
                 </size>
                </property>
@@ -4341,7 +4433,7 @@
               </widget>
              </item>
              <item>
-              <widget class="QLineEdit" name="lineEdit_min_priceByEarnings_2">
+              <widget class="QLineEdit" name="lineEdit_min_priceByEarnings_4">
                <property name="minimumSize">
                 <size>
                  <width>35</width>
@@ -4350,7 +4442,7 @@
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>35</width>
+                 <width>40</width>
                  <height>20</height>
                 </size>
                </property>
@@ -4369,7 +4461,7 @@
               </widget>
              </item>
              <item>
-              <widget class="QSlider" name="horizontalSlider_min_priceByEarnings_2">
+              <widget class="QSlider" name="horizontalSlider_min_priceByEarnings_4">
                <property name="minimumSize">
                 <size>
                  <width>65</width>
@@ -4378,7 +4470,7 @@
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>65</width>
+                 <width>120</width>
                  <height>10</height>
                 </size>
                </property>
@@ -4394,12 +4486,12 @@
               </widget>
              </item>
              <item>
-              <spacer name="horizontalSpacer_priceByEarnings2_2">
+              <spacer name="horizontalSpacer_priceByEarnings2_4">
                <property name="orientation">
                 <enum>Qt::Horizontal</enum>
                </property>
                <property name="sizeType">
-                <enum>QSizePolicy::Fixed</enum>
+                <enum>QSizePolicy::Minimum</enum>
                </property>
                <property name="sizeHint" stdset="0">
                 <size>
@@ -4410,7 +4502,7 @@
               </spacer>
              </item>
              <item>
-              <widget class="QLabel" name="label_max_priceByEarnings_2">
+              <widget class="QLabel" name="label_max_priceByEarnings_4">
                <property name="minimumSize">
                 <size>
                  <width>30</width>
@@ -4419,7 +4511,7 @@
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>30</width>
+                 <width>35</width>
                  <height>20</height>
                 </size>
                </property>
@@ -4432,7 +4524,7 @@
               </widget>
              </item>
              <item>
-              <widget class="QLineEdit" name="lineEdit_max_priceByEarnings_2">
+              <widget class="QLineEdit" name="lineEdit_max_priceByEarnings_4">
                <property name="minimumSize">
                 <size>
                  <width>35</width>
@@ -4441,7 +4533,7 @@
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>35</width>
+                 <width>40</width>
                  <height>20</height>
                 </size>
                </property>
@@ -4454,7 +4546,7 @@
               </widget>
              </item>
              <item>
-              <widget class="QSlider" name="horizontalSlider_max_priceByEarnings_2">
+              <widget class="QSlider" name="horizontalSlider_max_priceByEarnings_4">
                <property name="minimumSize">
                 <size>
                  <width>65</width>
@@ -4463,7 +4555,7 @@
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>65</width>
+                 <width>120</width>
                  <height>10</height>
                 </size>
                </property>
@@ -4487,15 +4579,15 @@
             </layout>
            </item>
            <item>
-            <layout class="QHBoxLayout" name="horizontalLayout_priceByBook_2">
+            <layout class="QHBoxLayout" name="horizontalLayout_priceByBook_4">
              <property name="sizeConstraint">
               <enum>QLayout::SetDefaultConstraint</enum>
              </property>
              <item>
-              <widget class="QCheckBox" name="checkBox_priceByBook_2">
+              <widget class="QCheckBox" name="checkBox_priceByBook_4">
                <property name="minimumSize">
                 <size>
-                 <width>140</width>
+                 <width>130</width>
                  <height>16</height>
                 </size>
                </property>
@@ -4511,12 +4603,12 @@
               </widget>
              </item>
              <item>
-              <spacer name="horizontalSpacer_priceByBook1_2">
+              <spacer name="horizontalSpacer_priceByBook1_4">
                <property name="orientation">
                 <enum>Qt::Horizontal</enum>
                </property>
                <property name="sizeType">
-                <enum>QSizePolicy::Fixed</enum>
+                <enum>QSizePolicy::Minimum</enum>
                </property>
                <property name="sizeHint" stdset="0">
                 <size>
@@ -4527,7 +4619,7 @@
               </spacer>
              </item>
              <item>
-              <widget class="QLabel" name="label_min_priceByBook_2">
+              <widget class="QLabel" name="label_min_priceByBook_4">
                <property name="minimumSize">
                 <size>
                  <width>25</width>
@@ -4536,7 +4628,7 @@
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>25</width>
+                 <width>35</width>
                  <height>20</height>
                 </size>
                </property>
@@ -4549,7 +4641,7 @@
               </widget>
              </item>
              <item>
-              <widget class="QLineEdit" name="lineEdit_min_priceByBook_2">
+              <widget class="QLineEdit" name="lineEdit_min_priceByBook_4">
                <property name="minimumSize">
                 <size>
                  <width>35</width>
@@ -4558,7 +4650,7 @@
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>35</width>
+                 <width>40</width>
                  <height>20</height>
                 </size>
                </property>
@@ -4577,7 +4669,7 @@
               </widget>
              </item>
              <item>
-              <widget class="QSlider" name="horizontalSlider_min_priceByBook_2">
+              <widget class="QSlider" name="horizontalSlider_min_priceByBook_4">
                <property name="minimumSize">
                 <size>
                  <width>65</width>
@@ -4586,7 +4678,7 @@
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>65</width>
+                 <width>120</width>
                  <height>10</height>
                 </size>
                </property>
@@ -4602,12 +4694,12 @@
               </widget>
              </item>
              <item>
-              <spacer name="horizontalSpacer_priceByBook2_2">
+              <spacer name="horizontalSpacer_priceByBook2_4">
                <property name="orientation">
                 <enum>Qt::Horizontal</enum>
                </property>
                <property name="sizeType">
-                <enum>QSizePolicy::Fixed</enum>
+                <enum>QSizePolicy::Minimum</enum>
                </property>
                <property name="sizeHint" stdset="0">
                 <size>
@@ -4618,7 +4710,7 @@
               </spacer>
              </item>
              <item>
-              <widget class="QLabel" name="label_max_priceByBook_2">
+              <widget class="QLabel" name="label_max_priceByBook_4">
                <property name="minimumSize">
                 <size>
                  <width>30</width>
@@ -4627,7 +4719,7 @@
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>30</width>
+                 <width>35</width>
                  <height>20</height>
                 </size>
                </property>
@@ -4640,7 +4732,7 @@
               </widget>
              </item>
              <item>
-              <widget class="QLineEdit" name="lineEdit_max_priceByBook_2">
+              <widget class="QLineEdit" name="lineEdit_max_priceByBook_4">
                <property name="minimumSize">
                 <size>
                  <width>35</width>
@@ -4649,7 +4741,7 @@
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>35</width>
+                 <width>40</width>
                  <height>20</height>
                 </size>
                </property>
@@ -4662,7 +4754,7 @@
               </widget>
              </item>
              <item>
-              <widget class="QSlider" name="horizontalSlider_max_priceByBook_2">
+              <widget class="QSlider" name="horizontalSlider_max_priceByBook_4">
                <property name="minimumSize">
                 <size>
                  <width>65</width>
@@ -4671,7 +4763,7 @@
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>65</width>
+                 <width>120</width>
                  <height>10</height>
                 </size>
                </property>
@@ -4695,15 +4787,15 @@
             </layout>
            </item>
            <item>
-            <layout class="QHBoxLayout" name="horizontalLayout_priceBySales_2">
+            <layout class="QHBoxLayout" name="horizontalLayout_priceBySales_4">
              <property name="sizeConstraint">
               <enum>QLayout::SetDefaultConstraint</enum>
              </property>
              <item>
-              <widget class="QCheckBox" name="checkBox_priceBySales_2">
+              <widget class="QCheckBox" name="checkBox_priceBySales_4">
                <property name="minimumSize">
                 <size>
-                 <width>140</width>
+                 <width>130</width>
                  <height>16</height>
                 </size>
                </property>
@@ -4719,12 +4811,12 @@
               </widget>
              </item>
              <item>
-              <spacer name="horizontalSpacer_priceBySales1_2">
+              <spacer name="horizontalSpacer_priceBySales1_4">
                <property name="orientation">
                 <enum>Qt::Horizontal</enum>
                </property>
                <property name="sizeType">
-                <enum>QSizePolicy::Fixed</enum>
+                <enum>QSizePolicy::Minimum</enum>
                </property>
                <property name="sizeHint" stdset="0">
                 <size>
@@ -4735,7 +4827,7 @@
               </spacer>
              </item>
              <item>
-              <widget class="QLabel" name="label_min_priceBySales_2">
+              <widget class="QLabel" name="label_min_priceBySales_4">
                <property name="minimumSize">
                 <size>
                  <width>25</width>
@@ -4744,7 +4836,7 @@
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>25</width>
+                 <width>35</width>
                  <height>20</height>
                 </size>
                </property>
@@ -4757,7 +4849,7 @@
               </widget>
              </item>
              <item>
-              <widget class="QLineEdit" name="lineEdit_min_priceBySales_2">
+              <widget class="QLineEdit" name="lineEdit_min_priceBySales_4">
                <property name="minimumSize">
                 <size>
                  <width>35</width>
@@ -4766,7 +4858,7 @@
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>35</width>
+                 <width>40</width>
                  <height>20</height>
                 </size>
                </property>
@@ -4785,7 +4877,7 @@
               </widget>
              </item>
              <item>
-              <widget class="QSlider" name="horizontalSlider_min_priceBySales_2">
+              <widget class="QSlider" name="horizontalSlider_min_priceBySales_4">
                <property name="minimumSize">
                 <size>
                  <width>65</width>
@@ -4794,7 +4886,7 @@
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>65</width>
+                 <width>120</width>
                  <height>10</height>
                 </size>
                </property>
@@ -4810,12 +4902,12 @@
               </widget>
              </item>
              <item>
-              <spacer name="horizontalSpacer_priceBySales2_2">
+              <spacer name="horizontalSpacer_priceBySales2_4">
                <property name="orientation">
                 <enum>Qt::Horizontal</enum>
                </property>
                <property name="sizeType">
-                <enum>QSizePolicy::Fixed</enum>
+                <enum>QSizePolicy::Minimum</enum>
                </property>
                <property name="sizeHint" stdset="0">
                 <size>
@@ -4826,7 +4918,7 @@
               </spacer>
              </item>
              <item>
-              <widget class="QLabel" name="label_max_priceBySales_2">
+              <widget class="QLabel" name="label_max_priceBySales_4">
                <property name="minimumSize">
                 <size>
                  <width>30</width>
@@ -4835,7 +4927,7 @@
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>30</width>
+                 <width>35</width>
                  <height>20</height>
                 </size>
                </property>
@@ -4848,7 +4940,7 @@
               </widget>
              </item>
              <item>
-              <widget class="QLineEdit" name="lineEdit_max_priceBySales_2">
+              <widget class="QLineEdit" name="lineEdit_max_priceBySales_4">
                <property name="minimumSize">
                 <size>
                  <width>35</width>
@@ -4857,7 +4949,7 @@
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>35</width>
+                 <width>40</width>
                  <height>20</height>
                 </size>
                </property>
@@ -4870,7 +4962,7 @@
               </widget>
              </item>
              <item>
-              <widget class="QSlider" name="horizontalSlider_max_priceBySales_2">
+              <widget class="QSlider" name="horizontalSlider_max_priceBySales_4">
                <property name="minimumSize">
                 <size>
                  <width>65</width>
@@ -4879,7 +4971,7 @@
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>65</width>
+                 <width>120</width>
                  <height>10</height>
                 </size>
                </property>
@@ -4903,15 +4995,15 @@
             </layout>
            </item>
            <item>
-            <layout class="QHBoxLayout" name="horizontalLayout_priceByCashFlow_2">
+            <layout class="QHBoxLayout" name="horizontalLayout_priceByCashFlow_4">
              <property name="sizeConstraint">
               <enum>QLayout::SetDefaultConstraint</enum>
              </property>
              <item>
-              <widget class="QCheckBox" name="checkBox_priceByCashFlow_2">
+              <widget class="QCheckBox" name="checkBox_priceByCashFlow_4">
                <property name="minimumSize">
                 <size>
-                 <width>140</width>
+                 <width>130</width>
                  <height>16</height>
                 </size>
                </property>
@@ -4927,12 +5019,12 @@
               </widget>
              </item>
              <item>
-              <spacer name="horizontalSpacer_priceByCashFlow1_2">
+              <spacer name="horizontalSpacer_priceByCashFlow1_4">
                <property name="orientation">
                 <enum>Qt::Horizontal</enum>
                </property>
                <property name="sizeType">
-                <enum>QSizePolicy::Fixed</enum>
+                <enum>QSizePolicy::Minimum</enum>
                </property>
                <property name="sizeHint" stdset="0">
                 <size>
@@ -4943,7 +5035,7 @@
               </spacer>
              </item>
              <item>
-              <widget class="QLabel" name="label_min_priceByCashFlow_2">
+              <widget class="QLabel" name="label_min_priceByCashFlow_4">
                <property name="minimumSize">
                 <size>
                  <width>25</width>
@@ -4952,7 +5044,7 @@
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>25</width>
+                 <width>35</width>
                  <height>20</height>
                 </size>
                </property>
@@ -4965,7 +5057,7 @@
               </widget>
              </item>
              <item>
-              <widget class="QLineEdit" name="lineEdit_min_priceByCashFlow_2">
+              <widget class="QLineEdit" name="lineEdit_min_priceByCashFlow_4">
                <property name="minimumSize">
                 <size>
                  <width>35</width>
@@ -4974,7 +5066,7 @@
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>35</width>
+                 <width>40</width>
                  <height>20</height>
                 </size>
                </property>
@@ -4993,7 +5085,7 @@
               </widget>
              </item>
              <item>
-              <widget class="QSlider" name="horizontalSlider_min_priceByCashFlow_2">
+              <widget class="QSlider" name="horizontalSlider_min_priceByCashFlow_4">
                <property name="minimumSize">
                 <size>
                  <width>65</width>
@@ -5002,7 +5094,7 @@
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>65</width>
+                 <width>120</width>
                  <height>10</height>
                 </size>
                </property>
@@ -5018,12 +5110,12 @@
               </widget>
              </item>
              <item>
-              <spacer name="horizontalSpacer_priceByCashFlow2_2">
+              <spacer name="horizontalSpacer_priceByCashFlow2_4">
                <property name="orientation">
                 <enum>Qt::Horizontal</enum>
                </property>
                <property name="sizeType">
-                <enum>QSizePolicy::Fixed</enum>
+                <enum>QSizePolicy::Minimum</enum>
                </property>
                <property name="sizeHint" stdset="0">
                 <size>
@@ -5034,7 +5126,7 @@
               </spacer>
              </item>
              <item>
-              <widget class="QLabel" name="label_max_priceByCashFlow_2">
+              <widget class="QLabel" name="label_max_priceByCashFlow_4">
                <property name="minimumSize">
                 <size>
                  <width>30</width>
@@ -5043,7 +5135,7 @@
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>30</width>
+                 <width>35</width>
                  <height>20</height>
                 </size>
                </property>
@@ -5056,7 +5148,7 @@
               </widget>
              </item>
              <item>
-              <widget class="QLineEdit" name="lineEdit_max_priceByCashFlow_2">
+              <widget class="QLineEdit" name="lineEdit_max_priceByCashFlow_4">
                <property name="minimumSize">
                 <size>
                  <width>35</width>
@@ -5065,7 +5157,7 @@
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>35</width>
+                 <width>40</width>
                  <height>20</height>
                 </size>
                </property>
@@ -5078,7 +5170,7 @@
               </widget>
              </item>
              <item>
-              <widget class="QSlider" name="horizontalSlider_max_priceByCashFlow_2">
+              <widget class="QSlider" name="horizontalSlider_max_priceByCashFlow_4">
                <property name="minimumSize">
                 <size>
                  <width>65</width>
@@ -5087,7 +5179,7 @@
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>65</width>
+                 <width>120</width>
                  <height>10</height>
                 </size>
                </property>
@@ -5113,12 +5205,12 @@
           </layout>
          </item>
          <item>
-          <spacer name="horizontalSpacer2_2">
+          <spacer name="horizontalSpacer1_12">
            <property name="orientation">
             <enum>Qt::Horizontal</enum>
            </property>
            <property name="sizeType">
-            <enum>QSizePolicy::Fixed</enum>
+            <enum>QSizePolicy::Minimum</enum>
            </property>
            <property name="sizeHint" stdset="0">
             <size>
@@ -5129,9 +5221,9 @@
           </spacer>
          </item>
          <item>
-          <layout class="QVBoxLayout" name="verticalLayout_button_2">
+          <layout class="QVBoxLayout" name="verticalLayout_button_4">
            <item>
-            <spacer name="verticalSpacer_topBtn_2">
+            <spacer name="verticalSpacer_topBtn_4">
              <property name="orientation">
               <enum>Qt::Vertical</enum>
              </property>
@@ -5147,17 +5239,17 @@
             </spacer>
            </item>
            <item>
-            <widget class="QPushButton" name="btn_selectAllCriteria_2">
+            <widget class="QPushButton" name="btn_selectAllCriteria_4">
              <property name="minimumSize">
               <size>
                <width>145</width>
-               <height>40</height>
+               <height>30</height>
               </size>
              </property>
              <property name="maximumSize">
               <size>
                <width>145</width>
-               <height>40</height>
+               <height>30</height>
               </size>
              </property>
              <property name="text">
@@ -5166,7 +5258,7 @@
             </widget>
            </item>
            <item>
-            <spacer name="verticalSpacer_betweenBtn_2">
+            <spacer name="verticalSpacer_betweenBtn_4">
              <property name="orientation">
               <enum>Qt::Vertical</enum>
              </property>
@@ -5182,17 +5274,17 @@
             </spacer>
            </item>
            <item>
-            <widget class="QPushButton" name="btn_deselectAllCriteria_2">
+            <widget class="QPushButton" name="btn_deselectAllCriteria_4">
              <property name="minimumSize">
               <size>
                <width>145</width>
-               <height>40</height>
+               <height>30</height>
               </size>
              </property>
              <property name="maximumSize">
               <size>
                <width>145</width>
-               <height>40</height>
+               <height>30</height>
               </size>
              </property>
              <property name="text">
@@ -5201,7 +5293,7 @@
             </widget>
            </item>
            <item>
-            <spacer name="verticalSpacer_bottomBtn_2">
+            <spacer name="verticalSpacer_bottomBtn_4">
              <property name="orientation">
               <enum>Qt::Vertical</enum>
              </property>
@@ -5228,11 +5320,24 @@
      <x>0</x>
      <y>0</y>
      <width>1280</width>
-     <height>17</height>
+     <height>31</height>
     </rect>
    </property>
   </widget>
-  <widget class="QStatusBar" name="statusbar"/>
+  <widget class="QStatusBar" name="statusbar">
+   <property name="minimumSize">
+    <size>
+     <width>1280</width>
+     <height>15</height>
+    </size>
+   </property>
+   <property name="maximumSize">
+    <size>
+     <width>1280</width>
+     <height>15</height>
+    </size>
+   </property>
+  </widget>
  </widget>
  <tabstops>
   <tabstop>tab</tabstop>
