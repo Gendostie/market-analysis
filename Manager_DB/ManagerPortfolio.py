@@ -1,5 +1,6 @@
 #!/usr/bin/python
-from Manager_DB.DbConnection import DBConnection
+import sys
+from DbConnection import DBConnection
 
 HOST = '127.0.0.1'
 USER = 'root'
@@ -14,17 +15,21 @@ def get_id_portfolio(name, db=None):
     :type name: str
     :param db: if we have already connexion in other function who cal this function
     :type db: DBConnection
-    :return: result in tuple of tuple
-    :rtype: tuple(tuple)
+    :return: result in list of dict
+    :rtype: list[dict]
     """
     if not name:
         raise ValueError('Name portfolio is None.')
 
-    if not db:
+    if not db or type(db) is not DBConnection:
         db = DBConnection(HOST, USER, PASSWORD, DATABASE)
 
     query = """SELECT id_portfolio FROM portfolio WHERE name = %(name)s"""
-    return db.select_in_db(query, {'name': name})
+    res = db.select_in_db(query, {'name': name})
+    return_value = []
+    for id_portfolio in res:
+        return_value.append({'id_portfolio': id_portfolio})
+    return return_value
 
 
 def get_name_portfolio_name(id_portfolio, db=None):
@@ -34,17 +39,21 @@ def get_name_portfolio_name(id_portfolio, db=None):
     :type id_portfolio: int
     :param db: if we have already connexion in other function who cal this function
     :type db: DBConnection
-    :return: result in tuple of tuple
-    :rtype: tuple(tuple)
+    :return: result in list of dict
+    :rtype: list[dict]
     """
     if not id_portfolio:
         raise ValueError('ID portfolio is None.')
 
-    if not db:
+    if not db or type(db) is not DBConnection:
         db = DBConnection(HOST, USER, PASSWORD, DATABASE)
 
     query = """SELECT name FROM portfolio WHERE id_portfolio = %(id)s"""
-    return db.select_in_db(query, {'id': id_portfolio})
+    res = db.select_in_db(query, {'id': id_portfolio})
+    return_value = []
+    for name in res:
+        return_value.append({'name': name})
+    return return_value
 
 
 def get_transaction_portfolio(id_portfolio, symbol_company=None, db=None):
@@ -56,13 +65,13 @@ def get_transaction_portfolio(id_portfolio, symbol_company=None, db=None):
     :type symbol_company: str
     :param db: if we have already connexion in other function who cal this function
     :type db: DBConnection
-    :return: result in tuple of tuple
-    :rtype: tuple(tuple)
+    :return: result in list of dict
+    :rtype: list[dict]
     """
     if not id_portfolio:
         raise ValueError('ID portfolio is None.')
 
-    if not db:
+    if not db or type(db) is not DBConnection:
         db = DBConnection(HOST, USER, PASSWORD, DATABASE)
 
     query = """SELECT id_transaction, id_symbol, quantity, value_current, transaction_date, id_simulation
@@ -71,7 +80,13 @@ def get_transaction_portfolio(id_portfolio, symbol_company=None, db=None):
     if symbol_company:
         query += "AND id_symbol = %(id_symbol)s"
         params['symbol_company'] = symbol_company
-    return db.select_in_db(query, params)
+    res = db.select_in_db(query, params)
+    return_value = []
+    for id_transaction, id_symbol, quantity, value_current, transaction_date, id_simulation in res:
+        return_value.append({'id_transaction': id_transaction, 'id_symbol': id_symbol, 'quantity': quantity,
+                             'value_current': value_current, 'transaction_date': transaction_date,
+                             'id_simulation': id_simulation})
+    return return_value
 
 
 def get_simulation_portfolio(id_portfolio, db=None):
@@ -81,19 +96,23 @@ def get_simulation_portfolio(id_portfolio, db=None):
     :type id_portfolio: int
     :param db: if we have already connexion in other function who cal this function
     :type db: DBConnection
-    :return: result in tuple of tuple
-    :rtype: tuple(tuple)
+    :return: result in list of dict
+    :rtype: list[dict]
     """
     if not id_portfolio:
         raise ValueError('ID portfolio is None.')
 
-    if not db:
+    if not db or type(db) is not DBConnection:
         db = DBConnection(HOST, USER, PASSWORD, DATABASE)
 
     query = """SELECT id_simulation, parameters, results
                 FROM simulation WHERE id_portfolio = %(id_portfolio)s"""
     params = {'id_portfolio': id_portfolio}
-    return db.select_in_db(query, params)
+    res = db.select_in_db(query, params)
+    return_value = []
+    for id_simulation, parameters, results in res:
+        return_value.append({'id_simulation': id_simulation, 'parameters': parameters, 'results': results})
+    return return_value
 
 
 def create_portfolio(name=None, db=None):
@@ -105,7 +124,7 @@ def create_portfolio(name=None, db=None):
     :return: id of portfolio
     :rtype int
     """
-    if not db:
+    if not db or type(db) is not DBConnection:
         db = DBConnection(HOST, USER, PASSWORD, DATABASE)
 
     if not name:
@@ -117,8 +136,7 @@ def create_portfolio(name=None, db=None):
     query = """INSERT INTO portfolio (name) VALUES (%(name)s)"""
     db.modified_db(query, {'name': name})
     # get id portfolio
-    query = """SELECT id_portfolio FROM portfolio WHERE name = %(name)s"""
-    return db.select_in_db(query, {'name': name})[0][0] # if we have more one with the same name, we take the first
+    return get_id_portfolio(name, db)
 
 
 def insert_transaction_to_db(id_portfolio, symbol_company, quantity, value_current, transaction_date,
@@ -147,7 +165,7 @@ def insert_transaction_to_db(id_portfolio, symbol_company, quantity, value_curre
     if not symbol_company:
         raise ValueError("Need to symbol_company valid to create transaction. symbol_company = %s" % symbol_company)
 
-    if not db:
+    if not db or type(db) is not DBConnection:
         db = DBConnection(HOST, USER, PASSWORD, DATABASE)
 
     query = """INSERT INTO transaction (id_portfolio, id_symbol, quantity, value_current,
@@ -174,7 +192,7 @@ def start_simulation(dict_params, id_portfolio=None, db=None):
     :type db: DBConnection
     :return:
     """
-    if not db:
+    if not db or type(db) is not DBConnection:
         db = DBConnection(HOST, USER, PASSWORD, DATABASE)
     if not id_portfolio:
         id_portfolio = create_portfolio()
@@ -190,17 +208,21 @@ def get_info_simulation(id_simulation, db=None):
     :param db: if we have already connexion in other function who cal this function
     :type db: DBConnection
     :return: information on simulation
-    :rtype: tuple(tuple())
+    :rtype: list[dict]
     """
     if not id_simulation:
         raise ValueError('ID simulation is None.')
 
-    if not db:
+    if not db or type(db) is not DBConnection:
         db = DBConnection(HOST, USER, PASSWORD, DATABASE)
 
     query = """SELECT id_portfolio, parameters, results
                 FROM simulation WHERE id_simulation = %(id_simulation)s"""
-    return db.select_in_db(query, {'id_simulation': id_simulation})
+    res = db.select_in_db(query, {'id_simulation': id_simulation})
+    return_value = []
+    for id_portfolio, parameters, results in res:
+        return_value.append({'id_portfolio': id_portfolio, 'parameters': parameters, 'results': results})
+    return return_value
 
 
 def get_transaction_simulation(id_simulation, db=None):
@@ -211,14 +233,23 @@ def get_transaction_simulation(id_simulation, db=None):
     :param db: if we have already connexion in other function who cal this function
     :type db: DBConnection
     :return: transaction of simulation
-    :rtype: tuple(tuple())
+    :rtype: list[dict]
     """
     if not id_simulation:
         raise ValueError('ID simulation is None.')
 
-    if not db:
+    if not db or type(db) is not DBConnection:
         db = DBConnection(HOST, USER, PASSWORD, DATABASE)
 
     query = """SELECT id_transaction, id_portfolio, id_symbol, quantity, value_current, transaction_date
                 FROM "transaction" WHERE id_simulation = %(id_simulation)s"""
-    return db.select_in_db(query, {'id_simulation': id_simulation})
+    res = db.select_in_db(query, {'id_simulation': id_simulation})
+    return_value = []
+    for id_transaction, id_portfolio, id_symbol, quantity, value_current, transaction_date in res:
+        return_value.append({'id_transaction': id_transaction, 'id_portfolio': id_portfolio, 'id_symbol': id_symbol,
+                             'quantity': quantity, 'value_current': value_current, 'transaction_date': transaction_date})
+    return return_value
+
+if __name__ == '__main__':
+    if len(sys.argv) > 1:
+        print(locals()[sys.argv[1]](sys.argv[2:]))

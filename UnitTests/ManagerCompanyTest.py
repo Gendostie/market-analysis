@@ -2,9 +2,9 @@
 import unittest
 from copy import deepcopy
 
-from Manager_DB.DbConnection import DBConnection
-from Manager_DB import ManagerCompany
-from UnitTests import ManagerDbTest
+from DbConnection import DBConnection
+import ManagerCompany
+import ManagerDbTest
 
 HOST = '127.0.0.1'
 USER = 'root'

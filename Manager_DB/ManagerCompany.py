@@ -1,7 +1,8 @@
 #!/usr/bin/python
+# -*- coding: utf-8 -*-
 import finsymbols
-
-from Manager_DB.DbConnection import DBConnection
+import sys
+from DbConnection import DBConnection
 
 HOST = '127.0.0.1'
 USER = 'root'
@@ -14,10 +15,11 @@ def get_snp500(db=None):
     Get company with flag is_in_snp500 in db
     :param db: if we have already connexion in other function who cal this function
     :type db: DBConnection
-    :return: result in tuple of tuple, ex: (('Alphabet Inc Class A', 'GOOGL', '\x01', None),)
-    :rtype: tuple(tuple)
+    :return: result in list of dict,
+        ex: [{'symbol': 'GOOGL', 'last_update_historic': None, 'name': 'Alphabet Inc Class A', 'is_in_snp500': '\\x01'}]
+    :rtype: list[dict]
     """
-    if not db:
+    if not db or type(db) is not DBConnection:
         db = DBConnection(HOST, USER, PASSWORD, DATABASE)
     query = """SELECT name, symbol, last_update_historic
                 FROM company WHERE is_in_snp500 = 1"""
@@ -43,7 +45,7 @@ def add_company_to_db(symbol, name, db=None):
     if not symbol or not name:
         raise ValueError('Name or symbol is None. name: %(name)s ; symbol: %(symbol)s ' % locals())
 
-    if not db:
+    if not db or type(db) is not DBConnection:
         db = DBConnection(HOST, USER, PASSWORD, DATABASE)
     # Add new company not in table and update name and flag snp500 if already in table
     query = """INSERT INTO company (name, symbol, is_in_snp500) VALUES (%(name)s, UPPER(%(symbol)s), 1)
@@ -58,13 +60,13 @@ def get_company_by_symbol(symbol, db=None):
     :type symbol: str
     :param db: if we have already connexion in other function who cal this function
     :type db: DBConnection
-    :return: return tuple of company who correspond to symbol
-    :rtype: tuple(tuple)
+    :return: return list of dict of company who correspond to symbol
+    :rtype: list[dict]
     """
     if not symbol:
         raise ValueError('Symbol company is None.')
 
-    if not db:
+    if not db or type(db) is not DBConnection:
         db = DBConnection(HOST, USER, PASSWORD, DATABASE)
     query = """SELECT name, symbol, is_in_snp500, last_update_historic
                 FROM company WHERE symbol = %(symbol)s"""
@@ -83,13 +85,13 @@ def get_company_by_name(name, db=None):
     :type name: str
     :param db: if we have already connexion in other function who cal this function
     :type db: DBConnection
-    :return: return tuple of company who correspond to name
-    :rtype: tuple(tuple)
+    :return: return list of dict of company who correspond to name
+    :rtype: list[dict]
     """
     if not name:
         raise ValueError('Name company is None.')
 
-    if not db:
+    if not db or type(db) is not DBConnection:
         db = DBConnection(HOST, USER, PASSWORD, DATABASE)
     query = """SELECT name, symbol, is_in_snp500, last_update_historic
                 FROM company WHERE name = %(name)s"""
@@ -101,6 +103,58 @@ def get_company_by_name(name, db=None):
     return return_value
 
 
+def get_historic_value_company(symbol, db=None):
+    """
+    Get historic value of a company
+    :param symbol: symbol of a company we search
+    :type symbol: str
+    :param db: if we have already connexion in other function who cal this function
+    :type db: DBConnection
+    :return: return list of dict of historic value a company who correspond to symbol
+    :rtype: list[dict]
+    """
+    if not symbol:
+        raise ValueError('Symbol company is None.')
+
+    if not db or type(db) is not DBConnection:
+        db = DBConnection(HOST, USER, PASSWORD, DATABASE)
+    query = """SELECT c.name, c.symbol, date_historic_value, revenu_usd_mil, gross_margin_pct,
+                net_income_usd_mil, earning_per_share_usd, dividends_usd, book_value_per_share_usd,
+                free_cash_flow_per_share_usd
+                FROM company c left join historic_value hv on c.symbol = hv.id_symbol
+                WHERE c.symbol = %(symbol)s"""
+    res = db.select_in_db(query, {'symbol': symbol})
+    return_value = []
+    for company_name, symbol, datetime_value, revenue, gross_margin, income, earning, dividends, book_value, cash_flow in res:
+        return_value.append({'company_name': company_name, 'symbol': symbol, 'datetime_value': datetime_value, 'revenue': revenue,
+                             'gross_margin': gross_margin, 'income': income, 'earning': earning, 'dividends': dividends,
+                             'book_value': book_value, 'cash_flow': cash_flow})
+    return return_value
+
+
+def get_historic_value_all_company(db=None):
+    """
+    Get historic value of all company
+    :param db: if we have already connexion in other function who cal this function
+    :type db: DBConnection
+    :return: return list of dict
+    :rtype: list[dict]
+    """
+    if not db or type(db) is not DBConnection:
+        db = DBConnection(HOST, USER, PASSWORD, DATABASE)
+    query = """SELECT c.name, c.symbol, date_historic_value, revenu_usd_mil, gross_margin_pct,
+                net_income_usd_mil, earning_per_share_usd, dividends_usd, book_value_per_share_usd,
+                free_cash_flow_per_share_usd
+                FROM company c left join historic_value hv on c.symbol = hv.id_symbol"""
+    res = db.select_in_db(query)
+    return_value = []
+    for company_name, symbol, datetime_value, revenue, gross_margin, income, earning, dividends, book_value, cash_flow in res:
+        return_value.append({'company_name': company_name, 'symbol': symbol, 'datetime_value': datetime_value, 'revenue': revenue,
+                             'gross_margin': gross_margin, 'income': income, 'earning': earning, 'dividends': dividends,
+                             'book_value': book_value, 'cash_flow': cash_flow})
+    return return_value
+
+
 def update_snp550_to_db(db=None):
     """
     Update data of table company to check if we have new company and remove company not in new list s&p500
@@ -109,7 +163,7 @@ def update_snp550_to_db(db=None):
     :return: number row affected
     :rtype: int
     """
-    if not db:
+    if not db or type(db) is not DBConnection:
         db = DBConnection(HOST, USER, PASSWORD, DATABASE)
     # Set all company in table for to re-init to 0 flag is_in_snp500
     query = """UPDATE company SET is_in_snp500 = 0"""
@@ -141,7 +195,7 @@ def insert_daily_value_to_db(symbol_company, list_values, db=None):
     if len(list_values) < 1:
         raise ValueError('List of values is empty. %s' % list_values)
 
-    if not db:
+    if not db or type(db) is not DBConnection:
         db = DBConnection(HOST, USER, PASSWORD, DATABASE)
 
     query = """INSERT INTO daily_value (date_daily_value, id_symbol, stock_value, 52w_price_change)
@@ -179,7 +233,7 @@ def insert_historic_value_to_db(symbol_company, list_values, db=None):
     if len(list_values) < 1:
         raise ValueError('List of values is empty. %s' % list_values)
 
-    if not db:
+    if not db or type(db) is not DBConnection:
         db = DBConnection(HOST, USER, PASSWORD, DATABASE)
 
     query = """INSERT INTO historic_value (date_historic_value, id_symbol, revenu_usd_mil,
@@ -205,3 +259,7 @@ def insert_historic_value_to_db(symbol_company, list_values, db=None):
         db.modified_db(query, params)
 
     return 0
+
+if __name__ == '__main__':
+    if len(sys.argv) > 1:
+        print(locals()[sys.argv[1]](sys.argv[2:]))
