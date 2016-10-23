@@ -64,35 +64,6 @@ class ManagerMainWindow(Ui_MainWindow):
                                                          widget_cb)
         self.tableWidget_stockScreener.setSortingEnabled(sorting_enable)
 
-    def create_connexion_signal_slot(self):
-        self.btn_stockScreener_addPortfolio.clicked\
-            .connect(sort_column_checkbox_table_widget_stock_screener)
-
-
-def sort_column_checkbox_table_widget_stock_screener():
-    table_widget = ui.tableWidget_stockScreener
-    # sort_order = 0 => ascending ; Qt::Unchecked = 0  Qt::Checked = 2  Qt::PartiallyChecked = 1
-    sort_order = table_widget.horizontalHeader().sortIndicatorOrder()
-    sort_indicator = table_widget.horizontalHeader().sortIndicatorSection()
-    nb_column = table_widget.columnCount()
-    # put value of same scale of checkbox state
-    sort_order = 0 if sort_order == 1 or sort_indicator != nb_column - 1 else 2
-    if table_widget.rowCount() > 0:
-        list_row_remove = []
-        for idx in range(table_widget.rowCount()):
-            # get checkbox widget
-            cb = table_widget.cellWidget(idx, nb_column - 1).layout().itemAt(0).widget()
-            # ascending = Unchecked to Checked ; descending = Checked to Unchecked
-            if cb.checkState() != sort_order:
-                row = HelperFunctionQt.take_row_table_widget(table_widget, idx)
-                HelperFunctionQt.set_row_table_widget(table_widget, row)
-                list_row_remove.append(idx)
-        list_row_remove.reverse()
-        for idx in list_row_remove:
-            table_widget.removeRow(idx)
-    sort_order = 1 if sort_order == 2 else 0  # put value of sort state
-    table_widget.horizontalHeader().setSortIndicator(nb_column - 1, sort_order)  # set indicator column sort
-
 
 if __name__ == "__main__":
     import sys
@@ -103,7 +74,6 @@ if __name__ == "__main__":
 
     ui.setup_size_fixed()
     ui.create_data_table_stock_screener()
-    ui.create_connexion_signal_slot()
 
     MainWindow.show()
     sys.exit(app.exec_())
