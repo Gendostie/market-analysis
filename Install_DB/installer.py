@@ -31,9 +31,11 @@ if not os.path.exists(config['path']['PATH_SNP500']):
 # TODO : Add a comment
 print_message('Fetching all the CSVs')
 init_data.get_all_csv(config['installer'].getboolean('INSTALL_FETCH_HISTO'),
-                      config['installer'].getboolean('INSTALL_FETCH_DAILY'))
+                      config['installer'].getboolean('INSTALL_FETCH_DAILY'),
+                      config['installer'].getboolean('INSTALL_FETCH_DIV'))
 
 # TODO : Add the CSVs that we can't fetch
 print_message('Updating the database with all the CSVs')
 init_data.set_up_all_with_csv(config['installer'].getboolean('INSTALL_SET_HISTO'),
-                              config['installer'].getboolean('INSTALL_SET_DAILY'))
+                              config['installer'].getboolean('INSTALL_SET_DAILY'),
+                              config['installer'].getboolean('INSTALL_SET_DIV'))

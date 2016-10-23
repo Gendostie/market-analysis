@@ -134,25 +134,16 @@ def insert_daily_value_to_db(symbol_company, list_values, db=None):
     if not db:
         db = DBConnection(HOST, USER, PASSWORD, DATABASE)
 
-    query = """INSERT INTO daily_value (date_daily_value, id_symbol, open_val, high, low, close_val, volume, adj_close)
-               VALUES (%(datetime_value)s, %(symbol_company)s, %(open_value)s, %(high_value)s, %(low_value)s,
-                        %(close_value)s, %(volume_value)s, %(adj_close_value)s)
+    query = """INSERT INTO daily_value (date_daily_value, id_symbol, close_val, adj_close)
+               VALUES (%(datetime_value)s, %(symbol_company)s, %(close_value)s, %(adj_close_value)s)
                ON DUPLICATE KEY UPDATE date_daily_value = %(datetime_value)s,
-                                       open_val = %(open_value)s,
-                                       high = %(high_value)s,
-                                       low = %(low_value)s,
                                        close_val = %(close_value)s,
-                                       volume = %(volume_value)s,
                                        adj_close = %(adj_close_value)s"""
 
     params = {'datetime_value': list_values[0],
               'symbol_company': symbol_company,
-              'open_value': list_values[1],
-              'high_value': list_values[2],
-              'low_value': list_values[3],
-              'close_value': list_values[4],
-              'volume_value': list_values[5],
-              'adj_close_value': list_values[6]}
+              'close_value': list_values[1],
+              'adj_close_value': list_values[2]}
     # TODO: check for multi-row to insert, maybe use connection.executemayny(query, list of tuple values)
     db.modified_db(query, params)
 
@@ -194,6 +185,26 @@ def insert_historic_value_to_db(symbol_company, list_values, db=None):
               'gross_margin': list_values[2], 'income': list_values[3], 'earning': list_values[4],
               'dividends': list_values[5],
               'book_value': list_values[6], 'cash_flow': list_values[7]}
+    # TODO: check for multi-row to insert, maybe use connection.executemany(query, list of tuple values)
+    db.modified_db(query, params)
+
+    return 0
+
+
+def insert_dividend_to_db(symbol_company, datetime, dividend, db=None):
+    if not symbol_company:
+        raise ValueError('Symbol company is None.')
+
+    if not db:
+        db = DBConnection(HOST, USER, PASSWORD, DATABASE)
+
+    query = """INSERT INTO dividends (symbol, date_dividend, dividend)
+               VALUES (%(symbol_value)s, %(datetime_value)s, %(dividend_value)s)
+               ON DUPLICATE KEY UPDATE date_dividend = %(datetime_value)s,
+                                       dividend = %(dividend_value)s"""
+    params = {'symbol_value': symbol_company,
+              'datetime_value': datetime,
+              'dividend_value': dividend}
     # TODO: check for multi-row to insert, maybe use connection.executemayny(query, list of tuple values)
     db.modified_db(query, params)
 

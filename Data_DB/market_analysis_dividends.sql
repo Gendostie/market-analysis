@@ -16,30 +16,29 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `daily_value`
+-- Table structure for table `dividends`
 --
 
-DROP TABLE IF EXISTS `daily_value`;
+DROP TABLE IF EXISTS `dividends`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `daily_value` (
-  `date_daily_value` datetime NOT NULL,
-  `id_symbol` varchar(10) NOT NULL,
-  `close_val` float DEFAULT '0',
-  `adj_close` float DEFAULT '0',
-  PRIMARY KEY (`date_daily_value`,`id_symbol`),
-  KEY `id_symbol_idx` (`id_symbol`),
-  CONSTRAINT `id_symbol_fk_daily_value` FOREIGN KEY (`id_symbol`) REFERENCES `company` (`symbol`) ON DELETE NO ACTION ON UPDATE NO ACTION
+CREATE TABLE `dividends` (
+  `symbol` varchar(10) NOT NULL,
+  `date_dividend` datetime NOT NULL,
+  `dividend` float DEFAULT '0',
+  PRIMARY KEY (`date_dividend`,`symbol`),
+  KEY `symbol_idx` (`symbol`),
+  CONSTRAINT `id_symbol_fk_dividends` FOREIGN KEY (`symbol`) REFERENCES `company` (`symbol`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `daily_value`
+-- Dumping data for table `company`
 --
 
-LOCK TABLES `daily_value` WRITE;
-/*!40000 ALTER TABLE `daily_value` DISABLE KEYS */;
-/*!40000 ALTER TABLE `daily_value` ENABLE KEYS */;
+LOCK TABLES `company` WRITE;
+/*!40000 ALTER TABLE `company` DISABLE KEYS */;
+/*!40000 ALTER TABLE `company` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 

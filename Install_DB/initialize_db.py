@@ -58,7 +58,8 @@ def create_db_mysql():
         query = ''
         for line in f:
             # exclude comments, line empty
-            if line[0:2] != '/*' and line[0:2] != '--' and line[0:2] != '\n':
+            if line[0:2] != '/*' and line[0:2] != '--' and line[0:2] != '\n' \
+                    and line[0:len('DROP TABLE')] != 'DROP TABLE':
                 query += line
         row_affected = 0
         # remove last ; for new_query empty to end
