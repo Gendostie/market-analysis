@@ -25,7 +25,7 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-void crreate_data_table_stock_screener(QTableWidget *tableWidget){
+void create_data_table_stock_screener(QTableWidget *tableWidget){
     int nb_row_init = 13;
 
     //TODO: change for call sql
@@ -35,8 +35,8 @@ void crreate_data_table_stock_screener(QTableWidget *tableWidget){
     l << "1231" << "1231" << "1231" << "1231" << "1231" << "1231" << "1231";
     list_company->append(l);
 
-    if (tableWidget->rowCount() < nb_row_init*1)
-            tableWidget->setRowCount(nb_row_init*1);
+    if (tableWidget->rowCount() < nb_row_init)
+            tableWidget->setRowCount(nb_row_init);
 
     const bool sorting_enabled = tableWidget->isSortingEnabled();
     tableWidget->setSortingEnabled(false);
