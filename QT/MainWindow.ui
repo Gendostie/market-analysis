@@ -85,7 +85,7 @@
        <property name="geometry">
         <rect>
          <x>0</x>
-         <y>-72</y>
+         <y>0</y>
          <width>1260</width>
          <height>250</height>
         </rect>
@@ -183,7 +183,7 @@
               </widget>
              </item>
              <item>
-              <widget class="QLineEdit" name="lineEdit_min_stockValue">
+              <widget class="QDoubleSpinBox" name="doubleSpinBox_min_stockValue">
                <property name="minimumSize">
                 <size>
                  <width>35</width>
@@ -196,17 +196,14 @@
                  <height>20</height>
                 </size>
                </property>
-               <property name="inputMask">
-                <string/>
-               </property>
-               <property name="text">
-                <string/>
-               </property>
-               <property name="maxLength">
-                <number>3</number>
-               </property>
                <property name="alignment">
                 <set>Qt::AlignCenter</set>
+               </property>
+               <property name="buttonSymbols">
+                <enum>QAbstractSpinBox::NoButtons</enum>
+               </property>
+               <property name="decimals">
+                <number>0</number>
                </property>
               </widget>
              </item>
@@ -274,7 +271,7 @@
               </widget>
              </item>
              <item>
-              <widget class="QLineEdit" name="lineEdit_max_stockValue">
+              <widget class="QDoubleSpinBox" name="doubleSpinBox_max_stockValue">
                <property name="minimumSize">
                 <size>
                  <width>35</width>
@@ -287,11 +284,17 @@
                  <height>20</height>
                 </size>
                </property>
-               <property name="maxLength">
-                <number>3</number>
-               </property>
                <property name="alignment">
                 <set>Qt::AlignCenter</set>
+               </property>
+               <property name="buttonSymbols">
+                <enum>QAbstractSpinBox::NoButtons</enum>
+               </property>
+               <property name="decimals">
+                <number>0</number>
+               </property>
+               <property name="value">
+                <double>100.000000000000000</double>
                </property>
               </widget>
              </item>
@@ -391,7 +394,7 @@
               </widget>
              </item>
              <item>
-              <widget class="QLineEdit" name="lineEdit_min_income">
+              <widget class="QDoubleSpinBox" name="doubleSpinBox_min_income">
                <property name="minimumSize">
                 <size>
                  <width>35</width>
@@ -404,17 +407,14 @@
                  <height>20</height>
                 </size>
                </property>
-               <property name="inputMask">
-                <string/>
-               </property>
-               <property name="text">
-                <string/>
-               </property>
-               <property name="maxLength">
-                <number>3</number>
-               </property>
                <property name="alignment">
                 <set>Qt::AlignCenter</set>
+               </property>
+               <property name="buttonSymbols">
+                <enum>QAbstractSpinBox::NoButtons</enum>
+               </property>
+               <property name="decimals">
+                <number>0</number>
                </property>
               </widget>
              </item>
@@ -482,7 +482,7 @@
               </widget>
              </item>
              <item>
-              <widget class="QLineEdit" name="lineEdit_max_income">
+              <widget class="QDoubleSpinBox" name="doubleSpinBox_max_income">
                <property name="minimumSize">
                 <size>
                  <width>35</width>
@@ -495,11 +495,17 @@
                  <height>20</height>
                 </size>
                </property>
-               <property name="maxLength">
-                <number>3</number>
-               </property>
                <property name="alignment">
                 <set>Qt::AlignCenter</set>
+               </property>
+               <property name="buttonSymbols">
+                <enum>QAbstractSpinBox::NoButtons</enum>
+               </property>
+               <property name="decimals">
+                <number>0</number>
+               </property>
+               <property name="value">
+                <double>100.000000000000000</double>
                </property>
               </widget>
              </item>
@@ -599,7 +605,7 @@
               </widget>
              </item>
              <item>
-              <widget class="QLineEdit" name="lineEdit_min_profitMargin">
+              <widget class="QDoubleSpinBox" name="doubleSpinBox_min_profitMargin">
                <property name="minimumSize">
                 <size>
                  <width>35</width>
@@ -612,17 +618,17 @@
                  <height>20</height>
                 </size>
                </property>
-               <property name="inputMask">
-                <string/>
-               </property>
-               <property name="text">
-                <string/>
-               </property>
-               <property name="maxLength">
-                <number>3</number>
-               </property>
                <property name="alignment">
                 <set>Qt::AlignCenter</set>
+               </property>
+               <property name="buttonSymbols">
+                <enum>QAbstractSpinBox::NoButtons</enum>
+               </property>
+               <property name="decimals">
+                <number>0</number>
+               </property>
+               <property name="maximum">
+                <double>100.000000000000000</double>
                </property>
               </widget>
              </item>
@@ -690,7 +696,7 @@
               </widget>
              </item>
              <item>
-              <widget class="QLineEdit" name="lineEdit_max_profitMargin">
+              <widget class="QDoubleSpinBox" name="doubleSpinBox_max_profitMargin">
                <property name="minimumSize">
                 <size>
                  <width>35</width>
@@ -703,11 +709,23 @@
                  <height>20</height>
                 </size>
                </property>
-               <property name="maxLength">
-                <number>3</number>
+               <property name="inputMethodHints">
+                <set>Qt::ImhDigitsOnly</set>
                </property>
                <property name="alignment">
                 <set>Qt::AlignCenter</set>
+               </property>
+               <property name="buttonSymbols">
+                <enum>QAbstractSpinBox::NoButtons</enum>
+               </property>
+               <property name="decimals">
+                <number>0</number>
+               </property>
+               <property name="maximum">
+                <double>100.000000000000000</double>
+               </property>
+               <property name="value">
+                <double>100.000000000000000</double>
                </property>
               </widget>
              </item>
@@ -807,7 +825,7 @@
               </widget>
              </item>
              <item>
-              <widget class="QLineEdit" name="lineEdit_min_dividendYield">
+              <widget class="QDoubleSpinBox" name="doubleSpinBox_min_dividendYield">
                <property name="minimumSize">
                 <size>
                  <width>35</width>
@@ -820,17 +838,17 @@
                  <height>20</height>
                 </size>
                </property>
-               <property name="inputMask">
-                <string/>
-               </property>
-               <property name="text">
-                <string/>
-               </property>
-               <property name="maxLength">
-                <number>3</number>
-               </property>
                <property name="alignment">
                 <set>Qt::AlignCenter</set>
+               </property>
+               <property name="buttonSymbols">
+                <enum>QAbstractSpinBox::NoButtons</enum>
+               </property>
+               <property name="decimals">
+                <number>0</number>
+               </property>
+               <property name="maximum">
+                <double>100.000000000000000</double>
                </property>
               </widget>
              </item>
@@ -898,7 +916,7 @@
               </widget>
              </item>
              <item>
-              <widget class="QLineEdit" name="lineEdit_max_dividendYield">
+              <widget class="QDoubleSpinBox" name="doubleSpinBox_max_dividendYield">
                <property name="minimumSize">
                 <size>
                  <width>35</width>
@@ -911,11 +929,20 @@
                  <height>20</height>
                 </size>
                </property>
-               <property name="maxLength">
-                <number>3</number>
-               </property>
                <property name="alignment">
                 <set>Qt::AlignCenter</set>
+               </property>
+               <property name="buttonSymbols">
+                <enum>QAbstractSpinBox::NoButtons</enum>
+               </property>
+               <property name="decimals">
+                <number>0</number>
+               </property>
+               <property name="maximum">
+                <double>100.000000000000000</double>
+               </property>
+               <property name="value">
+                <double>100.000000000000000</double>
                </property>
               </widget>
              </item>
@@ -1015,7 +1042,7 @@
               </widget>
              </item>
              <item>
-              <widget class="QLineEdit" name="lineEdit_min_marketCapitalisation">
+              <widget class="QDoubleSpinBox" name="doubleSpinBox_min_marketCapitalisation">
                <property name="minimumSize">
                 <size>
                  <width>35</width>
@@ -1028,17 +1055,17 @@
                  <height>20</height>
                 </size>
                </property>
-               <property name="inputMask">
-                <string/>
-               </property>
-               <property name="text">
-                <string/>
-               </property>
-               <property name="maxLength">
-                <number>3</number>
-               </property>
                <property name="alignment">
                 <set>Qt::AlignCenter</set>
+               </property>
+               <property name="buttonSymbols">
+                <enum>QAbstractSpinBox::NoButtons</enum>
+               </property>
+               <property name="decimals">
+                <number>0</number>
+               </property>
+               <property name="maximum">
+                <double>100.000000000000000</double>
                </property>
               </widget>
              </item>
@@ -1106,7 +1133,7 @@
               </widget>
              </item>
              <item>
-              <widget class="QLineEdit" name="lineEdit_max_marketCapitalisation">
+              <widget class="QDoubleSpinBox" name="doubleSpinBox_max_marketCapitalisation">
                <property name="minimumSize">
                 <size>
                  <width>35</width>
@@ -1119,11 +1146,20 @@
                  <height>20</height>
                 </size>
                </property>
-               <property name="maxLength">
-                <number>3</number>
-               </property>
                <property name="alignment">
                 <set>Qt::AlignCenter</set>
+               </property>
+               <property name="buttonSymbols">
+                <enum>QAbstractSpinBox::NoButtons</enum>
+               </property>
+               <property name="decimals">
+                <number>0</number>
+               </property>
+               <property name="maximum">
+                <double>100.000000000000000</double>
+               </property>
+               <property name="value">
+                <double>100.000000000000000</double>
                </property>
               </widget>
              </item>
@@ -1223,7 +1259,7 @@
               </widget>
              </item>
              <item>
-              <widget class="QLineEdit" name="lineEdit_min_financicalIndex">
+              <widget class="QDoubleSpinBox" name="doubleSpinBox_min_financicalIndex">
                <property name="minimumSize">
                 <size>
                  <width>35</width>
@@ -1236,17 +1272,17 @@
                  <height>20</height>
                 </size>
                </property>
-               <property name="inputMask">
-                <string/>
-               </property>
-               <property name="text">
-                <string/>
-               </property>
-               <property name="maxLength">
-                <number>3</number>
-               </property>
                <property name="alignment">
                 <set>Qt::AlignCenter</set>
+               </property>
+               <property name="buttonSymbols">
+                <enum>QAbstractSpinBox::NoButtons</enum>
+               </property>
+               <property name="decimals">
+                <number>0</number>
+               </property>
+               <property name="maximum">
+                <double>100.000000000000000</double>
                </property>
               </widget>
              </item>
@@ -1314,7 +1350,7 @@
               </widget>
              </item>
              <item>
-              <widget class="QLineEdit" name="lineEdit_max_financicalIndex">
+              <widget class="QDoubleSpinBox" name="doubleSpinBox_max_financicalIndex">
                <property name="minimumSize">
                 <size>
                  <width>35</width>
@@ -1327,11 +1363,17 @@
                  <height>20</height>
                 </size>
                </property>
-               <property name="maxLength">
-                <number>3</number>
-               </property>
                <property name="alignment">
                 <set>Qt::AlignCenter</set>
+               </property>
+               <property name="buttonSymbols">
+                <enum>QAbstractSpinBox::NoButtons</enum>
+               </property>
+               <property name="decimals">
+                <number>0</number>
+               </property>
+               <property name="value">
+                <double>100.000000000000000</double>
                </property>
               </widget>
              </item>
@@ -1410,7 +1452,7 @@
           </spacer>
          </item>
          <item>
-          <layout class="QVBoxLayout" name="verticalLayout_rigth">
+          <layout class="QVBoxLayout" name="verticalLayout_right">
            <item>
             <layout class="QHBoxLayout" name="horizontalLayout_indexEnd">
              <property name="sizeConstraint">
@@ -1477,7 +1519,7 @@
               </widget>
              </item>
              <item>
-              <widget class="QLineEdit" name="lineEdit_min_indexEnd">
+              <widget class="QDoubleSpinBox" name="doubleSpinBox_min_indexEnd">
                <property name="minimumSize">
                 <size>
                  <width>35</width>
@@ -1490,17 +1532,14 @@
                  <height>20</height>
                 </size>
                </property>
-               <property name="inputMask">
-                <string/>
-               </property>
-               <property name="text">
-                <string/>
-               </property>
-               <property name="maxLength">
-                <number>3</number>
-               </property>
                <property name="alignment">
                 <set>Qt::AlignCenter</set>
+               </property>
+               <property name="buttonSymbols">
+                <enum>QAbstractSpinBox::NoButtons</enum>
+               </property>
+               <property name="decimals">
+                <number>0</number>
                </property>
               </widget>
              </item>
@@ -1568,7 +1607,7 @@
               </widget>
              </item>
              <item>
-              <widget class="QLineEdit" name="lineEdit_max_indexEnd">
+              <widget class="QDoubleSpinBox" name="doubleSpinBox_max_indexEnd">
                <property name="minimumSize">
                 <size>
                  <width>35</width>
@@ -1581,11 +1620,17 @@
                  <height>20</height>
                 </size>
                </property>
-               <property name="maxLength">
-                <number>3</number>
-               </property>
                <property name="alignment">
                 <set>Qt::AlignCenter</set>
+               </property>
+               <property name="buttonSymbols">
+                <enum>QAbstractSpinBox::NoButtons</enum>
+               </property>
+               <property name="decimals">
+                <number>0</number>
+               </property>
+               <property name="value">
+                <double>100.000000000000000</double>
                </property>
               </widget>
              </item>
@@ -1685,7 +1730,7 @@
               </widget>
              </item>
              <item>
-              <widget class="QLineEdit" name="lineEdit_min_priceByEarnings">
+              <widget class="QDoubleSpinBox" name="doubleSpinBox_min_priceByEarnings">
                <property name="minimumSize">
                 <size>
                  <width>35</width>
@@ -1698,17 +1743,17 @@
                  <height>20</height>
                 </size>
                </property>
-               <property name="inputMask">
-                <string/>
-               </property>
-               <property name="text">
-                <string/>
-               </property>
-               <property name="maxLength">
-                <number>3</number>
-               </property>
                <property name="alignment">
                 <set>Qt::AlignCenter</set>
+               </property>
+               <property name="buttonSymbols">
+                <enum>QAbstractSpinBox::NoButtons</enum>
+               </property>
+               <property name="decimals">
+                <number>0</number>
+               </property>
+               <property name="value">
+                <double>0.000000000000000</double>
                </property>
               </widget>
              </item>
@@ -1776,7 +1821,7 @@
               </widget>
              </item>
              <item>
-              <widget class="QLineEdit" name="lineEdit_max_priceByEarnings">
+              <widget class="QDoubleSpinBox" name="doubleSpinBox_max_priceByEarnings">
                <property name="minimumSize">
                 <size>
                  <width>35</width>
@@ -1789,11 +1834,17 @@
                  <height>20</height>
                 </size>
                </property>
-               <property name="maxLength">
-                <number>3</number>
-               </property>
                <property name="alignment">
                 <set>Qt::AlignCenter</set>
+               </property>
+               <property name="buttonSymbols">
+                <enum>QAbstractSpinBox::NoButtons</enum>
+               </property>
+               <property name="decimals">
+                <number>0</number>
+               </property>
+               <property name="value">
+                <double>100.000000000000000</double>
                </property>
               </widget>
              </item>
@@ -1893,7 +1944,7 @@
               </widget>
              </item>
              <item>
-              <widget class="QLineEdit" name="lineEdit_min_priceByBook">
+              <widget class="QDoubleSpinBox" name="doubleSpinBox_min_priceByBook">
                <property name="minimumSize">
                 <size>
                  <width>35</width>
@@ -1906,17 +1957,17 @@
                  <height>20</height>
                 </size>
                </property>
-               <property name="inputMask">
-                <string/>
-               </property>
-               <property name="text">
-                <string/>
-               </property>
-               <property name="maxLength">
-                <number>3</number>
-               </property>
                <property name="alignment">
                 <set>Qt::AlignCenter</set>
+               </property>
+               <property name="buttonSymbols">
+                <enum>QAbstractSpinBox::NoButtons</enum>
+               </property>
+               <property name="decimals">
+                <number>0</number>
+               </property>
+               <property name="value">
+                <double>0.000000000000000</double>
                </property>
               </widget>
              </item>
@@ -1984,7 +2035,7 @@
               </widget>
              </item>
              <item>
-              <widget class="QLineEdit" name="lineEdit_max_priceByBook">
+              <widget class="QDoubleSpinBox" name="doubleSpinBox_max_priceByBook">
                <property name="minimumSize">
                 <size>
                  <width>35</width>
@@ -1997,11 +2048,17 @@
                  <height>20</height>
                 </size>
                </property>
-               <property name="maxLength">
-                <number>3</number>
-               </property>
                <property name="alignment">
                 <set>Qt::AlignCenter</set>
+               </property>
+               <property name="buttonSymbols">
+                <enum>QAbstractSpinBox::NoButtons</enum>
+               </property>
+               <property name="decimals">
+                <number>0</number>
+               </property>
+               <property name="value">
+                <double>100.000000000000000</double>
                </property>
               </widget>
              </item>
@@ -2101,7 +2158,7 @@
               </widget>
              </item>
              <item>
-              <widget class="QLineEdit" name="lineEdit_min_priceBySales">
+              <widget class="QDoubleSpinBox" name="doubleSpinBox_min_priceBySales">
                <property name="minimumSize">
                 <size>
                  <width>35</width>
@@ -2114,17 +2171,17 @@
                  <height>20</height>
                 </size>
                </property>
-               <property name="inputMask">
-                <string/>
-               </property>
-               <property name="text">
-                <string/>
-               </property>
-               <property name="maxLength">
-                <number>3</number>
-               </property>
                <property name="alignment">
                 <set>Qt::AlignCenter</set>
+               </property>
+               <property name="buttonSymbols">
+                <enum>QAbstractSpinBox::NoButtons</enum>
+               </property>
+               <property name="decimals">
+                <number>0</number>
+               </property>
+               <property name="value">
+                <double>0.000000000000000</double>
                </property>
               </widget>
              </item>
@@ -2192,7 +2249,7 @@
               </widget>
              </item>
              <item>
-              <widget class="QLineEdit" name="lineEdit_max_priceBySales">
+              <widget class="QDoubleSpinBox" name="doubleSpinBox_max_priceBySales">
                <property name="minimumSize">
                 <size>
                  <width>35</width>
@@ -2205,11 +2262,17 @@
                  <height>20</height>
                 </size>
                </property>
-               <property name="maxLength">
-                <number>3</number>
-               </property>
                <property name="alignment">
                 <set>Qt::AlignCenter</set>
+               </property>
+               <property name="buttonSymbols">
+                <enum>QAbstractSpinBox::NoButtons</enum>
+               </property>
+               <property name="decimals">
+                <number>0</number>
+               </property>
+               <property name="value">
+                <double>100.000000000000000</double>
                </property>
               </widget>
              </item>
@@ -2309,7 +2372,7 @@
               </widget>
              </item>
              <item>
-              <widget class="QLineEdit" name="lineEdit_min_priceByCashFlow">
+              <widget class="QDoubleSpinBox" name="doubleSpinBox_min_priceByCashFlow">
                <property name="minimumSize">
                 <size>
                  <width>35</width>
@@ -2322,17 +2385,17 @@
                  <height>20</height>
                 </size>
                </property>
-               <property name="inputMask">
-                <string/>
-               </property>
-               <property name="text">
-                <string/>
-               </property>
-               <property name="maxLength">
-                <number>3</number>
-               </property>
                <property name="alignment">
                 <set>Qt::AlignCenter</set>
+               </property>
+               <property name="buttonSymbols">
+                <enum>QAbstractSpinBox::NoButtons</enum>
+               </property>
+               <property name="decimals">
+                <number>0</number>
+               </property>
+               <property name="value">
+                <double>0.000000000000000</double>
                </property>
               </widget>
              </item>
@@ -2400,7 +2463,7 @@
               </widget>
              </item>
              <item>
-              <widget class="QLineEdit" name="lineEdit_max_priceByCashFlow">
+              <widget class="QDoubleSpinBox" name="doubleSpinBox_max_priceByCashFlow">
                <property name="minimumSize">
                 <size>
                  <width>35</width>
@@ -2413,11 +2476,17 @@
                  <height>20</height>
                 </size>
                </property>
-               <property name="maxLength">
-                <number>3</number>
-               </property>
                <property name="alignment">
                 <set>Qt::AlignCenter</set>
+               </property>
+               <property name="buttonSymbols">
+                <enum>QAbstractSpinBox::NoButtons</enum>
+               </property>
+               <property name="decimals">
+                <number>0</number>
+               </property>
+               <property name="value">
+                <double>100.000000000000000</double>
                </property>
               </widget>
              </item>
@@ -5342,59 +5411,37 @@
  <tabstops>
   <tabstop>tab</tabstop>
   <tabstop>checkBox_stockValue</tabstop>
-  <tabstop>lineEdit_min_stockValue</tabstop>
   <tabstop>horizontalSlider_min_stockValue</tabstop>
-  <tabstop>lineEdit_max_stockValue</tabstop>
   <tabstop>horizontalSlider_max_stockValue</tabstop>
   <tabstop>checkBox_income</tabstop>
-  <tabstop>lineEdit_min_income</tabstop>
   <tabstop>horizontalSlider_min_income</tabstop>
-  <tabstop>lineEdit_max_income</tabstop>
   <tabstop>horizontalSlider_max_income</tabstop>
   <tabstop>checkBox_profitMargin</tabstop>
-  <tabstop>lineEdit_min_profitMargin</tabstop>
   <tabstop>horizontalSlider_min_profitMargin</tabstop>
-  <tabstop>lineEdit_max_profitMargin</tabstop>
   <tabstop>horizontalSlider_max_profitMargin</tabstop>
   <tabstop>checkBox_dividendYield</tabstop>
-  <tabstop>lineEdit_min_dividendYield</tabstop>
   <tabstop>horizontalSlider_min_dividendYield</tabstop>
-  <tabstop>lineEdit_max_dividendYield</tabstop>
   <tabstop>horizontalSlider_max_dividendYield</tabstop>
   <tabstop>checkBox_marketCapitalisation</tabstop>
-  <tabstop>lineEdit_min_marketCapitalisation</tabstop>
   <tabstop>horizontalSlider_min_marketCapitalisation</tabstop>
-  <tabstop>lineEdit_max_marketCapitalisation</tabstop>
   <tabstop>horizontalSlider_max_marketCapitalisation</tabstop>
   <tabstop>checkBox_financicalIndex</tabstop>
-  <tabstop>lineEdit_min_financicalIndex</tabstop>
   <tabstop>horizontalSlider_min_financicalIndex</tabstop>
-  <tabstop>lineEdit_max_financicalIndex</tabstop>
   <tabstop>horizontalSlider_max_financicalIndex</tabstop>
   <tabstop>checkBox_indexEnd</tabstop>
-  <tabstop>lineEdit_min_indexEnd</tabstop>
   <tabstop>horizontalSlider_min_indexEnd</tabstop>
-  <tabstop>lineEdit_max_indexEnd</tabstop>
   <tabstop>horizontalSlider_max_indexEnd</tabstop>
   <tabstop>checkBox_priceByEarnings</tabstop>
-  <tabstop>lineEdit_min_priceByEarnings</tabstop>
   <tabstop>horizontalSlider_min_priceByEarnings</tabstop>
-  <tabstop>lineEdit_max_priceByEarnings</tabstop>
   <tabstop>horizontalSlider_max_priceByEarnings</tabstop>
   <tabstop>checkBox_priceByBook</tabstop>
-  <tabstop>lineEdit_min_priceByBook</tabstop>
   <tabstop>horizontalSlider_min_priceByBook</tabstop>
-  <tabstop>lineEdit_max_priceByBook</tabstop>
   <tabstop>horizontalSlider_max_priceByBook</tabstop>
   <tabstop>checkBox_priceBySales</tabstop>
-  <tabstop>lineEdit_min_priceBySales</tabstop>
   <tabstop>horizontalSlider_min_priceBySales</tabstop>
-  <tabstop>lineEdit_max_priceBySales</tabstop>
   <tabstop>horizontalSlider_max_priceBySales</tabstop>
   <tabstop>checkBox_priceByCashFlow</tabstop>
-  <tabstop>lineEdit_min_priceByCashFlow</tabstop>
   <tabstop>horizontalSlider_min_priceByCashFlow</tabstop>
-  <tabstop>lineEdit_max_priceByCashFlow</tabstop>
   <tabstop>horizontalSlider_max_priceByCashFlow</tabstop>
   <tabstop>btn_selectAllCriteria</tabstop>
   <tabstop>btn_deselectAllCriteria</tabstop>

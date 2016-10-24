@@ -69,9 +69,44 @@ class ManagerMainWindow(Ui_MainWindow):
         Add connection between signal (ex:click button) and slot (action to do, ex: open dialog box)
         :return: None
         """
+        # sort column checkbox of table stock screnner
         self.tableWidget_stockScreener.horizontalHeader().sectionClicked\
             .connect(Slots.sort_column_checkbox_table_widget_stock_screener)
+        # checked or unchecked the checkbox of cell clicked
         self.tableWidget_stockScreener.cellClicked.connect(Slots.modify_checkbox_table_widget_stock_screener)
+        # link slider and spin box of box layout to left
+        for idx_h_layout in range(self.verticalLayout_left.count()):
+            min_spin_box = HelperFunctionQt.get_widget_of_layout(self.verticalLayout_left.itemAt(idx_h_layout),
+                                                                  QtGui.QDoubleSpinBox)
+            min_range_slider = HelperFunctionQt.get_widget_of_layout(self.verticalLayout_left.itemAt(idx_h_layout),
+                                                                     QtGui.QSlider)
+            min_spin_box.valueChanged.connect(min_range_slider.setValue)
+            min_range_slider.valueChanged.connect(min_spin_box.setValue)
+
+            max_spin_box = HelperFunctionQt.get_widget_of_layout(self.verticalLayout_left.itemAt(idx_h_layout),
+                                                                  QtGui.QDoubleSpinBox, 1)
+
+            max_range_slider = HelperFunctionQt.get_widget_of_layout(self.verticalLayout_left.itemAt(idx_h_layout),
+                                                                  QtGui.QSlider, 1)
+            max_spin_box.valueChanged.connect(max_range_slider.setValue)
+            max_range_slider.valueChanged.connect(max_spin_box.setValue)
+        # link slider and spin box of box layout to right
+        for idx_h_layout in range(self.verticalLayout_right.count()):
+            min_spin_box = HelperFunctionQt.get_widget_of_layout(self.verticalLayout_right.itemAt(idx_h_layout),
+                                                                 QtGui.QDoubleSpinBox)
+            min_range_slider = HelperFunctionQt.get_widget_of_layout(self.verticalLayout_right.itemAt(idx_h_layout),
+                                                                     QtGui.QSlider)
+            min_spin_box.valueChanged.connect(min_range_slider.setValue)
+            min_range_slider.valueChanged.connect(min_spin_box.setValue)
+
+            max_spin_box = HelperFunctionQt.get_widget_of_layout(self.verticalLayout_right.itemAt(idx_h_layout),
+                                                                 QtGui.QDoubleSpinBox, 1)
+
+            max_range_slider = HelperFunctionQt.get_widget_of_layout(self.verticalLayout_right.itemAt(idx_h_layout),
+                                                                     QtGui.QSlider, 1)
+            max_spin_box.valueChanged.connect(max_range_slider.setValue)
+            max_range_slider.valueChanged.connect(max_spin_box.setValue)
+
 
 
 class Slots:
@@ -109,7 +144,8 @@ class Slots:
                 list_row_remove = []
                 for idx in range(table_widget.rowCount()):
                     # get checkbox widget
-                    cb = table_widget.cellWidget(idx, column).layout().itemAt(0).widget()
+                    cb = HelperFunctionQt.get_widget_of_layout(table_widget.cellWidget(idx, column).layout(),
+                                                               QtGui.QCheckBox)
                     if cb.checkState() != sort_order:
                         row = HelperFunctionQt.take_row_table_widget(table_widget, idx)
                         HelperFunctionQt.set_row_table_widget(table_widget, row)
