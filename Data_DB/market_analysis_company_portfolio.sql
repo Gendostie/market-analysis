@@ -16,37 +16,30 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `transaction`
+-- Table structure for table `company_portfolio`
 --
 
-DROP TABLE IF EXISTS `transaction`;
+DROP TABLE IF EXISTS `company_portfolio`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `transaction` (
-  `id_transaction` int(11) NOT NULL,
+CREATE TABLE `company_portfolio` (
   `id_portfolio` int(11) NOT NULL,
-  `id_symbol` varchar(10) NOT NULL,
-  `quantity` int(11) DEFAULT '0',
-  `value_current` decimal(4,0) DEFAULT '0',
-  `transaction_date` datetime NOT NULL,
-  `id_simulation` int(11) DEFAULT NULL,
-  PRIMARY KEY (`id_transaction`,`id_portfolio`),
-  KEY `id_portfolio_idx` (`id_portfolio`),
-  KEY `id_simulation_fk_transaction_idx` (`id_simulation`),
-  KEY `id_symbol_fk_transaction_idx` (`id_symbol`),
-  CONSTRAINT `id_portfolio_fk_transaction` FOREIGN KEY (`id_portfolio`) REFERENCES `portfolio` (`id_portfolio`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `id_simulation_fk_transaction` FOREIGN KEY (`id_simulation`) REFERENCES `simulation` (`id_simulation`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `id_symbol_fk_transaction` FOREIGN KEY (`id_symbol`) REFERENCES `company_portfolio` (`symbol_company`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  `symbol_company` varchar(10) NOT NULL,
+  `is_activate_in_portfolio` tinyint(1) DEFAULT '0',
+  PRIMARY KEY (`id_portfolio`,`symbol_company`),
+  KEY `symbol_fk_company_portfolio_idx` (`symbol_company`),
+  CONSTRAINT `id_portfolio_fk_company_symbol` FOREIGN KEY (`id_portfolio`) REFERENCES `portfolio` (`id_portfolio`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `symbol_fk_company_portfolio` FOREIGN KEY (`symbol_company`) REFERENCES `company` (`symbol`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `transaction`
+-- Dumping data for table `company_portfolio`
 --
 
-LOCK TABLES `transaction` WRITE;
-/*!40000 ALTER TABLE `transaction` DISABLE KEYS */;
-/*!40000 ALTER TABLE `transaction` ENABLE KEYS */;
+LOCK TABLES `company_portfolio` WRITE;
+/*!40000 ALTER TABLE `company_portfolio` DISABLE KEYS */;
+/*!40000 ALTER TABLE `company_portfolio` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -58,4 +51,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2016-10-26 10:43:09
+-- Dump completed on 2016-10-26 10:31:05
