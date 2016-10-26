@@ -2,6 +2,8 @@
 # -*- coding: utf-8 -*-
 from PyQt4 import QtCore, QtGui
 
+import ManagerPortfolio
+
 
 def take_row_table_widget(table_widget, idx_row):
     """
@@ -100,3 +102,35 @@ def get_widget_of_layout(layout, type_object_to_find, nb_same_type_skip=0):
     if not isinstance(return_object, type_object_to_find):
         raise ValueError("No object we search in box layout.")
     return return_object
+
+
+def add_companies_to_portfolio_db(portfolio_name, list_company):
+    """
+    Call function for add company to portfolio in db
+    :param portfolio_name: name of portfolio
+    :type portfolio_name: str
+    :param list_company: list symbol of company
+    :type list_company: list[str]
+    :return: None
+    """
+    # add portfolio if is new
+    portfolio_id = ManagerPortfolio.create_portfolio(portfolio_name)
+    # add company to portfolio in db
+    nb_company_added = ManagerPortfolio.add_companies_to_portfolio(portfolio_id, list_company)
+    print("Nb company added: %s" % nb_company_added)
+
+
+def select_deselect_combobox_layout(layout, is_checked):
+    """
+    Common function for selected or deselected combo box in a layout
+    :param layout: Widget layout, must be a simple layout in layout
+    :type layout: QtGui.QLayout
+    :param is_checked: 2 if checked or 0 for unchecked
+    :type is_checked: int
+    :return: None
+    """
+    if layout.count() > 0:
+        for idx in range(layout.count()):
+            cb = get_widget_of_layout(layout.itemAt(idx), QtGui.QCheckBox)
+            if cb:
+                cb.setCheckState(is_checked)

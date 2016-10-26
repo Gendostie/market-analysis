@@ -4,6 +4,7 @@ from PyQt4 import QtCore, QtGui
 
 from MainWindow import Ui_MainWindow, _translate
 import ManagerCompany
+import ManagerPortfolio
 import HelperFunctionQt
 
 
@@ -18,6 +19,14 @@ class ManagerMainWindow(Ui_MainWindow):
         MainWindow.setMinimumSize(MainWindow.size())
         # adjust column of table widget
         self.tableWidget_stockScreener.horizontalHeader().setSectionResizeMode(QtGui.QHeaderView.ResizeToContents)
+
+    def setup_manager(self):
+        """
+        Setup for widget already in MainWindow.ui to modify
+        :return: None
+        """
+        self.comboBox_stockScreener_portfolio.lineEdit().setPlaceholderText("Choose your portfolio name.")
+        self.add_portfolio_name_in_combobox('tabStockScreener', 'comboBox_stockScreener_portfolio')
 
     def create_data_table_stock_screener(self):
         """
@@ -35,7 +44,6 @@ class ManagerMainWindow(Ui_MainWindow):
         sorting_enable = self.tableWidget_stockScreener.isSortingEnabled()
         self.tableWidget_stockScreener.setSortingEnabled(False)
         for idx_row, company in enumerate(list_company):
-            row_items = []
             for key in company.keys():
                 try:
                     idx_column = list_column_table.index(key)
@@ -64,7 +72,7 @@ class ManagerMainWindow(Ui_MainWindow):
                                                          widget_cb)
         self.tableWidget_stockScreener.setSortingEnabled(sorting_enable)
 
-    def create_connexion_signal_slot(self):
+    def create_connection_signal_slot(self):
         """
         Add connection between signal (ex:click button) and slot (action to do, ex: open dialog box)
         :return: None
@@ -74,6 +82,11 @@ class ManagerMainWindow(Ui_MainWindow):
             .connect(Slots.sort_column_checkbox_table_widget_stock_screener)
         # checked or unchecked the checkbox of cell clicked
         self.tableWidget_stockScreener.cellClicked.connect(Slots.modify_checkbox_table_widget_stock_screener)
+        # connection btn Add to portfolio of Stock Screener
+        self.btn_stockScreener_addPortfolio.clicked.connect(Slots.add_company_to_portfolio_stock_screener)
+        # connection combo box line edit to portfolio of Stock Screener to same fct of btn Add to portfolio
+        self.comboBox_stockScreener_portfolio.lineEdit().returnPressed\
+            .connect(Slots.add_company_to_portfolio_stock_screener)
         # link slider and spin box of box layout to left
         for idx_h_layout in range(self.verticalLayout_left.count()):
             min_spin_box = HelperFunctionQt.get_widget_of_layout(self.verticalLayout_left.itemAt(idx_h_layout),
@@ -106,7 +119,26 @@ class ManagerMainWindow(Ui_MainWindow):
                                                                      QtGui.QSlider, 1)
             max_spin_box.valueChanged.connect(max_range_slider.setValue)
             max_range_slider.valueChanged.connect(max_spin_box.setValue)
+        # btn select criteria stock sceenner
+        self.btn_selectAllCriteria.clicked.connect(Slots.select_all_criteria_stock_screener)
+        # btn deselect criteria stock sceenner
+        self.btn_deselectAllCriteria.clicked.connect(Slots.deselect_all_criteria_stock_screener)
 
+    def add_portfolio_name_in_combobox(self, tab_widget_name, combobox_name):
+        """
+        Add portfolio name of DB in combo box chosen
+        :param tab_widget_name: name of tabular widget (tabStockScreener, tabPortfolioManager, tabSimmulator)
+        :type tab_widget_name: str
+        :param combobox_name: name of combo box we want add portfolio name
+        :type combobox_name: str
+        :return: None
+        """
+        tab_widget = self.tab.findChild(QtGui.QWidget, tab_widget_name)
+        cb = tab_widget.findChild(QtGui.QComboBox, combobox_name)
+
+        list_portfolio = ManagerPortfolio.get_all_portfolio_info()
+        for dict_portfolio in list_portfolio:
+            cb.addItem(dict_portfolio.get('name'))
 
 
 class Slots:
@@ -156,6 +188,47 @@ class Slots:
             sort_order = 1 if sort_order == 2 else sort_order  # put value of sort state
             table_widget.horizontalHeader().setSortIndicator(column, sort_order)  # set indicator column sort
 
+    @staticmethod
+    def add_company_to_portfolio_stock_screener():
+        """
+        Get all information to add companies in portfolio with call function
+        HelperFunctionQt.add_companies_to_portfolio_db
+        :return: None
+        """
+        table_widget = ui.tableWidget_stockScreener
+        if table_widget.rowCount() > 0:
+            list_company = []
+            for idx in range(table_widget.rowCount()):
+                # get checkbox widget
+                cb = HelperFunctionQt.get_widget_of_layout(
+                                                table_widget.cellWidget(idx, table_widget.columnCount() - 1).layout(),
+                                                QtGui.QCheckBox)
+                if cb.isChecked():
+                    # add symbol company in list company to add in DB for a portfolio
+                    list_company.append(table_widget.item(idx, 1).text())
+            # get name portfolio
+            portfolio_name = ui.comboBox_stockScreener_portfolio.lineEdit().text()
+            # add company to portfolio in db
+            HelperFunctionQt.add_companies_to_portfolio_db(portfolio_name, list_company)
+
+    @staticmethod
+    def select_all_criteria_stock_screener():
+        """
+        Select all criteria of stock screener
+        :return: None
+        """
+        HelperFunctionQt.select_deselect_combobox_layout(ui.verticalLayout_left, QtCore.Qt.Checked)
+        HelperFunctionQt.select_deselect_combobox_layout(ui.verticalLayout_right, QtCore.Qt.Checked)
+
+    @staticmethod
+    def deselect_all_criteria_stock_screener():
+        """
+        Deselect all criteria of stock screener
+        :return: None
+        """
+        HelperFunctionQt.select_deselect_combobox_layout(ui.verticalLayout_left, QtCore.Qt.Unchecked)
+        HelperFunctionQt.select_deselect_combobox_layout(ui.verticalLayout_right, QtCore.Qt.Unchecked)
+
 
 if __name__ == "__main__":
     import sys
@@ -164,9 +237,10 @@ if __name__ == "__main__":
     ui = ManagerMainWindow()
     ui.setupUi(MainWindow)
 
+    ui.setup_manager()
     ui.setup_size_fixed()
     ui.create_data_table_stock_screener()
-    ui.create_connexion_signal_slot()
+    ui.create_connection_signal_slot()
 
     MainWindow.show()
     sys.exit(app.exec_())

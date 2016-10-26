@@ -2793,36 +2793,6 @@
       <property name="editable">
        <bool>true</bool>
       </property>
-      <item>
-       <property name="text">
-        <string>Choose portfolio</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>insect</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>chat</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>chien</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>oiseau</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>poisson</string>
-       </property>
-      </item>
      </widget>
      <widget class="QPushButton" name="btn_stockScreener_addPortfolio">
       <property name="geometry">
@@ -2859,7 +2829,7 @@
      <attribute name="title">
       <string>Simmulator</string>
      </attribute>
-     <widget class="QScrollArea" name="scrollArea_4">
+     <widget class="QScrollArea" name="scrollArea_2">
       <property name="geometry">
        <rect>
         <x>5</x>
@@ -2898,7 +2868,7 @@
       <property name="widgetResizable">
        <bool>false</bool>
       </property>
-      <widget class="QWidget" name="scrollAreaWidgetContents_4">
+      <widget class="QWidget" name="scrollAreaWidgetContents_2">
        <property name="geometry">
         <rect>
          <x>0</x>
@@ -2919,7 +2889,7 @@
          <height>16777215</height>
         </size>
        </property>
-       <widget class="QWidget" name="horizontalLayoutWidget_4">
+       <widget class="QWidget" name="horizontalLayoutWidget_2">
         <property name="geometry">
          <rect>
           <x>0</x>
@@ -2928,7 +2898,7 @@
           <height>251</height>
          </rect>
         </property>
-        <layout class="QHBoxLayout" name="horizontalLayout_4">
+        <layout class="QHBoxLayout" name="horizontalLayout_2">
          <property name="spacing">
           <number>10</number>
          </property>
@@ -2936,14 +2906,14 @@
           <number>0</number>
          </property>
          <item>
-          <layout class="QVBoxLayout" name="verticalLayout_left_4">
+          <layout class="QVBoxLayout" name="verticalLayout_left_2">
            <item>
-            <layout class="QHBoxLayout" name="horizontalLayout_stockValue_4">
+            <layout class="QHBoxLayout" name="horizontalLayout_stockValue_2">
              <property name="sizeConstraint">
               <enum>QLayout::SetDefaultConstraint</enum>
              </property>
              <item>
-              <widget class="QCheckBox" name="checkBox_stockValue_4">
+              <widget class="QCheckBox" name="checkBox_stockValue_2">
                <property name="minimumSize">
                 <size>
                  <width>170</width>
@@ -2962,7 +2932,7 @@
               </widget>
              </item>
              <item>
-              <spacer name="horizontalSpacer_stockValue1_4">
+              <spacer name="horizontalSpacer_stockValue1_2">
                <property name="orientation">
                 <enum>Qt::Horizontal</enum>
                </property>
@@ -2978,7 +2948,7 @@
               </spacer>
              </item>
              <item>
-              <widget class="QLabel" name="label_min_stockValue_4">
+              <widget class="QLabel" name="label_min_stockValue_2">
                <property name="minimumSize">
                 <size>
                  <width>25</width>
@@ -3000,7 +2970,7 @@
               </widget>
              </item>
              <item>
-              <widget class="QLineEdit" name="lineEdit_min_stockValue_4">
+              <widget class="QDoubleSpinBox" name="doubleSpinBox_min_stockValue_2">
                <property name="minimumSize">
                 <size>
                  <width>35</width>
@@ -3013,22 +2983,19 @@
                  <height>20</height>
                 </size>
                </property>
-               <property name="inputMask">
-                <string/>
-               </property>
-               <property name="text">
-                <string/>
-               </property>
-               <property name="maxLength">
-                <number>3</number>
-               </property>
                <property name="alignment">
                 <set>Qt::AlignCenter</set>
+               </property>
+               <property name="buttonSymbols">
+                <enum>QAbstractSpinBox::NoButtons</enum>
+               </property>
+               <property name="decimals">
+                <number>0</number>
                </property>
               </widget>
              </item>
              <item>
-              <widget class="QSlider" name="horizontalSlider_min_stockValue_4">
+              <widget class="QSlider" name="horizontalSlider_min_stockValue_2">
                <property name="minimumSize">
                 <size>
                  <width>65</width>
@@ -3037,7 +3004,7 @@
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>120</width>
+                 <width>140</width>
                  <height>10</height>
                 </size>
                </property>
@@ -3053,7 +3020,7 @@
               </widget>
              </item>
              <item>
-              <spacer name="horizontalSpacer_stockValue2_4">
+              <spacer name="horizontalSpacer_stockValue2_2">
                <property name="orientation">
                 <enum>Qt::Horizontal</enum>
                </property>
@@ -3069,7 +3036,7 @@
               </spacer>
              </item>
              <item>
-              <widget class="QLabel" name="label_max_stockValue_4">
+              <widget class="QLabel" name="label_max_stockValue_2">
                <property name="minimumSize">
                 <size>
                  <width>30</width>
@@ -3091,7 +3058,7 @@
               </widget>
              </item>
              <item>
-              <widget class="QLineEdit" name="lineEdit_max_stockValue_4">
+              <widget class="QDoubleSpinBox" name="doubleSpinBox_max_stockValue_2">
                <property name="minimumSize">
                 <size>
                  <width>35</width>
@@ -3104,16 +3071,22 @@
                  <height>20</height>
                 </size>
                </property>
-               <property name="maxLength">
-                <number>3</number>
-               </property>
                <property name="alignment">
                 <set>Qt::AlignCenter</set>
+               </property>
+               <property name="buttonSymbols">
+                <enum>QAbstractSpinBox::NoButtons</enum>
+               </property>
+               <property name="decimals">
+                <number>0</number>
+               </property>
+               <property name="value">
+                <double>100.000000000000000</double>
                </property>
               </widget>
              </item>
              <item>
-              <widget class="QSlider" name="horizontalSlider_max_stockValue_4">
+              <widget class="QSlider" name="horizontalSlider_max_stockValue_2">
                <property name="minimumSize">
                 <size>
                  <width>65</width>
@@ -3122,7 +3095,7 @@
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>120</width>
+                 <width>140</width>
                  <height>10</height>
                 </size>
                </property>
@@ -3146,12 +3119,12 @@
             </layout>
            </item>
            <item>
-            <layout class="QHBoxLayout" name="horizontalLayout_income_4">
+            <layout class="QHBoxLayout" name="horizontalLayout_income_2">
              <property name="sizeConstraint">
               <enum>QLayout::SetDefaultConstraint</enum>
              </property>
              <item>
-              <widget class="QCheckBox" name="checkBox_income_4">
+              <widget class="QCheckBox" name="checkBox_income_2">
                <property name="minimumSize">
                 <size>
                  <width>170</width>
@@ -3170,7 +3143,7 @@
               </widget>
              </item>
              <item>
-              <spacer name="horizontalSpacer_income1_4">
+              <spacer name="horizontalSpacer_income1_2">
                <property name="orientation">
                 <enum>Qt::Horizontal</enum>
                </property>
@@ -3186,7 +3159,7 @@
               </spacer>
              </item>
              <item>
-              <widget class="QLabel" name="label_min_income_4">
+              <widget class="QLabel" name="label_min_income_2">
                <property name="minimumSize">
                 <size>
                  <width>25</width>
@@ -3208,7 +3181,7 @@
               </widget>
              </item>
              <item>
-              <widget class="QLineEdit" name="lineEdit_min_income_4">
+              <widget class="QDoubleSpinBox" name="doubleSpinBox_min_income_2">
                <property name="minimumSize">
                 <size>
                  <width>35</width>
@@ -3221,22 +3194,19 @@
                  <height>20</height>
                 </size>
                </property>
-               <property name="inputMask">
-                <string/>
-               </property>
-               <property name="text">
-                <string/>
-               </property>
-               <property name="maxLength">
-                <number>3</number>
-               </property>
                <property name="alignment">
                 <set>Qt::AlignCenter</set>
+               </property>
+               <property name="buttonSymbols">
+                <enum>QAbstractSpinBox::NoButtons</enum>
+               </property>
+               <property name="decimals">
+                <number>0</number>
                </property>
               </widget>
              </item>
              <item>
-              <widget class="QSlider" name="horizontalSlider_min_income_4">
+              <widget class="QSlider" name="horizontalSlider_min_income_2">
                <property name="minimumSize">
                 <size>
                  <width>65</width>
@@ -3245,7 +3215,7 @@
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>120</width>
+                 <width>140</width>
                  <height>10</height>
                 </size>
                </property>
@@ -3261,7 +3231,7 @@
               </widget>
              </item>
              <item>
-              <spacer name="horizontalSpacer_income2_4">
+              <spacer name="horizontalSpacer_income2_2">
                <property name="orientation">
                 <enum>Qt::Horizontal</enum>
                </property>
@@ -3277,7 +3247,7 @@
               </spacer>
              </item>
              <item>
-              <widget class="QLabel" name="label_max_income_4">
+              <widget class="QLabel" name="label_max_income_2">
                <property name="minimumSize">
                 <size>
                  <width>30</width>
@@ -3299,7 +3269,7 @@
               </widget>
              </item>
              <item>
-              <widget class="QLineEdit" name="lineEdit_max_income_4">
+              <widget class="QDoubleSpinBox" name="doubleSpinBox_max_income_2">
                <property name="minimumSize">
                 <size>
                  <width>35</width>
@@ -3312,16 +3282,22 @@
                  <height>20</height>
                 </size>
                </property>
-               <property name="maxLength">
-                <number>3</number>
-               </property>
                <property name="alignment">
                 <set>Qt::AlignCenter</set>
+               </property>
+               <property name="buttonSymbols">
+                <enum>QAbstractSpinBox::NoButtons</enum>
+               </property>
+               <property name="decimals">
+                <number>0</number>
+               </property>
+               <property name="value">
+                <double>100.000000000000000</double>
                </property>
               </widget>
              </item>
              <item>
-              <widget class="QSlider" name="horizontalSlider_max_income_4">
+              <widget class="QSlider" name="horizontalSlider_max_income_2">
                <property name="minimumSize">
                 <size>
                  <width>65</width>
@@ -3330,7 +3306,7 @@
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>120</width>
+                 <width>140</width>
                  <height>10</height>
                 </size>
                </property>
@@ -3354,12 +3330,12 @@
             </layout>
            </item>
            <item>
-            <layout class="QHBoxLayout" name="horizontalLayout_profitMargin_4">
+            <layout class="QHBoxLayout" name="horizontalLayout_profitMargin_2">
              <property name="sizeConstraint">
               <enum>QLayout::SetDefaultConstraint</enum>
              </property>
              <item>
-              <widget class="QCheckBox" name="checkBox_profitMargin_4">
+              <widget class="QCheckBox" name="checkBox_profitMargin_2">
                <property name="minimumSize">
                 <size>
                  <width>170</width>
@@ -3378,7 +3354,7 @@
               </widget>
              </item>
              <item>
-              <spacer name="horizontalSpacer_profitMargin1_4">
+              <spacer name="horizontalSpacer_profitMargin1_2">
                <property name="orientation">
                 <enum>Qt::Horizontal</enum>
                </property>
@@ -3394,7 +3370,7 @@
               </spacer>
              </item>
              <item>
-              <widget class="QLabel" name="label_min_profitMargin_4">
+              <widget class="QLabel" name="label_min_profitMargin_2">
                <property name="minimumSize">
                 <size>
                  <width>25</width>
@@ -3416,7 +3392,7 @@
               </widget>
              </item>
              <item>
-              <widget class="QLineEdit" name="lineEdit_min_profitMargin_4">
+              <widget class="QDoubleSpinBox" name="doubleSpinBox_min_profitMargin_2">
                <property name="minimumSize">
                 <size>
                  <width>35</width>
@@ -3429,22 +3405,22 @@
                  <height>20</height>
                 </size>
                </property>
-               <property name="inputMask">
-                <string/>
-               </property>
-               <property name="text">
-                <string/>
-               </property>
-               <property name="maxLength">
-                <number>3</number>
-               </property>
                <property name="alignment">
                 <set>Qt::AlignCenter</set>
+               </property>
+               <property name="buttonSymbols">
+                <enum>QAbstractSpinBox::NoButtons</enum>
+               </property>
+               <property name="decimals">
+                <number>0</number>
+               </property>
+               <property name="maximum">
+                <double>100.000000000000000</double>
                </property>
               </widget>
              </item>
              <item>
-              <widget class="QSlider" name="horizontalSlider_min_profitMargin_4">
+              <widget class="QSlider" name="horizontalSlider_min_profitMargin_2">
                <property name="minimumSize">
                 <size>
                  <width>65</width>
@@ -3453,7 +3429,7 @@
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>120</width>
+                 <width>140</width>
                  <height>10</height>
                 </size>
                </property>
@@ -3469,7 +3445,7 @@
               </widget>
              </item>
              <item>
-              <spacer name="horizontalSpacer_profitMargin2_4">
+              <spacer name="horizontalSpacer_profitMargin2_2">
                <property name="orientation">
                 <enum>Qt::Horizontal</enum>
                </property>
@@ -3485,7 +3461,7 @@
               </spacer>
              </item>
              <item>
-              <widget class="QLabel" name="label_max_profitMargin_4">
+              <widget class="QLabel" name="label_max_profitMargin_2">
                <property name="minimumSize">
                 <size>
                  <width>30</width>
@@ -3507,7 +3483,7 @@
               </widget>
              </item>
              <item>
-              <widget class="QLineEdit" name="lineEdit_max_profitMargin_4">
+              <widget class="QDoubleSpinBox" name="doubleSpinBox_max_profitMargin_2">
                <property name="minimumSize">
                 <size>
                  <width>35</width>
@@ -3520,16 +3496,28 @@
                  <height>20</height>
                 </size>
                </property>
-               <property name="maxLength">
-                <number>3</number>
+               <property name="inputMethodHints">
+                <set>Qt::ImhDigitsOnly</set>
                </property>
                <property name="alignment">
                 <set>Qt::AlignCenter</set>
                </property>
+               <property name="buttonSymbols">
+                <enum>QAbstractSpinBox::NoButtons</enum>
+               </property>
+               <property name="decimals">
+                <number>0</number>
+               </property>
+               <property name="maximum">
+                <double>100.000000000000000</double>
+               </property>
+               <property name="value">
+                <double>100.000000000000000</double>
+               </property>
               </widget>
              </item>
              <item>
-              <widget class="QSlider" name="horizontalSlider_max_profitMargin_4">
+              <widget class="QSlider" name="horizontalSlider_max_profitMargin_2">
                <property name="minimumSize">
                 <size>
                  <width>65</width>
@@ -3538,7 +3526,7 @@
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>120</width>
+                 <width>140</width>
                  <height>10</height>
                 </size>
                </property>
@@ -3562,12 +3550,12 @@
             </layout>
            </item>
            <item>
-            <layout class="QHBoxLayout" name="horizontalLayout_dividendYield_4">
+            <layout class="QHBoxLayout" name="horizontalLayout_dividendYield_2">
              <property name="sizeConstraint">
               <enum>QLayout::SetDefaultConstraint</enum>
              </property>
              <item>
-              <widget class="QCheckBox" name="checkBox_dividendYield_4">
+              <widget class="QCheckBox" name="checkBox_dividendYield_2">
                <property name="minimumSize">
                 <size>
                  <width>170</width>
@@ -3586,7 +3574,7 @@
               </widget>
              </item>
              <item>
-              <spacer name="horizontalSpacer_dividendYield1_4">
+              <spacer name="horizontalSpacer_dividendYield1_2">
                <property name="orientation">
                 <enum>Qt::Horizontal</enum>
                </property>
@@ -3602,7 +3590,7 @@
               </spacer>
              </item>
              <item>
-              <widget class="QLabel" name="label_min_dividendYield_4">
+              <widget class="QLabel" name="label_min_dividendYield_2">
                <property name="minimumSize">
                 <size>
                  <width>25</width>
@@ -3624,7 +3612,7 @@
               </widget>
              </item>
              <item>
-              <widget class="QLineEdit" name="lineEdit_min_dividendYield_4">
+              <widget class="QDoubleSpinBox" name="doubleSpinBox_min_dividendYield_2">
                <property name="minimumSize">
                 <size>
                  <width>35</width>
@@ -3637,22 +3625,22 @@
                  <height>20</height>
                 </size>
                </property>
-               <property name="inputMask">
-                <string/>
-               </property>
-               <property name="text">
-                <string/>
-               </property>
-               <property name="maxLength">
-                <number>3</number>
-               </property>
                <property name="alignment">
                 <set>Qt::AlignCenter</set>
+               </property>
+               <property name="buttonSymbols">
+                <enum>QAbstractSpinBox::NoButtons</enum>
+               </property>
+               <property name="decimals">
+                <number>0</number>
+               </property>
+               <property name="maximum">
+                <double>100.000000000000000</double>
                </property>
               </widget>
              </item>
              <item>
-              <widget class="QSlider" name="horizontalSlider_min_dividendYield_4">
+              <widget class="QSlider" name="horizontalSlider_min_dividendYield_2">
                <property name="minimumSize">
                 <size>
                  <width>65</width>
@@ -3661,7 +3649,7 @@
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>120</width>
+                 <width>140</width>
                  <height>10</height>
                 </size>
                </property>
@@ -3677,7 +3665,7 @@
               </widget>
              </item>
              <item>
-              <spacer name="horizontalSpacer_dividendYield2_4">
+              <spacer name="horizontalSpacer_dividendYield2_2">
                <property name="orientation">
                 <enum>Qt::Horizontal</enum>
                </property>
@@ -3693,7 +3681,7 @@
               </spacer>
              </item>
              <item>
-              <widget class="QLabel" name="label_max_dividendYield_4">
+              <widget class="QLabel" name="label_max_dividendYield_2">
                <property name="minimumSize">
                 <size>
                  <width>30</width>
@@ -3715,7 +3703,7 @@
               </widget>
              </item>
              <item>
-              <widget class="QLineEdit" name="lineEdit_max_dividendYield_4">
+              <widget class="QDoubleSpinBox" name="doubleSpinBox_max_dividendYield_2">
                <property name="minimumSize">
                 <size>
                  <width>35</width>
@@ -3728,16 +3716,25 @@
                  <height>20</height>
                 </size>
                </property>
-               <property name="maxLength">
-                <number>3</number>
-               </property>
                <property name="alignment">
                 <set>Qt::AlignCenter</set>
+               </property>
+               <property name="buttonSymbols">
+                <enum>QAbstractSpinBox::NoButtons</enum>
+               </property>
+               <property name="decimals">
+                <number>0</number>
+               </property>
+               <property name="maximum">
+                <double>100.000000000000000</double>
+               </property>
+               <property name="value">
+                <double>100.000000000000000</double>
                </property>
               </widget>
              </item>
              <item>
-              <widget class="QSlider" name="horizontalSlider_max_dividendYield_4">
+              <widget class="QSlider" name="horizontalSlider_max_dividendYield_2">
                <property name="minimumSize">
                 <size>
                  <width>65</width>
@@ -3746,7 +3743,7 @@
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>120</width>
+                 <width>140</width>
                  <height>10</height>
                 </size>
                </property>
@@ -3770,12 +3767,12 @@
             </layout>
            </item>
            <item>
-            <layout class="QHBoxLayout" name="horizontalLayout_marketCapitalisation_4">
+            <layout class="QHBoxLayout" name="horizontalLayout_marketCapitalisation_2">
              <property name="sizeConstraint">
               <enum>QLayout::SetDefaultConstraint</enum>
              </property>
              <item>
-              <widget class="QCheckBox" name="checkBox_marketCapitalisation_4">
+              <widget class="QCheckBox" name="checkBox_marketCapitalisation_2">
                <property name="minimumSize">
                 <size>
                  <width>170</width>
@@ -3794,7 +3791,7 @@
               </widget>
              </item>
              <item>
-              <spacer name="horizontalSpacer_marketCapitalisation1_4">
+              <spacer name="horizontalSpacer_marketCapitalisation1_2">
                <property name="orientation">
                 <enum>Qt::Horizontal</enum>
                </property>
@@ -3810,7 +3807,7 @@
               </spacer>
              </item>
              <item>
-              <widget class="QLabel" name="label_min_marketCapitalisation_4">
+              <widget class="QLabel" name="label_min_marketCapitalisation_2">
                <property name="minimumSize">
                 <size>
                  <width>25</width>
@@ -3832,7 +3829,7 @@
               </widget>
              </item>
              <item>
-              <widget class="QLineEdit" name="lineEdit_min_marketCapitalisation_4">
+              <widget class="QDoubleSpinBox" name="doubleSpinBox_min_marketCapitalisation_2">
                <property name="minimumSize">
                 <size>
                  <width>35</width>
@@ -3845,22 +3842,22 @@
                  <height>20</height>
                 </size>
                </property>
-               <property name="inputMask">
-                <string/>
-               </property>
-               <property name="text">
-                <string/>
-               </property>
-               <property name="maxLength">
-                <number>3</number>
-               </property>
                <property name="alignment">
                 <set>Qt::AlignCenter</set>
+               </property>
+               <property name="buttonSymbols">
+                <enum>QAbstractSpinBox::NoButtons</enum>
+               </property>
+               <property name="decimals">
+                <number>0</number>
+               </property>
+               <property name="maximum">
+                <double>100.000000000000000</double>
                </property>
               </widget>
              </item>
              <item>
-              <widget class="QSlider" name="horizontalSlider_min_marketCapitalisation_4">
+              <widget class="QSlider" name="horizontalSlider_min_marketCapitalisation_2">
                <property name="minimumSize">
                 <size>
                  <width>65</width>
@@ -3869,7 +3866,7 @@
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>120</width>
+                 <width>140</width>
                  <height>10</height>
                 </size>
                </property>
@@ -3885,7 +3882,7 @@
               </widget>
              </item>
              <item>
-              <spacer name="horizontalSpacer_marketCapitalisation2_4">
+              <spacer name="horizontalSpacer_marketCapitalisation2_2">
                <property name="orientation">
                 <enum>Qt::Horizontal</enum>
                </property>
@@ -3901,7 +3898,7 @@
               </spacer>
              </item>
              <item>
-              <widget class="QLabel" name="label_max_marketCapitalisation_4">
+              <widget class="QLabel" name="label_max_marketCapitalisation_2">
                <property name="minimumSize">
                 <size>
                  <width>30</width>
@@ -3923,7 +3920,7 @@
               </widget>
              </item>
              <item>
-              <widget class="QLineEdit" name="lineEdit_max_marketCapitalisation_4">
+              <widget class="QDoubleSpinBox" name="doubleSpinBox_max_marketCapitalisation_2">
                <property name="minimumSize">
                 <size>
                  <width>35</width>
@@ -3936,16 +3933,25 @@
                  <height>20</height>
                 </size>
                </property>
-               <property name="maxLength">
-                <number>3</number>
-               </property>
                <property name="alignment">
                 <set>Qt::AlignCenter</set>
+               </property>
+               <property name="buttonSymbols">
+                <enum>QAbstractSpinBox::NoButtons</enum>
+               </property>
+               <property name="decimals">
+                <number>0</number>
+               </property>
+               <property name="maximum">
+                <double>100.000000000000000</double>
+               </property>
+               <property name="value">
+                <double>100.000000000000000</double>
                </property>
               </widget>
              </item>
              <item>
-              <widget class="QSlider" name="horizontalSlider_max_marketCapitalisation_4">
+              <widget class="QSlider" name="horizontalSlider_max_marketCapitalisation_2">
                <property name="minimumSize">
                 <size>
                  <width>65</width>
@@ -3954,7 +3960,7 @@
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>120</width>
+                 <width>140</width>
                  <height>10</height>
                 </size>
                </property>
@@ -3978,12 +3984,12 @@
             </layout>
            </item>
            <item>
-            <layout class="QHBoxLayout" name="horizontalLayout_financicalIndex_4">
+            <layout class="QHBoxLayout" name="horizontalLayout_financicalIndex_2">
              <property name="sizeConstraint">
               <enum>QLayout::SetDefaultConstraint</enum>
              </property>
              <item>
-              <widget class="QCheckBox" name="checkBox_financicalIndex_4">
+              <widget class="QCheckBox" name="checkBox_financicalIndex_2">
                <property name="minimumSize">
                 <size>
                  <width>170</width>
@@ -4002,7 +4008,7 @@
               </widget>
              </item>
              <item>
-              <spacer name="horizontalSpacer_financicalIndex1_4">
+              <spacer name="horizontalSpacer_financicalIndex1_2">
                <property name="orientation">
                 <enum>Qt::Horizontal</enum>
                </property>
@@ -4018,7 +4024,7 @@
               </spacer>
              </item>
              <item>
-              <widget class="QLabel" name="label_min_financicalIndex_4">
+              <widget class="QLabel" name="label_min_financicalIndex_2">
                <property name="minimumSize">
                 <size>
                  <width>25</width>
@@ -4040,7 +4046,7 @@
               </widget>
              </item>
              <item>
-              <widget class="QLineEdit" name="lineEdit_min_financicalIndex_4">
+              <widget class="QDoubleSpinBox" name="doubleSpinBox_min_financicalIndex_2">
                <property name="minimumSize">
                 <size>
                  <width>35</width>
@@ -4053,22 +4059,22 @@
                  <height>20</height>
                 </size>
                </property>
-               <property name="inputMask">
-                <string/>
-               </property>
-               <property name="text">
-                <string/>
-               </property>
-               <property name="maxLength">
-                <number>3</number>
-               </property>
                <property name="alignment">
                 <set>Qt::AlignCenter</set>
+               </property>
+               <property name="buttonSymbols">
+                <enum>QAbstractSpinBox::NoButtons</enum>
+               </property>
+               <property name="decimals">
+                <number>0</number>
+               </property>
+               <property name="maximum">
+                <double>100.000000000000000</double>
                </property>
               </widget>
              </item>
              <item>
-              <widget class="QSlider" name="horizontalSlider_min_financicalIndex_4">
+              <widget class="QSlider" name="horizontalSlider_min_financicalIndex_2">
                <property name="minimumSize">
                 <size>
                  <width>65</width>
@@ -4077,7 +4083,7 @@
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>120</width>
+                 <width>140</width>
                  <height>10</height>
                 </size>
                </property>
@@ -4093,7 +4099,7 @@
               </widget>
              </item>
              <item>
-              <spacer name="horizontalSpacer_financicalIndex2_4">
+              <spacer name="horizontalSpacer_financicalIndex2_2">
                <property name="orientation">
                 <enum>Qt::Horizontal</enum>
                </property>
@@ -4109,7 +4115,7 @@
               </spacer>
              </item>
              <item>
-              <widget class="QLabel" name="label_max_financicalIndex_4">
+              <widget class="QLabel" name="label_max_financicalIndex_2">
                <property name="minimumSize">
                 <size>
                  <width>30</width>
@@ -4131,7 +4137,7 @@
               </widget>
              </item>
              <item>
-              <widget class="QLineEdit" name="lineEdit_max_financicalIndex_4">
+              <widget class="QDoubleSpinBox" name="doubleSpinBox_max_financicalIndex_2">
                <property name="minimumSize">
                 <size>
                  <width>35</width>
@@ -4144,16 +4150,22 @@
                  <height>20</height>
                 </size>
                </property>
-               <property name="maxLength">
-                <number>3</number>
-               </property>
                <property name="alignment">
                 <set>Qt::AlignCenter</set>
+               </property>
+               <property name="buttonSymbols">
+                <enum>QAbstractSpinBox::NoButtons</enum>
+               </property>
+               <property name="decimals">
+                <number>0</number>
+               </property>
+               <property name="value">
+                <double>100.000000000000000</double>
                </property>
               </widget>
              </item>
              <item>
-              <widget class="QSlider" name="horizontalSlider_max_financicalIndex_4">
+              <widget class="QSlider" name="horizontalSlider_max_financicalIndex_2">
                <property name="minimumSize">
                 <size>
                  <width>65</width>
@@ -4162,7 +4174,7 @@
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>120</width>
+                 <width>140</width>
                  <height>10</height>
                 </size>
                </property>
@@ -4188,7 +4200,7 @@
           </layout>
          </item>
          <item>
-          <spacer name="horizontalSpacer1_10">
+          <spacer name="horizontalSpacer1_4">
            <property name="orientation">
             <enum>Qt::Horizontal</enum>
            </property>
@@ -4204,14 +4216,14 @@
           </spacer>
          </item>
          <item>
-          <widget class="Line" name="line_4">
+          <widget class="Line" name="line_2">
            <property name="orientation">
             <enum>Qt::Vertical</enum>
            </property>
           </widget>
          </item>
          <item>
-          <spacer name="horizontalSpacer1_11">
+          <spacer name="horizontalSpacer1_5">
            <property name="orientation">
             <enum>Qt::Horizontal</enum>
            </property>
@@ -4227,14 +4239,14 @@
           </spacer>
          </item>
          <item>
-          <layout class="QVBoxLayout" name="verticalLayout_rigth_4">
+          <layout class="QVBoxLayout" name="verticalLayout_right_2">
            <item>
-            <layout class="QHBoxLayout" name="horizontalLayout_indexEnd_4">
+            <layout class="QHBoxLayout" name="horizontalLayout_indexEnd_2">
              <property name="sizeConstraint">
               <enum>QLayout::SetDefaultConstraint</enum>
              </property>
              <item>
-              <widget class="QCheckBox" name="checkBox_indexEnd_4">
+              <widget class="QCheckBox" name="checkBox_indexEnd_2">
                <property name="enabled">
                 <bool>true</bool>
                </property>
@@ -4256,7 +4268,7 @@
               </widget>
              </item>
              <item>
-              <spacer name="horizontalSpacer_indexEnd1_4">
+              <spacer name="horizontalSpacer_indexEnd1_2">
                <property name="orientation">
                 <enum>Qt::Horizontal</enum>
                </property>
@@ -4272,7 +4284,7 @@
               </spacer>
              </item>
              <item>
-              <widget class="QLabel" name="label_min_indexEnd_4">
+              <widget class="QLabel" name="label_min_indexEnd_2">
                <property name="minimumSize">
                 <size>
                  <width>25</width>
@@ -4294,7 +4306,7 @@
               </widget>
              </item>
              <item>
-              <widget class="QLineEdit" name="lineEdit_min_indexEnd_4">
+              <widget class="QDoubleSpinBox" name="doubleSpinBox_min_indexEnd_2">
                <property name="minimumSize">
                 <size>
                  <width>35</width>
@@ -4307,22 +4319,19 @@
                  <height>20</height>
                 </size>
                </property>
-               <property name="inputMask">
-                <string/>
-               </property>
-               <property name="text">
-                <string/>
-               </property>
-               <property name="maxLength">
-                <number>3</number>
-               </property>
                <property name="alignment">
                 <set>Qt::AlignCenter</set>
+               </property>
+               <property name="buttonSymbols">
+                <enum>QAbstractSpinBox::NoButtons</enum>
+               </property>
+               <property name="decimals">
+                <number>0</number>
                </property>
               </widget>
              </item>
              <item>
-              <widget class="QSlider" name="horizontalSlider_min_indexEnd_4">
+              <widget class="QSlider" name="horizontalSlider_min_indexEnd_2">
                <property name="minimumSize">
                 <size>
                  <width>65</width>
@@ -4331,7 +4340,7 @@
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>120</width>
+                 <width>140</width>
                  <height>10</height>
                 </size>
                </property>
@@ -4347,7 +4356,7 @@
               </widget>
              </item>
              <item>
-              <spacer name="horizontalSpacer_indexEnd2_4">
+              <spacer name="horizontalSpacer_indexEnd2_2">
                <property name="orientation">
                 <enum>Qt::Horizontal</enum>
                </property>
@@ -4363,7 +4372,7 @@
               </spacer>
              </item>
              <item>
-              <widget class="QLabel" name="label_max_indexEnd_4">
+              <widget class="QLabel" name="label_max_indexEnd_2">
                <property name="minimumSize">
                 <size>
                  <width>30</width>
@@ -4385,7 +4394,7 @@
               </widget>
              </item>
              <item>
-              <widget class="QLineEdit" name="lineEdit_max_indexEnd_4">
+              <widget class="QDoubleSpinBox" name="doubleSpinBox_max_indexEnd_2">
                <property name="minimumSize">
                 <size>
                  <width>35</width>
@@ -4398,16 +4407,22 @@
                  <height>20</height>
                 </size>
                </property>
-               <property name="maxLength">
-                <number>3</number>
-               </property>
                <property name="alignment">
                 <set>Qt::AlignCenter</set>
+               </property>
+               <property name="buttonSymbols">
+                <enum>QAbstractSpinBox::NoButtons</enum>
+               </property>
+               <property name="decimals">
+                <number>0</number>
+               </property>
+               <property name="value">
+                <double>100.000000000000000</double>
                </property>
               </widget>
              </item>
              <item>
-              <widget class="QSlider" name="horizontalSlider_max_indexEnd_4">
+              <widget class="QSlider" name="horizontalSlider_max_indexEnd_2">
                <property name="minimumSize">
                 <size>
                  <width>65</width>
@@ -4416,7 +4431,7 @@
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>120</width>
+                 <width>140</width>
                  <height>10</height>
                 </size>
                </property>
@@ -4440,12 +4455,12 @@
             </layout>
            </item>
            <item>
-            <layout class="QHBoxLayout" name="horizontalLayout_priceByEarnings_4">
+            <layout class="QHBoxLayout" name="horizontalLayout_priceByEarnings_2">
              <property name="sizeConstraint">
               <enum>QLayout::SetDefaultConstraint</enum>
              </property>
              <item>
-              <widget class="QCheckBox" name="checkBox_priceByEarnings_4">
+              <widget class="QCheckBox" name="checkBox_priceByEarnings_2">
                <property name="minimumSize">
                 <size>
                  <width>130</width>
@@ -4464,7 +4479,7 @@
               </widget>
              </item>
              <item>
-              <spacer name="horizontalSpacer_priceByEarnings1_4">
+              <spacer name="horizontalSpacer_priceByEarnings1_2">
                <property name="orientation">
                 <enum>Qt::Horizontal</enum>
                </property>
@@ -4480,7 +4495,7 @@
               </spacer>
              </item>
              <item>
-              <widget class="QLabel" name="label_min_priceByEarnings_4">
+              <widget class="QLabel" name="label_min_priceByEarnings_2">
                <property name="minimumSize">
                 <size>
                  <width>25</width>
@@ -4502,7 +4517,7 @@
               </widget>
              </item>
              <item>
-              <widget class="QLineEdit" name="lineEdit_min_priceByEarnings_4">
+              <widget class="QDoubleSpinBox" name="doubleSpinBox_min_priceByEarnings_2">
                <property name="minimumSize">
                 <size>
                  <width>35</width>
@@ -4515,22 +4530,22 @@
                  <height>20</height>
                 </size>
                </property>
-               <property name="inputMask">
-                <string/>
-               </property>
-               <property name="text">
-                <string/>
-               </property>
-               <property name="maxLength">
-                <number>3</number>
-               </property>
                <property name="alignment">
                 <set>Qt::AlignCenter</set>
+               </property>
+               <property name="buttonSymbols">
+                <enum>QAbstractSpinBox::NoButtons</enum>
+               </property>
+               <property name="decimals">
+                <number>0</number>
+               </property>
+               <property name="value">
+                <double>0.000000000000000</double>
                </property>
               </widget>
              </item>
              <item>
-              <widget class="QSlider" name="horizontalSlider_min_priceByEarnings_4">
+              <widget class="QSlider" name="horizontalSlider_min_priceByEarnings_2">
                <property name="minimumSize">
                 <size>
                  <width>65</width>
@@ -4539,7 +4554,7 @@
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>120</width>
+                 <width>140</width>
                  <height>10</height>
                 </size>
                </property>
@@ -4555,7 +4570,7 @@
               </widget>
              </item>
              <item>
-              <spacer name="horizontalSpacer_priceByEarnings2_4">
+              <spacer name="horizontalSpacer_priceByEarnings2_2">
                <property name="orientation">
                 <enum>Qt::Horizontal</enum>
                </property>
@@ -4571,7 +4586,7 @@
               </spacer>
              </item>
              <item>
-              <widget class="QLabel" name="label_max_priceByEarnings_4">
+              <widget class="QLabel" name="label_max_priceByEarnings_2">
                <property name="minimumSize">
                 <size>
                  <width>30</width>
@@ -4593,7 +4608,7 @@
               </widget>
              </item>
              <item>
-              <widget class="QLineEdit" name="lineEdit_max_priceByEarnings_4">
+              <widget class="QDoubleSpinBox" name="doubleSpinBox_max_priceByEarnings_2">
                <property name="minimumSize">
                 <size>
                  <width>35</width>
@@ -4606,16 +4621,22 @@
                  <height>20</height>
                 </size>
                </property>
-               <property name="maxLength">
-                <number>3</number>
-               </property>
                <property name="alignment">
                 <set>Qt::AlignCenter</set>
+               </property>
+               <property name="buttonSymbols">
+                <enum>QAbstractSpinBox::NoButtons</enum>
+               </property>
+               <property name="decimals">
+                <number>0</number>
+               </property>
+               <property name="value">
+                <double>100.000000000000000</double>
                </property>
               </widget>
              </item>
              <item>
-              <widget class="QSlider" name="horizontalSlider_max_priceByEarnings_4">
+              <widget class="QSlider" name="horizontalSlider_max_priceByEarnings_2">
                <property name="minimumSize">
                 <size>
                  <width>65</width>
@@ -4624,7 +4645,7 @@
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>120</width>
+                 <width>140</width>
                  <height>10</height>
                 </size>
                </property>
@@ -4648,12 +4669,12 @@
             </layout>
            </item>
            <item>
-            <layout class="QHBoxLayout" name="horizontalLayout_priceByBook_4">
+            <layout class="QHBoxLayout" name="horizontalLayout_priceByBook_2">
              <property name="sizeConstraint">
               <enum>QLayout::SetDefaultConstraint</enum>
              </property>
              <item>
-              <widget class="QCheckBox" name="checkBox_priceByBook_4">
+              <widget class="QCheckBox" name="checkBox_priceByBook_2">
                <property name="minimumSize">
                 <size>
                  <width>130</width>
@@ -4672,7 +4693,7 @@
               </widget>
              </item>
              <item>
-              <spacer name="horizontalSpacer_priceByBook1_4">
+              <spacer name="horizontalSpacer_priceByBook1_2">
                <property name="orientation">
                 <enum>Qt::Horizontal</enum>
                </property>
@@ -4688,7 +4709,7 @@
               </spacer>
              </item>
              <item>
-              <widget class="QLabel" name="label_min_priceByBook_4">
+              <widget class="QLabel" name="label_min_priceByBook_2">
                <property name="minimumSize">
                 <size>
                  <width>25</width>
@@ -4710,7 +4731,7 @@
               </widget>
              </item>
              <item>
-              <widget class="QLineEdit" name="lineEdit_min_priceByBook_4">
+              <widget class="QDoubleSpinBox" name="doubleSpinBox_min_priceByBook_2">
                <property name="minimumSize">
                 <size>
                  <width>35</width>
@@ -4723,22 +4744,22 @@
                  <height>20</height>
                 </size>
                </property>
-               <property name="inputMask">
-                <string/>
-               </property>
-               <property name="text">
-                <string/>
-               </property>
-               <property name="maxLength">
-                <number>3</number>
-               </property>
                <property name="alignment">
                 <set>Qt::AlignCenter</set>
+               </property>
+               <property name="buttonSymbols">
+                <enum>QAbstractSpinBox::NoButtons</enum>
+               </property>
+               <property name="decimals">
+                <number>0</number>
+               </property>
+               <property name="value">
+                <double>0.000000000000000</double>
                </property>
               </widget>
              </item>
              <item>
-              <widget class="QSlider" name="horizontalSlider_min_priceByBook_4">
+              <widget class="QSlider" name="horizontalSlider_min_priceByBook_2">
                <property name="minimumSize">
                 <size>
                  <width>65</width>
@@ -4747,7 +4768,7 @@
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>120</width>
+                 <width>140</width>
                  <height>10</height>
                 </size>
                </property>
@@ -4763,7 +4784,7 @@
               </widget>
              </item>
              <item>
-              <spacer name="horizontalSpacer_priceByBook2_4">
+              <spacer name="horizontalSpacer_priceByBook2_2">
                <property name="orientation">
                 <enum>Qt::Horizontal</enum>
                </property>
@@ -4779,7 +4800,7 @@
               </spacer>
              </item>
              <item>
-              <widget class="QLabel" name="label_max_priceByBook_4">
+              <widget class="QLabel" name="label_max_priceByBook_2">
                <property name="minimumSize">
                 <size>
                  <width>30</width>
@@ -4801,7 +4822,7 @@
               </widget>
              </item>
              <item>
-              <widget class="QLineEdit" name="lineEdit_max_priceByBook_4">
+              <widget class="QDoubleSpinBox" name="doubleSpinBox_max_priceByBook_2">
                <property name="minimumSize">
                 <size>
                  <width>35</width>
@@ -4814,16 +4835,22 @@
                  <height>20</height>
                 </size>
                </property>
-               <property name="maxLength">
-                <number>3</number>
-               </property>
                <property name="alignment">
                 <set>Qt::AlignCenter</set>
+               </property>
+               <property name="buttonSymbols">
+                <enum>QAbstractSpinBox::NoButtons</enum>
+               </property>
+               <property name="decimals">
+                <number>0</number>
+               </property>
+               <property name="value">
+                <double>100.000000000000000</double>
                </property>
               </widget>
              </item>
              <item>
-              <widget class="QSlider" name="horizontalSlider_max_priceByBook_4">
+              <widget class="QSlider" name="horizontalSlider_max_priceByBook_2">
                <property name="minimumSize">
                 <size>
                  <width>65</width>
@@ -4832,7 +4859,7 @@
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>120</width>
+                 <width>140</width>
                  <height>10</height>
                 </size>
                </property>
@@ -4856,12 +4883,12 @@
             </layout>
            </item>
            <item>
-            <layout class="QHBoxLayout" name="horizontalLayout_priceBySales_4">
+            <layout class="QHBoxLayout" name="horizontalLayout_priceBySales_2">
              <property name="sizeConstraint">
               <enum>QLayout::SetDefaultConstraint</enum>
              </property>
              <item>
-              <widget class="QCheckBox" name="checkBox_priceBySales_4">
+              <widget class="QCheckBox" name="checkBox_priceBySales_2">
                <property name="minimumSize">
                 <size>
                  <width>130</width>
@@ -4880,7 +4907,7 @@
               </widget>
              </item>
              <item>
-              <spacer name="horizontalSpacer_priceBySales1_4">
+              <spacer name="horizontalSpacer_priceBySales1_2">
                <property name="orientation">
                 <enum>Qt::Horizontal</enum>
                </property>
@@ -4896,7 +4923,7 @@
               </spacer>
              </item>
              <item>
-              <widget class="QLabel" name="label_min_priceBySales_4">
+              <widget class="QLabel" name="label_min_priceBySales_2">
                <property name="minimumSize">
                 <size>
                  <width>25</width>
@@ -4918,7 +4945,7 @@
               </widget>
              </item>
              <item>
-              <widget class="QLineEdit" name="lineEdit_min_priceBySales_4">
+              <widget class="QDoubleSpinBox" name="doubleSpinBox_min_priceBySales_2">
                <property name="minimumSize">
                 <size>
                  <width>35</width>
@@ -4931,22 +4958,22 @@
                  <height>20</height>
                 </size>
                </property>
-               <property name="inputMask">
-                <string/>
-               </property>
-               <property name="text">
-                <string/>
-               </property>
-               <property name="maxLength">
-                <number>3</number>
-               </property>
                <property name="alignment">
                 <set>Qt::AlignCenter</set>
+               </property>
+               <property name="buttonSymbols">
+                <enum>QAbstractSpinBox::NoButtons</enum>
+               </property>
+               <property name="decimals">
+                <number>0</number>
+               </property>
+               <property name="value">
+                <double>0.000000000000000</double>
                </property>
               </widget>
              </item>
              <item>
-              <widget class="QSlider" name="horizontalSlider_min_priceBySales_4">
+              <widget class="QSlider" name="horizontalSlider_min_priceBySales_2">
                <property name="minimumSize">
                 <size>
                  <width>65</width>
@@ -4955,7 +4982,7 @@
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>120</width>
+                 <width>140</width>
                  <height>10</height>
                 </size>
                </property>
@@ -4971,7 +4998,7 @@
               </widget>
              </item>
              <item>
-              <spacer name="horizontalSpacer_priceBySales2_4">
+              <spacer name="horizontalSpacer_priceBySales2_2">
                <property name="orientation">
                 <enum>Qt::Horizontal</enum>
                </property>
@@ -4987,7 +5014,7 @@
               </spacer>
              </item>
              <item>
-              <widget class="QLabel" name="label_max_priceBySales_4">
+              <widget class="QLabel" name="label_max_priceBySales_2">
                <property name="minimumSize">
                 <size>
                  <width>30</width>
@@ -5009,7 +5036,7 @@
               </widget>
              </item>
              <item>
-              <widget class="QLineEdit" name="lineEdit_max_priceBySales_4">
+              <widget class="QDoubleSpinBox" name="doubleSpinBox_max_priceBySales_2">
                <property name="minimumSize">
                 <size>
                  <width>35</width>
@@ -5022,16 +5049,22 @@
                  <height>20</height>
                 </size>
                </property>
-               <property name="maxLength">
-                <number>3</number>
-               </property>
                <property name="alignment">
                 <set>Qt::AlignCenter</set>
+               </property>
+               <property name="buttonSymbols">
+                <enum>QAbstractSpinBox::NoButtons</enum>
+               </property>
+               <property name="decimals">
+                <number>0</number>
+               </property>
+               <property name="value">
+                <double>100.000000000000000</double>
                </property>
               </widget>
              </item>
              <item>
-              <widget class="QSlider" name="horizontalSlider_max_priceBySales_4">
+              <widget class="QSlider" name="horizontalSlider_max_priceBySales_2">
                <property name="minimumSize">
                 <size>
                  <width>65</width>
@@ -5040,7 +5073,7 @@
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>120</width>
+                 <width>140</width>
                  <height>10</height>
                 </size>
                </property>
@@ -5064,12 +5097,12 @@
             </layout>
            </item>
            <item>
-            <layout class="QHBoxLayout" name="horizontalLayout_priceByCashFlow_4">
+            <layout class="QHBoxLayout" name="horizontalLayout_priceByCashFlow_2">
              <property name="sizeConstraint">
               <enum>QLayout::SetDefaultConstraint</enum>
              </property>
              <item>
-              <widget class="QCheckBox" name="checkBox_priceByCashFlow_4">
+              <widget class="QCheckBox" name="checkBox_priceByCashFlow_2">
                <property name="minimumSize">
                 <size>
                  <width>130</width>
@@ -5088,7 +5121,7 @@
               </widget>
              </item>
              <item>
-              <spacer name="horizontalSpacer_priceByCashFlow1_4">
+              <spacer name="horizontalSpacer_priceByCashFlow1_2">
                <property name="orientation">
                 <enum>Qt::Horizontal</enum>
                </property>
@@ -5104,7 +5137,7 @@
               </spacer>
              </item>
              <item>
-              <widget class="QLabel" name="label_min_priceByCashFlow_4">
+              <widget class="QLabel" name="label_min_priceByCashFlow_2">
                <property name="minimumSize">
                 <size>
                  <width>25</width>
@@ -5126,7 +5159,7 @@
               </widget>
              </item>
              <item>
-              <widget class="QLineEdit" name="lineEdit_min_priceByCashFlow_4">
+              <widget class="QDoubleSpinBox" name="doubleSpinBox_min_priceByCashFlow_2">
                <property name="minimumSize">
                 <size>
                  <width>35</width>
@@ -5139,22 +5172,22 @@
                  <height>20</height>
                 </size>
                </property>
-               <property name="inputMask">
-                <string/>
-               </property>
-               <property name="text">
-                <string/>
-               </property>
-               <property name="maxLength">
-                <number>3</number>
-               </property>
                <property name="alignment">
                 <set>Qt::AlignCenter</set>
+               </property>
+               <property name="buttonSymbols">
+                <enum>QAbstractSpinBox::NoButtons</enum>
+               </property>
+               <property name="decimals">
+                <number>0</number>
+               </property>
+               <property name="value">
+                <double>0.000000000000000</double>
                </property>
               </widget>
              </item>
              <item>
-              <widget class="QSlider" name="horizontalSlider_min_priceByCashFlow_4">
+              <widget class="QSlider" name="horizontalSlider_min_priceByCashFlow_2">
                <property name="minimumSize">
                 <size>
                  <width>65</width>
@@ -5163,7 +5196,7 @@
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>120</width>
+                 <width>140</width>
                  <height>10</height>
                 </size>
                </property>
@@ -5179,7 +5212,7 @@
               </widget>
              </item>
              <item>
-              <spacer name="horizontalSpacer_priceByCashFlow2_4">
+              <spacer name="horizontalSpacer_priceByCashFlow2_2">
                <property name="orientation">
                 <enum>Qt::Horizontal</enum>
                </property>
@@ -5195,7 +5228,7 @@
               </spacer>
              </item>
              <item>
-              <widget class="QLabel" name="label_max_priceByCashFlow_4">
+              <widget class="QLabel" name="label_max_priceByCashFlow_2">
                <property name="minimumSize">
                 <size>
                  <width>30</width>
@@ -5217,7 +5250,7 @@
               </widget>
              </item>
              <item>
-              <widget class="QLineEdit" name="lineEdit_max_priceByCashFlow_4">
+              <widget class="QDoubleSpinBox" name="doubleSpinBox_max_priceByCashFlow_2">
                <property name="minimumSize">
                 <size>
                  <width>35</width>
@@ -5230,16 +5263,22 @@
                  <height>20</height>
                 </size>
                </property>
-               <property name="maxLength">
-                <number>3</number>
-               </property>
                <property name="alignment">
                 <set>Qt::AlignCenter</set>
+               </property>
+               <property name="buttonSymbols">
+                <enum>QAbstractSpinBox::NoButtons</enum>
+               </property>
+               <property name="decimals">
+                <number>0</number>
+               </property>
+               <property name="value">
+                <double>100.000000000000000</double>
                </property>
               </widget>
              </item>
              <item>
-              <widget class="QSlider" name="horizontalSlider_max_priceByCashFlow_4">
+              <widget class="QSlider" name="horizontalSlider_max_priceByCashFlow_2">
                <property name="minimumSize">
                 <size>
                  <width>65</width>
@@ -5248,7 +5287,7 @@
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>120</width>
+                 <width>140</width>
                  <height>10</height>
                 </size>
                </property>
@@ -5274,7 +5313,7 @@
           </layout>
          </item>
          <item>
-          <spacer name="horizontalSpacer1_12">
+          <spacer name="horizontalSpacer1_6">
            <property name="orientation">
             <enum>Qt::Horizontal</enum>
            </property>
@@ -5290,9 +5329,9 @@
           </spacer>
          </item>
          <item>
-          <layout class="QVBoxLayout" name="verticalLayout_button_4">
+          <layout class="QVBoxLayout" name="verticalLayout_button_2">
            <item>
-            <spacer name="verticalSpacer_topBtn_4">
+            <spacer name="verticalSpacer_topBtn_2">
              <property name="orientation">
               <enum>Qt::Vertical</enum>
              </property>
@@ -5308,7 +5347,7 @@
             </spacer>
            </item>
            <item>
-            <widget class="QPushButton" name="btn_selectAllCriteria_4">
+            <widget class="QPushButton" name="btn_selectAllCriteria_2">
              <property name="minimumSize">
               <size>
                <width>145</width>
@@ -5327,7 +5366,7 @@
             </widget>
            </item>
            <item>
-            <spacer name="verticalSpacer_betweenBtn_4">
+            <spacer name="verticalSpacer_betweenBtn_2">
              <property name="orientation">
               <enum>Qt::Vertical</enum>
              </property>
@@ -5343,7 +5382,7 @@
             </spacer>
            </item>
            <item>
-            <widget class="QPushButton" name="btn_deselectAllCriteria_4">
+            <widget class="QPushButton" name="btn_deselectAllCriteria_2">
              <property name="minimumSize">
               <size>
                <width>145</width>
@@ -5362,7 +5401,7 @@
             </widget>
            </item>
            <item>
-            <spacer name="verticalSpacer_bottomBtn_4">
+            <spacer name="verticalSpacer_bottomBtn_2">
              <property name="orientation">
               <enum>Qt::Vertical</enum>
              </property>
@@ -5380,6 +5419,8 @@
        </widget>
       </widget>
      </widget>
+     <zorder>scrollArea_2</zorder>
+     <zorder>horizontalLayoutWidget_2</zorder>
     </widget>
    </widget>
   </widget>

@@ -32,6 +32,24 @@ def get_id_portfolio(name, db=None):
     return return_value
 
 
+def get_all_portfolio_info(db=None):
+    """
+    Get all portfolio with name and id
+    :param db: if we have already connexion in other function who cal this function
+    :type db: DbConnection
+    :return: list[dict]
+    """
+    if not db or type(db) is not DbConnection:
+        db = DbConnection(HOST, USER, PASSWORD, DATABASE)
+
+    query = """SELECT id_portfolio, name FROM portfolio"""
+    res = db.select_in_db(query)
+    return_value = []
+    for id_portfolio, name in res:
+        return_value.append({'id_portfolio': id_portfolio, 'name': name})
+    return return_value
+
+
 def get_name_portfolio_name(id_portfolio, db=None):
     """
     Get name of portfolio as id of portfolio
@@ -118,7 +136,8 @@ def get_simulation_portfolio(id_portfolio, db=None):
 def create_portfolio(name=None, db=None):
     """
     Create new portfolio
-    :param name:
+    :param name: name of portfolio
+    :type name: str
     :param db: if we have already connexion in other function who cal this function
     :type db: DbConnection
     :return: id of portfolio
@@ -133,10 +152,44 @@ def create_portfolio(name=None, db=None):
         res = db.select_in_db(query)
         name = 'new_portfolio' + str(res[0][0])
 
-    query = """INSERT INTO portfolio (name) VALUES (%(name)s)"""
+    query = """INSERT INTO portfolio (name) VALUES (%(name)s) ON DUPLICATE KEY UPDATE name = name"""
     db.modified_db(query, {'name': name})
     # get id portfolio
     return get_id_portfolio(name, db)
+
+
+def add_companies_to_portfolio(portfolio, list_company, db=None):
+    """
+    Add list of company to portfolio
+    :param portfolio: id or name of portfolio
+    :type portfolio: int|string
+    :param list_company: list contains symbol of company
+    :type list_company: list[str]
+    :param db: if we have already connexion in other function who cal this function
+    :type db: DbConnection
+    :return: nb added company to portfolio
+    :rtype: int
+    """
+    if not db or type(db) is not DbConnection:
+        db = DbConnection(HOST, USER, PASSWORD, DATABASE)
+
+    # check if id or name of portfolio, if name => get id
+    if isinstance(portfolio, str):
+        if not portfolio.isdigit():
+            id_portfolio = get_id_portfolio(portfolio)
+            portfolio = id_portfolio[0].get('id_portfolio')[0]
+    # check if portfolio number is valid
+    if not portfolio:
+        raise ValueError("Need to portfolio valid to add company to portfolio. portfolio = %s" % portfolio)
+
+    # add each company to portfolio
+    query = """INSERT INTO company_portfolio (id_portfolio, symbol_company, is_activate_in_portfolio)
+                VALUES (%(id_portfolio)s, %(symbol_company)s, 1) ON DUPLICATE KEY UPDATE is_activate_in_portfolio = 1"""
+    nb_company_add = 0
+    for company in list_company:
+        params = {'id_portfolio': portfolio, 'symbol_company': company}
+        nb_company_add += db.modified_db(query, params)
+    return nb_company_add
 
 
 def insert_transaction_to_db(id_portfolio, symbol_company, quantity, value_current, transaction_date,
