@@ -76,13 +76,21 @@ def get_all_daily(sp500):
     config = configparser.ConfigParser()
     config.read('../config.ini')
 
-    day_max = config.get('daily', 'DAY_MAX')
-    month_max = config.get('daily', 'MONTH_MAX')
-    year_max = config.get('daily', 'YEAR_MAX')
+    # day_max = config.get('daily', 'DAY_MAX')
+    # month_max = config.get('daily', 'MONTH_MAX')
+    # year_max = config.get('daily', 'YEAR_MAX')
+
+    day_max = strftime("%d", localtime())
+    month_max = strftime("%m", localtime())
+    year_max = strftime("%Y", localtime())
+
+    print("Date max = {}-{}-{}".format(year_max, month_max, day_max))
 
     day_min = config.get('daily', 'DAY_MIN')
     month_min = config.get('daily', 'MONTH_MIN')
     year_min = config.get('daily', 'YEAR_MIN')
+
+    print("Date min = {}-{}-{}".format(year_min, month_min, day_min))
 
     log_path = config.get('path', 'PATH_LOG')
     dir_path = config.get('path', 'PATH_SNP500')
@@ -108,15 +116,21 @@ def get_all_daily(sp500):
                     logFile.write("{} = An empty string was received for {} ({}) \n"
                                   .format(strftime("%d %b %Y %H:%M:%S", localtime()), symbol, company))
 
+    config['daily']['DAY_MIN'] = day_max
+    config['daily']['MONTH_MIN'] = month_max
+    config['daily']['YEAR_MIN'] = year_max
+    with open('../config.ini', 'w') as configfile:
+        config.write(configfile)
+
 
 def get_all_dividend(sp500):
     # Get all the configuration from the config.ini file
     config = configparser.ConfigParser()
     config.read('../config.ini')
 
-    day_max = config.get('daily', 'DAY_MAX')
-    month_max = config.get('daily', 'MONTH_MAX')
-    year_max = config.get('daily', 'YEAR_MAX')
+    day_max = strftime("%d", localtime())
+    month_max = strftime("%m", localtime())
+    year_max = strftime("%Y", localtime())
 
     day_min = config.get('daily', 'DAY_MIN')
     month_min = config.get('daily', 'MONTH_MIN')
