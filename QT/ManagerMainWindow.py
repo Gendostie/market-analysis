@@ -88,37 +88,9 @@ class ManagerMainWindow(Ui_MainWindow):
         self.comboBox_stockScreener_portfolio.lineEdit().returnPressed\
             .connect(Slots.add_company_to_portfolio_stock_screener)
         # link slider and spin box of box layout to left
-        for idx_h_layout in range(self.verticalLayout_left.count()):
-            min_spin_box = HelperFunctionQt.get_widget_of_layout(self.verticalLayout_left.itemAt(idx_h_layout),
-                                                                  QtGui.QDoubleSpinBox)
-            min_range_slider = HelperFunctionQt.get_widget_of_layout(self.verticalLayout_left.itemAt(idx_h_layout),
-                                                                     QtGui.QSlider)
-            min_spin_box.valueChanged.connect(min_range_slider.setValue)
-            min_range_slider.valueChanged.connect(min_spin_box.setValue)
-
-            max_spin_box = HelperFunctionQt.get_widget_of_layout(self.verticalLayout_left.itemAt(idx_h_layout),
-                                                                  QtGui.QDoubleSpinBox, 1)
-
-            max_range_slider = HelperFunctionQt.get_widget_of_layout(self.verticalLayout_left.itemAt(idx_h_layout),
-                                                                  QtGui.QSlider, 1)
-            max_spin_box.valueChanged.connect(max_range_slider.setValue)
-            max_range_slider.valueChanged.connect(max_spin_box.setValue)
+        HelperFunctionQt.link_spin_slider_layout(self.verticalLayout_left)
         # link slider and spin box of box layout to right
-        for idx_h_layout in range(self.verticalLayout_right.count()):
-            min_spin_box = HelperFunctionQt.get_widget_of_layout(self.verticalLayout_right.itemAt(idx_h_layout),
-                                                                 QtGui.QDoubleSpinBox)
-            min_range_slider = HelperFunctionQt.get_widget_of_layout(self.verticalLayout_right.itemAt(idx_h_layout),
-                                                                     QtGui.QSlider)
-            min_spin_box.valueChanged.connect(min_range_slider.setValue)
-            min_range_slider.valueChanged.connect(min_spin_box.setValue)
-
-            max_spin_box = HelperFunctionQt.get_widget_of_layout(self.verticalLayout_right.itemAt(idx_h_layout),
-                                                                 QtGui.QDoubleSpinBox, 1)
-
-            max_range_slider = HelperFunctionQt.get_widget_of_layout(self.verticalLayout_right.itemAt(idx_h_layout),
-                                                                     QtGui.QSlider, 1)
-            max_spin_box.valueChanged.connect(max_range_slider.setValue)
-            max_range_slider.valueChanged.connect(max_spin_box.setValue)
+        HelperFunctionQt.link_spin_slider_layout(self.verticalLayout_right)
         # btn select criteria stock sceenner
         self.btn_selectAllCriteria.clicked.connect(Slots.select_all_criteria_stock_screener)
         # btn deselect criteria stock sceenner

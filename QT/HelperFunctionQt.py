@@ -134,3 +134,29 @@ def select_deselect_combobox_layout(layout, is_checked):
             cb = get_widget_of_layout(layout.itemAt(idx), QtGui.QCheckBox)
             if cb:
                 cb.setCheckState(is_checked)
+
+
+def link_spin_slider_layout(layout):
+    """
+    Common function for link (connect signal/slot) spin box and slider
+    :param layout: Widget layout, must be a simple layout in layout
+    :type layout: QtGui.QLayout
+    :return: None
+    """
+    for idx_layout in range(layout.count()):
+        # link min
+        min_spin_box = get_widget_of_layout(layout.itemAt(idx_layout), QtGui.QDoubleSpinBox)
+        min_range_slider = get_widget_of_layout(layout.itemAt(idx_layout), QtGui.QSlider)
+        min_spin_box.valueChanged.connect(min_range_slider.setValue)
+        min_range_slider.valueChanged.connect(min_spin_box.setValue)
+        # link max
+        max_spin_box = get_widget_of_layout(layout.itemAt(idx_layout), QtGui.QDoubleSpinBox, 1)
+        max_range_slider = get_widget_of_layout(layout.itemAt(idx_layout), QtGui.QSlider, 1)
+        max_spin_box.valueChanged.connect(max_range_slider.setValue)
+        max_range_slider.valueChanged.connect(max_spin_box.setValue)
+
+        min_spin_box.valueChanged.connect(max_spin_box.setMinimum)
+        max_spin_box.valueChanged.connect(min_spin_box.setMaximum)
+
+        min_range_slider.valueChanged.connect(max_range_slider.setMinimum)
+        max_range_slider.valueChanged.connect(min_range_slider.setMaximum)
