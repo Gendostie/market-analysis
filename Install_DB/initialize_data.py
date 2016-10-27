@@ -14,7 +14,7 @@ from Manager_DB.ManagerCompany import insert_historic_value_to_db, insert_daily_
 
 ################################################################################################
 #
-#                                    GET CSV FROM THE WEB
+#                                    GET CSVs FROM THE WEB
 #
 #
 ################################################################################################
