@@ -2,6 +2,7 @@
 import finsymbols
 from Manager_DB.DbConnection import DBConnection
 
+# TODO : Config
 HOST = '127.0.0.1'
 USER = 'root'
 PASSWORD = 'root'
@@ -202,8 +203,9 @@ def insert_historic_value_to_db(symbol_company, list_values, db=None):
 
 
 def insert_dividend_to_db(symbol_company, datetime, dividend, db=None):
+    # TODO : Comments
     if not symbol_company:
-        raise ValueError('Symbol company is None.')
+        raise ValueError('symbol_company is None.')
 
     if not db:
         db = DBConnection(HOST, USER, PASSWORD, DATABASE)
@@ -215,7 +217,6 @@ def insert_dividend_to_db(symbol_company, datetime, dividend, db=None):
     params = {'symbol_value': symbol_company,
               'datetime_value': datetime,
               'dividend_value': dividend}
-    # TODO: check for multi-row to insert, maybe use connection.executemayny(query, list of tuple values)
     db.modified_db(query, params)
 
     return 0

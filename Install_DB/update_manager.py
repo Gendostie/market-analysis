@@ -93,7 +93,7 @@ def get_all_historical(sp500, config, logfile):
 
 
 def get_all_daily(sp500, config, logfile):
-    # TODO: Data max and min
+    # TODO: Date max and min
     """Fetch the CSVs from Yahoo Finance and save the content in a CSV file.
 
     All CSVs are named following the format: "daily_" + the company's symbol + ".csv"
@@ -139,8 +139,9 @@ def get_all_daily(sp500, config, logfile):
 
 
 def get_all_dividend(sp500, config, logfile):
-    # TODO: Data max and min
-    """Fetch the CSVs from Yahoo Finance and save the content in a CSV file.
+    # TODO: Date max and min
+    # TODO: Test for those with no dividends
+    """Fetch the CSVs with dividends only from Yahoo Finance and save the content in a CSV file.
 
     All CSVs are named following the format: "div_" + the company's symbol + ".csv"
     ex: For Google, the CSV's name is "daily_GOOGL.csv".
@@ -148,7 +149,7 @@ def get_all_dividend(sp500, config, logfile):
     Log any exceptions raised while querying Yahoo Finance.
 
     :param sp500: List of unique S&P500's companies' symbols.
-    :param config: An open configparser
+    :param config: An open configparser.
     :param logfile: An open text file used as a log.
     :return: Nothing. All CSVs downloaded will be found in the directory SNP500 located in the project's directory.
     """
@@ -193,6 +194,17 @@ def get_all_dividend(sp500, config, logfile):
 
 
 def update_with_csv(is_updating_histo=True, is_updating_daily=True, is_updating_div=True):
+    # TODO : Update the config file for the min date.
+    """Intermediary function in charge of centralizing the update of the database with the downloaded CSVs.
+
+    This function only works if there are files in the directory "SNP500". It should always be called after any of the
+    "get" functions. The algorithm requires that the files are named a certain way.
+
+    :param is_updating_histo: If True, the "historical" table will be updated. Default is True.
+    :param is_updating_daily: If True, the "daily" table will be updated. Default is True.
+    :param is_updating_div: If True, the "dividends" table will be updated. Default is True.
+    :return: Nothing. The insertions are made into the database.
+    """
     config = configparser.ConfigParser()
     config.read('../config.ini')
 
@@ -210,7 +222,7 @@ def update_with_csv(is_updating_histo=True, is_updating_daily=True, is_updating_
     if is_updating_histo:
         for filename in glob.glob(dir_path + 'histo_*.csv'):
             if os.stat(filename).st_size != 0:
-                update_historical(filename, config, db)
+                update_historical(filename, config, logfile, db)
             else:
                 logfile.write("{} [UPDATE][HISTO] Skipped \"{}\" because the file was empty.\n"
                               .format(strftime("%d %b %Y %H:%M:%S", localtime()), filename))
@@ -218,7 +230,7 @@ def update_with_csv(is_updating_histo=True, is_updating_daily=True, is_updating_
     if is_updating_daily:
         for filename in glob.glob(dir_path + 'daily_*.csv'):
             if os.stat(filename).st_size != 0:
-                update_daily(filename, db)
+                update_daily(filename, config, db)
             else:
                 logfile.write("{} [UPDATE][DAILY] Skipped \"{}\" because the file was empty.\n"
                               .format(strftime("%d %b %Y %H:%M:%S", localtime()), filename))
@@ -226,7 +238,7 @@ def update_with_csv(is_updating_histo=True, is_updating_daily=True, is_updating_
     if is_updating_div:
         for filename in glob.glob(dir_path + 'div_*.csv'):
             if os.stat(filename).st_size != 0:
-                update_dividend(filename, db)
+                update_dividend(filename, config, db)
             else:
                 logfile.write("{} [UPDATE][DIVID] Skipped \"{}\" because the file was empty.\n"
                               .format(strftime("%d %b %Y %H:%M:%S", localtime()), filename))
@@ -234,17 +246,24 @@ def update_with_csv(is_updating_histo=True, is_updating_daily=True, is_updating_
     logfile.close()
 
 
-def update_historical(filename, config, db):
-    histo_funct = {'Revenue USD Mil': lambda x: None if pd.isnull(x) else int(x.replace(",", "")),
-                   'Gross Margin %': float,
-                   'Net Income USD Mil': lambda x: None if pd.isnull(x) else int(x.replace(",", "")),
-                   'Earnings Per Share USD': float,
-                   'Dividends USD': float,
-                   'Book Value Per Share * USD': float,
-                   'Free Cash Flow Per Share * USD': float}
+def update_historical(filename, config, logfile, db):
+    # TODO: Get information about all the values inserted.
+    """Insert in the database the historical financial information for one company.
 
-    log_path = config.get('path', 'PATH_LOG')
+    This function only works if there are files in the directory "SNP500" with a name like "histo_*.csv", where * is the
+    symbol of a company. It should only be called after the function "get_all_historical".
 
+    The function assumes that the first 2 lines of the CSV are the header and that the first column contains the indexes
+    of the rows. The column TTM, for Trailing Twelve Months, is excluded; as are any columns where the date isn't in the
+    format YYYY-MM. It also excludes a column where all values are Null. It might happen if the company's financial
+    information are missing for one year (like if it didn't exist back then).
+
+    :param filename: The full path of the CSV containing the historical information of a company.
+    :param config: An open configparser.
+    :param logfile: An open text file used as a log.
+    :param db: A DBConnection object for the database.
+    :return: Nothing. The insertions are made into the table "historic_value" in the database.
+    """
     # The dates have the format YYYY-MM in the CVSs. We want to remove the TTM and errors if there are any.
     reg_expr = re.compile('.{4}-.{2}')
 
@@ -260,38 +279,46 @@ def update_historical(filename, config, db):
 
     # Since all elements are considered objects, we need to convert them into the type we need for our database.
     # For integers, we also need to remove the comma or it will be interpreted incorrectly.
-    # The check for Null is important because the function replace() cannot be used on it. It will crash the program.
+    # The check for Null is important because the function replace() cannot be used on it. The program would crash.
+    histo_funct = {'Revenue USD Mil': lambda x: None if pd.isnull(x) else int(x.replace(",", "")),
+                   'Gross Margin %': float,
+                   'Net Income USD Mil': lambda x: None if pd.isnull(x) else int(x.replace(",", "")),
+                   'Earnings Per Share USD': float,
+                   'Dividends USD': float,
+                   'Book Value Per Share * USD': float,
+                   'Free Cash Flow Per Share * USD': float}
     for row, funct in histo_funct.items():
         df.loc[row] = df.loc[row].apply(funct)
 
-    # For every years (col), we insert its data in the db.
-    with open(log_path, 'a') as log_file:
-        for col in df.columns.values:
-            if reg_expr.match(col) is not None:
-                # Converting the NaN values into None for the sql query.
-                numerical_param = list(map(lambda n: None if pd.isnull(n) else n, list(df[col].values)))
+    # For every year (column), we insert its data in the db.
+    for col in df.columns.values:
+        if reg_expr.match(col) is not None:
+            # Converting the NaN values into None for the sql query.
+            numerical_param = list(map(lambda n: None if pd.isnull(n) else n, list(df[col].values)))
 
-                # Skipping this column if all values are None
-                if all(num is None for num in numerical_param):
-                    log_file.write("{} = Skipping the year {} of the company {}. Data : {}\n"
-                                   .format(strftime("%d %b %Y %H:%M:%S", localtime()), col, symbol, numerical_param))
-                    continue
+            # Skipping this column if all values are None
+            if all(num is None for num in numerical_param):
+                logfile.write("{} [UPDATE][HISTO] Skipping the year {} of the company {}. Data : {}\n"
+                              .format(strftime("%d %b %Y %H:%M:%S", localtime()), col, symbol, numerical_param))
+                continue
 
-                # Converting the date (str) into datetime for the sql query.
-                date = pd.to_datetime(col, format='%Y-%m')
-
-                query_params = [datetime(date.year, date.month, date.day)] + numerical_param
-
-                insert_historic_value_to_db(str(symbol), query_params, db)
+            # Converting the date (str) into datetime for the sql query.
+            date = pd.to_datetime(col, format='%Y-%m')
+            query_params = [datetime(date.year, date.month, date.day)] + numerical_param
+            insert_historic_value_to_db(str(symbol), query_params, db)
 
 
-def update_daily(filename, db):
-    # TODO : Not using the log file
-    config = configparser.ConfigParser()
-    config.read('../config.ini')
+def update_daily(filename, config, db):
+    """Insert in the database the daily stock prices of a company.
 
-    log_path = config.get('path', 'PATH_LOG')
+    This function only works if there are files in the directory "SNP500" with a name like "daily_*.csv", where * is the
+    symbol of a company. It should only be called after the function "get_all_daily".
 
+    :param filename: The full path of the CSV containing the daily stock price information of a company.
+    :param config: An open configparser.
+    :param db: A DBConnection object for the database.
+    :return: Nothing. The insertions are made into the table "daily_value" in the database.
+    """
     # Cut the filename to get the symbol of the company; which is always the name of the CSV file.
     basename = os.path.splitext(filename)[0]
     type_and_symbol = basename.rsplit('/', 1)[1]
@@ -300,26 +327,31 @@ def update_daily(filename, db):
     df = pd.read_csv(filename)
     daily_values = list(df.columns.values)
 
-    with open(log_path, 'a') as log_file:
-        for row in df.itertuples(False):
-            date = pd.to_datetime(row[daily_values.index('Date')], format='%Y-%m')
+    for row in df.itertuples(False):
+        date = pd.to_datetime(row[daily_values.index('Date')], format='%Y-%m')
 
-            numerical_param = []
-            for col_name in json.loads(config.get('list', 'DAILY_COL')):
-                numerical_param.append(row[daily_values.index(col_name)])
-            numerical_param = list(map(lambda n: float(n), numerical_param))
+        # Take only the rows that we need. The list containing the names of those rows is in the configuration file.
+        numerical_param = []
+        for col_name in json.loads(config.get('list', 'DAILY_COL')):
+            numerical_param.append(row[daily_values.index(col_name)])
+        # All the values are converted to float.
+        # (Unless we keep the Volume; which should be an integer. This is not implemented as for now.)
+        numerical_param = list(map(lambda n: float(n), numerical_param))
+        query_params = [datetime(date.year, date.month, date.day)] + numerical_param
+        insert_daily_value_to_db(str(symbol), query_params, db)
 
-            query_params = [datetime(date.year, date.month, date.day)] + numerical_param
-            insert_daily_value_to_db(str(symbol), query_params, db)
 
+def update_dividend(filename, config, db):
+    """Insert in the database each dividend paid by a company and when each transaction was made.
 
-def update_dividend(filename, db):
-    # TODO : Not using the log file
-    config = configparser.ConfigParser()
-    config.read('../config.ini')
+    This function only works if there are files in the directory "SNP500" with a name like "div_*.csv", where * is the
+    symbol of a company. It should only be called after the function "get_all_dividend".
 
-    log_path = config.get('path', 'PATH_LOG')
-
+    :param filename: The full path of the CSV containing the dividends paid by a company.
+    :param config: An open configparser.
+    :param db: A DBConnection object for the database.
+    :return: Nothing. The insertions are made into the table "dividends" in the database.
+    """
     # Cut the filename to get the symbol of the company; which is always the name of the CSV file.
     basename = os.path.splitext(filename)[0]
     type_and_symbol = basename.rsplit('/', 1)[1]
@@ -328,10 +360,7 @@ def update_dividend(filename, db):
     df = pd.read_csv(filename)
     div_values = list(df.columns.values)
 
-    with open(log_path, 'a') as log_file:
-        for row in df.itertuples(False):
-            date = pd.to_datetime(row[div_values.index('Date')], format='%Y-%m')
-
-            numerical_param = float(row[div_values.index('Dividends')])
-
-            insert_dividend_to_db(str(symbol), datetime(date.year, date.month, date.day), numerical_param, db)
+    for row in df.itertuples(False):
+        date = pd.to_datetime(row[div_values.index('Date')], format='%Y-%m')
+        numerical_param = float(row[div_values.index('Dividends')])
+        insert_dividend_to_db(str(symbol), datetime(date.year, date.month, date.day), numerical_param, db)
