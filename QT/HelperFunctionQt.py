@@ -2,17 +2,18 @@
 # -*- coding: utf-8 -*-
 from PyQt4 import QtCore, QtGui
 
+from MainWindow import _translate
 import ManagerPortfolio
 
 
-def take_row_table_widget(table_widget, idx_row):
+def get_row_table_widget(table_widget, idx_row):
     """
-
-    :param table_widget:
+    Get row in table widget
+    :param table_widget: table qt
     :type table_widget: QtGui.QTableWidget
-    :param idx_row:
+    :param idx_row: index of row
     :type idx_row: int
-    :return:
+    :return: row qt, list of cell item and/or cell widget
     :rtype: list[QtGui.QTableWidgetItem]
     """
     row_items = []
@@ -26,12 +27,12 @@ def take_row_table_widget(table_widget, idx_row):
 
 def set_row_table_widget(table_widget, row_items):
     """
-
-    :param table_widget:
+    Add row in end of table widget
+    :param table_widget: table qt
     :type table_widget: QtGui.QTableWidget
-    :param row_items:
+    :param row_items: row of table widget
     :type row_items: list[QtGui.QTableWidgetItem]
-    :return:
+    :return: None
     """
     table_widget.setRowCount(table_widget.rowCount() + 1)
     for idx_column, item in enumerate(row_items):
@@ -116,7 +117,7 @@ def add_companies_to_portfolio_db(portfolio_name, list_company):
     # add portfolio if is new
     portfolio_id = ManagerPortfolio.create_portfolio(portfolio_name)
     # add company to portfolio in db
-    nb_company_added = ManagerPortfolio.add_companies_to_portfolio(portfolio_id, list_company)
+    nb_company_added = ManagerPortfolio.add_companies_to_portfolio(portfolio_id[0].get('id_portfolio')[0], list_company)
     print("Nb company added: %s" % nb_company_added)
 
 
@@ -160,3 +161,50 @@ def link_spin_slider_layout(layout):
 
         min_range_slider.valueChanged.connect(max_range_slider.setMinimum)
         max_range_slider.valueChanged.connect(min_range_slider.setMaximum)
+
+
+def create_new_cell_item_table_widget(table_widget, idx_row, idx_column, value):
+    """
+    Create a cell item in row to column specify of table widget chosen
+    :param table_widget: table qt
+    :type table_widget: QtGui.QTableWidget
+    :param idx_row: index of row
+    :type idx_row: int
+    :param idx_column: index of column
+    :type idx_column: int
+    :param value: value to display in cell
+    :type value: str
+    :return: None
+    """
+    # create new row
+    cell = QtGui.QTableWidgetItem()
+    # we don't want user can change value of cell in table QtCore.Qt.ItemIsEditable
+    cell.setFlags(QtCore.Qt.ItemIsUserCheckable | QtCore.Qt.ItemIsEnabled)
+
+    value = value if value is not None else ""
+    cell.setText(_translate("MainWindow", value, None))
+    table_widget.setItem(idx_row, idx_column, cell)
+
+
+def create_new_cell_widget_table_widget(table_widget, idx_row, idx_column, widget_of_widget):
+    """
+    Create a cell widget with a other widget (ex: checkbox)
+    :param table_widget: table qt
+    :type table_widget: QtGui.QTableWidget
+    :param idx_row: index of row
+    :type idx_row: int
+    :param idx_column: index of column
+    :type idx_column: int
+    :param widget_of_widget: widget to display in cell (ex: checkbox)
+    :type widget_of_widget: QtGui.QWidget(QtGui.QWidget)
+    :return: None
+    """
+    widget = QtGui.QWidget()
+
+    h_box_layout = QtGui.QHBoxLayout()
+    h_box_layout.setMargin(1)
+    h_box_layout.setAlignment(QtCore.Qt.AlignCenter)
+    h_box_layout.addWidget(widget_of_widget)
+
+    widget.setLayout(h_box_layout)
+    table_widget.setCellWidget(idx_row, idx_column, widget)
