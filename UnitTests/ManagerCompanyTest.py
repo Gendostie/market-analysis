@@ -2,9 +2,9 @@
 import unittest
 from copy import deepcopy
 
-from Manager_DB.DbConnection import DBConnection
-from Manager_DB import ManagerCompany
-from UnitTests import ManagerDbTest
+from DbConnection import DbConnection
+import ManagerCompany
+import ManagerDbTest
 
 HOST = '127.0.0.1'
 USER = 'root'
@@ -18,7 +18,7 @@ class ManagerCompanyTest(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         ManagerDbTest.init_db_mysql_test(HOST, USER, PASSWORD, DATABASE)
-        cls.__db = DBConnection(HOST, USER, PASSWORD, DATABASE)
+        cls.__db = DbConnection(HOST, USER, PASSWORD, DATABASE)
 
         cls.__company = [{'symbol': 'GOOGL', 'name': 'Alphabet Inc Class A', 'last_update_historic': None},
                          {'symbol': 'AMZN', 'name': 'Amazon.com Inc', 'last_update_historic': None},

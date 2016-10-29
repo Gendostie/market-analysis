@@ -1,4 +1,4 @@
--- MySQL dump 10.13  Distrib 5.7.15, for Win64 (x86_64)
+-- MySQL dump 10.13  Distrib 5.7.12, for Win32 (AMD64)
 --
 -- Host: localhost    Database: market_analysis
 -- ------------------------------------------------------
@@ -31,7 +31,7 @@ CREATE TABLE `simulation` (
   PRIMARY KEY (`id_simulation`,`id_portfolio`),
   KEY `id_portfolio_idx` (`id_portfolio`),
   CONSTRAINT `id_portfolio_fk_simulation` FOREIGN KEY (`id_portfolio`) REFERENCES `portfolio` (`id_portfolio`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -52,4 +52,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2016-09-30 20:15:43
+-- Dump completed on 2016-10-26 10:31:06
