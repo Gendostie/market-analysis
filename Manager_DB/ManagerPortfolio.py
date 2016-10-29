@@ -1,6 +1,6 @@
 #!/usr/bin/python
 import sys
-from DbConnection import DbConnection
+from Manager_DB.DbConnection import DbConnection
 
 HOST = '127.0.0.1'
 USER = 'root'
