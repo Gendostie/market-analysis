@@ -1,7 +1,7 @@
 #!/usr/bin/python
 from os import listdir
 from os import path
-from Manager_DB.DbConnection import DBConnection
+from Manager_DB.DbConnection import DbConnection
 
 
 def init_db_mysql_test(host, user, password, database):
@@ -17,10 +17,10 @@ def init_db_mysql_test(host, user, password, database):
     :param database: name of database, can include name table, ex: market_analysis.company
     :type database: str
     :return: connection to db
-    :rtype: DBConnection
+    :rtype: DbConnection
     """
     # Drop database if exists already
-    db = DBConnection(host, user, password, '')  # no database, because we don't know if database exists
+    db = DbConnection(host, user, password, '')  # no database, because we don't know if database exists
     query = """DROP DATABASE IF EXISTS %s""" % ('`' + database + '`')
     db.modified_db(query)
     # Create database
@@ -29,7 +29,7 @@ def init_db_mysql_test(host, user, password, database):
     db.close_connection()
 
     # Create another connection, because now we are sure that database exists
-    db = DBConnection(host, user, password, database)
+    db = DbConnection(host, user, password, database)
     # Create table
     for filename in listdir(path.join('../Data_DB')):
         # Take just filename to finish by extension sql
@@ -61,11 +61,11 @@ def drop_db_mysql_test(host, user, password, database, db=None):
     :param database: name of database, can include name table, ex: market_analysis.company
     :type database: str
     :param db: if we have already connexion in other function who cal this function
-    :type db: DBConnection
+    :type db: DbConnection
     :return: None
     """
     if not db:
-        db = DBConnection(host, user, password, '')  # no database if error when create db
+        db = DbConnection(host, user, password, '')  # no database if error when create db
     query = """DROP DATABASE IF EXISTS %s""" % ('`' + database + '`')
     db.modified_db(query)
     db.close_connection()
