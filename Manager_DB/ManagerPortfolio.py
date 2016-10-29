@@ -170,7 +170,7 @@ def add_companies_to_portfolio(portfolio, list_company, db=None):
     :return: nb added company to portfolio
     :rtype: int
     """
-    if not db or type(db) is not DbConnection:
+    if not db or not isinstance(db, DbConnection):
         db = DbConnection(HOST, USER, PASSWORD, DATABASE)
 
     # check if id or name of portfolio, if name => get id
@@ -190,6 +190,38 @@ def add_companies_to_portfolio(portfolio, list_company, db=None):
         params = {'id_portfolio': portfolio, 'symbol_company': company}
         nb_company_add += db.modified_db(query, params)
     return nb_company_add
+
+
+def get_companies_to_portfolio(portfolio, db=None):
+    """
+    Get all company associate to a portfolio
+    :param portfolio: id or name of portfolio
+    :type portfolio: int|string
+    :param db: if we have already connexion in other function who cal this function
+    :type db: DbConnection
+    :return: list company name  and symbol
+    :rtype: list[dict]
+    """
+    if not db or not isinstance(db, DbConnection):
+        db = DbConnection(HOST, USER, PASSWORD, DATABASE)
+
+    # check if id or name of portfolio, if name => get id
+    if isinstance(portfolio, str):
+        if not portfolio.isdigit():
+            id_portfolio = get_id_portfolio(portfolio)
+            portfolio = id_portfolio[0].get('id_portfolio')[0]
+    # check if portfolio number is valid
+    if not portfolio:
+        raise ValueError("Need to portfolio valid to add company to portfolio. portfolio = %s" % portfolio)
+
+    query = """SELECT c.name, cp.symbol_company
+                FROM company_portfolio cp JOIN company c ON c.symbol = cp.symbol_company
+                WHERE cp.id_portfolio = %(portfolio)s AND cp.is_activate_in_portfolio = 1"""
+    res = db.select_in_db(query, {'portfolio': portfolio})
+    return_value = []
+    for name, symbol in res:
+        return_value.append({'name': name, 'symbol': symbol})
+    return return_value
 
 
 def insert_transaction_to_db(id_portfolio, symbol_company, quantity, value_current, transaction_date,
