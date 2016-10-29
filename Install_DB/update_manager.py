@@ -108,9 +108,9 @@ def get_all_daily(sp500, config, logfile):
     :return: Nothing. All CSVs downloaded will be found in the directory SNP500 located in the project's directory.
     """
     # The months begin with 0. So 0 = January and 11 = December
-    day_max = config.get('daily', 'DAY_MAX')
-    month_max = config.get('daily', 'MONTH_MAX')
-    year_max = config.get('daily', 'YEAR_MAX')
+    day_max = strftime("%d", localtime())
+    month_max = strftime("%m", localtime())
+    year_max = strftime("%Y", localtime())
 
     day_min = config.get('daily', 'DAY_MIN')
     month_min = config.get('daily', 'MONTH_MIN')
@@ -139,6 +139,14 @@ def get_all_daily(sp500, config, logfile):
             if r.text:
                 csvFile.write(r.text)
 
+    # Update the configuration file so, next time, it won't try to update what was already done.
+    # The months begin with 0. So 0 = January and 11 = December
+    config['daily']['DAY_MIN'] = day_max
+    config['daily']['MONTH_MIN'] = month_max - 1
+    config['daily']['YEAR_MIN'] = year_max
+    with open('../config.ini', 'w') as configfile:
+        config.write(configfile)
+
 
 def get_all_dividend(sp500, config, logfile):
     # TODO: Date max and min
@@ -156,13 +164,13 @@ def get_all_dividend(sp500, config, logfile):
     :return: Nothing. All CSVs downloaded will be found in the directory SNP500 located in the project's directory.
     """
     # The months begin with 0. So 0 = January and 11 = December
-    day_max = config.get('daily', 'DAY_MAX')
-    month_max = config.get('daily', 'MONTH_MAX')
-    year_max = config.get('daily', 'YEAR_MAX')
+    day_max = strftime("%d", localtime())
+    month_max = strftime("%m", localtime())
+    year_max = strftime("%Y", localtime())
 
-    day_min = config.get('daily', 'DAY_MIN')
-    month_min = config.get('daily', 'MONTH_MIN')
-    year_min = config.get('daily', 'YEAR_MIN')
+    day_min = config.get('dividend', 'DAY_MIN')
+    month_min = config.get('dividend', 'MONTH_MIN')
+    year_min = config.get('dividend', 'YEAR_MIN')
 
     dir_path = config.get('path', 'PATH_SNP500')
 
@@ -186,6 +194,14 @@ def get_all_dividend(sp500, config, logfile):
             #      containing information.
             if r.text:
                 csvFile.write(r.text)
+
+    # Update the configuration file so, next time, it won't try to update what was already done.
+    # The months begin with 0. So 0 = January and 11 = December
+    config['dividend']['DAY_MIN'] = day_max
+    config['dividend']['MONTH_MIN'] = month_max - 1
+    config['dividend']['YEAR_MIN'] = year_max
+    with open('../config.ini', 'w') as configfile:
+        config.write(configfile)
 
 
 ################################################################################################
