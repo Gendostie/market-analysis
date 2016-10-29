@@ -31,6 +31,7 @@ def get_csv(is_fetching_histo=True, is_fetching_daily=True, is_fetching_div=True
     """
     # Get all symbols of the S&P500.
     # TODO: Get all the companies that were in the S&P500 between two dates. Otherwise -> survivor bias.
+    # When testing, you might consider lowering the number of companies by slicing this list. ex: add [:50] at the end
     sp500 = finsymbols.get_sp500_symbols()
 
     # Get the configuration file
@@ -106,6 +107,7 @@ def get_all_daily(sp500, config, logfile):
     :param logfile: An open text file used as a log.
     :return: Nothing. All CSVs downloaded will be found in the directory SNP500 located in the project's directory.
     """
+    # The months begin with 0. So 0 = January and 11 = December
     day_max = config.get('daily', 'DAY_MAX')
     month_max = config.get('daily', 'MONTH_MAX')
     year_max = config.get('daily', 'YEAR_MAX')
@@ -117,8 +119,8 @@ def get_all_daily(sp500, config, logfile):
     dir_path = config.get('path', 'PATH_SNP500')
 
     prefix = "http://real-chart.finance.yahoo.com/table.csv?s="
-    suffix = "&d={}&e={}&f={}&g=d&a={}&b={}&c={}&ignore=.csv".format(day_max, month_max, year_max,
-                                                                     day_min, month_min, year_min)
+    suffix = "&d={}&e={}&f={}&g=d&a={}&b={}&c={}&ignore=.csv".format(month_max, day_max, year_max,
+                                                                     month_min, day_min, year_min)
 
     for i in range(len(sp500)):
         symbol = sp500[i]['symbol']
@@ -153,6 +155,7 @@ def get_all_dividend(sp500, config, logfile):
     :param logfile: An open text file used as a log.
     :return: Nothing. All CSVs downloaded will be found in the directory SNP500 located in the project's directory.
     """
+    # The months begin with 0. So 0 = January and 11 = December
     day_max = config.get('daily', 'DAY_MAX')
     month_max = config.get('daily', 'MONTH_MAX')
     year_max = config.get('daily', 'YEAR_MAX')
