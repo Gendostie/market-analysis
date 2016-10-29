@@ -32,7 +32,7 @@ def get_csv(is_fetching_histo=True, is_fetching_daily=True, is_fetching_div=True
     # Get all symbols of the S&P500.
     # TODO: Get all the companies that were in the S&P500 between two dates. Otherwise -> survivor bias.
     # When testing, you might consider lowering the number of companies by slicing this list. ex: add [:50] at the end
-    sp500 = finsymbols.get_sp500_symbols()
+    sp500 = finsymbols.get_sp500_symbols()[:25]
 
     # Get the configuration file
     config = configparser.ConfigParser()
@@ -51,7 +51,6 @@ def get_csv(is_fetching_histo=True, is_fetching_daily=True, is_fetching_div=True
         get_all_dividend(sp500, config, logfile)
 
     logfile.close()
-    # TODO : Any update to do to config?
 
 
 def get_all_historical(sp500, config, logfile):
@@ -94,13 +93,17 @@ def get_all_historical(sp500, config, logfile):
 
 
 def get_all_daily(sp500, config, logfile):
-    # TODO: Date max and min
     """Fetch the CSVs from Yahoo Finance and save the content in a CSV file.
 
     All CSVs are named following the format: "daily_" + the company's symbol + ".csv"
     ex: For Google, the CSV's name is "daily_GOOGL.csv".
 
     Log any exceptions raised while querying Yahoo Finance.
+
+    The minimum date that is used when querying Yahoo Finance is written in the configuration file. It can be manually
+    adjusted if needed. It is set automatically to the date of the last update after each execution of "installer.py".
+
+    The maximum date that is used when querying Yahoo Finance is the present localtime date.
 
     :param sp500: List of unique S&P500's companies' symbols.
     :param config: An open configparser
@@ -139,24 +142,19 @@ def get_all_daily(sp500, config, logfile):
             if r.text:
                 csvFile.write(r.text)
 
-    # Update the configuration file so, next time, it won't try to update what was already done.
-    # The months begin with 0. So 0 = January and 11 = December
-    config['daily']['DAY_MIN'] = day_max
-    config['daily']['MONTH_MIN'] = month_max - 1
-    config['daily']['YEAR_MIN'] = year_max
-    with open('../config.ini', 'w') as configfile:
-        config.write(configfile)
-
 
 def get_all_dividend(sp500, config, logfile):
-    # TODO: Date max and min
-    # TODO: Test for those with no dividends
     """Fetch the CSVs with dividends only from Yahoo Finance and save the content in a CSV file.
 
     All CSVs are named following the format: "div_" + the company's symbol + ".csv"
     ex: For Google, the CSV's name is "daily_GOOGL.csv".
 
     Log any exceptions raised while querying Yahoo Finance.
+
+    The minimum date that is used when querying Yahoo Finance is written in the configuration file. It can be manually
+    adjusted if needed. It is set automatically to the date of the last update after each execution of "installer.py".
+
+    The maximum date that is used when querying Yahoo Finance is the present localtime date.
 
     :param sp500: List of unique S&P500's companies' symbols.
     :param config: An open configparser.
@@ -195,14 +193,6 @@ def get_all_dividend(sp500, config, logfile):
             if r.text:
                 csvFile.write(r.text)
 
-    # Update the configuration file so, next time, it won't try to update what was already done.
-    # The months begin with 0. So 0 = January and 11 = December
-    config['dividend']['DAY_MIN'] = day_max
-    config['dividend']['MONTH_MIN'] = month_max - 1
-    config['dividend']['YEAR_MIN'] = year_max
-    with open('../config.ini', 'w') as configfile:
-        config.write(configfile)
-
 
 ################################################################################################
 #
@@ -213,7 +203,6 @@ def get_all_dividend(sp500, config, logfile):
 
 
 def update_with_csv(is_updating_histo=True, is_updating_daily=True, is_updating_div=True):
-    # TODO : Update the config file for the min date.
     """Intermediary function in charge of centralizing the update of the database with the downloaded CSVs.
 
     This function only works if there are files in the directory "SNP500". It should always be called after any of the
@@ -266,7 +255,6 @@ def update_with_csv(is_updating_histo=True, is_updating_daily=True, is_updating_
 
 
 def update_historical(filename, config, logfile, db):
-    # TODO: Get information about all the values inserted.
     """Insert in the database the historical financial information for one company.
 
     This function only works if there are files in the directory "SNP500" with a name like "histo_*.csv", where * is the

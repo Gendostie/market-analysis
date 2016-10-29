@@ -3,6 +3,7 @@ import os
 import Install_DB.initialize_db as init_sql
 import Install_DB.update_manager as um
 import configparser
+from time import localtime, strftime
 
 
 def print_message(message):
@@ -11,13 +12,12 @@ def print_message(message):
     print(line + message + '\n')
 
 
-# TODO : Check for requirements, check for config.ini
+# TODO : Check for requirements, check for config.ini. Check that the database exists too?
 # Fetch the configuration file
 config = configparser.ConfigParser()
 config.read('../config.ini')
 
 # Installation (or re-installation) of the database if required
-# TODO : Don't drop all the tables (like daily...)
 if config['installer'].getboolean('INSTALL_DB'):
     print_message('Installing the database')
     init_sql.create_db_mysql()
@@ -38,3 +38,24 @@ print_message('Updating the database with all the CSVs')
 um.update_with_csv(config['installer'].getboolean('INSTALL_SET_HISTO'),
                    config['installer'].getboolean('INSTALL_SET_DAILY'),
                    config['installer'].getboolean('INSTALL_SET_DIV'))
+
+# Update the configuration file so, next time, it won't try to update what was already done.
+# Also, next time, it won't drop the database or try to update the historical data (which rarely changes)
+# Note: The months begin with 0. So 0 = January and 11 = December
+# TODO : Add an option so the user can update manually the historical data
+config['installer']['install_db'] = "False"
+config['installer']['install_fetch_histo'] = "False"
+config['installer']['install_set_histo'] = "False"
+
+if config['installer'].getboolean('INSTALL_FETCH_DAILY'):
+    config['daily']['DAY_MIN'] = strftime("%d", localtime())
+    config['daily']['MONTH_MIN'] = str(localtime().tm_mon - 1)
+    config['daily']['YEAR_MIN'] = strftime("%Y", localtime())
+
+if config['installer'].getboolean('INSTALL_FETCH_DIV'):
+    config['dividend']['DAY_MIN'] = strftime("%d", localtime())
+    config['dividend']['MONTH_MIN'] = str(localtime().tm_mon - 1)
+    config['dividend']['YEAR_MIN'] = strftime("%Y", localtime())
+
+with open('../config.ini', 'w') as configfile:
+    config.write(configfile)
