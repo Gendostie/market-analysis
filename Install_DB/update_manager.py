@@ -8,7 +8,7 @@ import configparser
 import pandas as pd
 from datetime import datetime
 from time import localtime, strftime
-from Manager_DB.DbConnection import DBConnection
+from Manager_DB.DbConnection import DbConnection
 from Manager_DB.ManagerCompany import insert_historic_value_to_db, insert_daily_value_to_db, insert_dividend_to_db
 import sys
 
@@ -30,7 +30,7 @@ def get_csv(is_fetching_histo=True, is_fetching_daily=True, is_fetching_div=True
     :return: Nothing. All CSVs downloaded will be found in the directory SNP500 located in the project's directory.
     """
     # Get all symbols of the S&P500.
-    # TODO: Get all the companies that were in the S&P500 between two dates. Survivor bias.
+    # TODO: Get all the companies that were in the S&P500 between two dates. Otherwise -> survivor bias.
     sp500 = finsymbols.get_sp500_symbols()
 
     # Get the configuration file
@@ -211,7 +211,7 @@ def update_with_csv(is_updating_histo=True, is_updating_daily=True, is_updating_
     log_path = config.get('path', 'PATH_LOG')
     dir_path = config.get('path', 'PATH_SNP500')
 
-    db = DBConnection(config.get('database', 'HOST'),
+    db = DbConnection(config.get('database', 'HOST'),
                       config.get('database', 'USER'),
                       config.get('database', 'PASSWORD'),
                       config.get('database', 'DATABASE'))
@@ -238,7 +238,7 @@ def update_with_csv(is_updating_histo=True, is_updating_daily=True, is_updating_
     if is_updating_div:
         for filename in glob.glob(dir_path + 'div_*.csv'):
             if os.stat(filename).st_size != 0:
-                update_dividend(filename, config, db)
+                update_dividend(filename, db)
             else:
                 logfile.write("{} [UPDATE][DIVID] Skipped \"{}\" because the file was empty.\n"
                               .format(strftime("%d %b %Y %H:%M:%S", localtime()), filename))
@@ -341,14 +341,13 @@ def update_daily(filename, config, db):
         insert_daily_value_to_db(str(symbol), query_params, db)
 
 
-def update_dividend(filename, config, db):
+def update_dividend(filename, db):
     """Insert in the database each dividend paid by a company and when each transaction was made.
 
     This function only works if there are files in the directory "SNP500" with a name like "div_*.csv", where * is the
     symbol of a company. It should only be called after the function "get_all_dividend".
 
     :param filename: The full path of the CSV containing the dividends paid by a company.
-    :param config: An open configparser.
     :param db: A DBConnection object for the database.
     :return: Nothing. The insertions are made into the table "dividends" in the database.
     """

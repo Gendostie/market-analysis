@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 import finsymbols
 import sys
-from DbConnection import DbConnection
+from Manager_DB.DbConnection import DbConnection
 
 # TODO : Config
 HOST = '127.0.0.1'
@@ -258,12 +258,19 @@ def insert_historic_value_to_db(symbol_company, list_values, db=None):
 
 
 def insert_dividend_to_db(symbol_company, datetime, dividend, db=None):
-    # TODO : Comments
+    """Insert one line in the table "dividends". Represent a dividend paid by a company at a specific date.
+
+    :param symbol_company: The symbol of the company.
+    :param datetime: A Datetime object which represents the date when the dividend was paid by the company.
+    :param dividend: A float. The actual dividend paid by the company on that date.
+    :param db: A DbConnection object. If nothing is passed, a new connection will be made with the default db params.
+    :return: Nothing. The insertion will be made in the table "dividends"
+    """
     if not symbol_company:
         raise ValueError('symbol_company is None.')
 
     if not db:
-        db = DBConnection(HOST, USER, PASSWORD, DATABASE)
+        db = DbConnection(HOST, USER, PASSWORD, DATABASE)
 
     query = """INSERT INTO dividends (symbol, date_dividend, dividend)
                VALUES (%(symbol_value)s, %(datetime_value)s, %(dividend_value)s)

@@ -7,8 +7,8 @@ import configparser
 
 def print_message(message):
     """Print a message on the command line. Useful for debugging."""
-    LINE = '--------------- '
-    print(LINE + message + '\n')
+    line = '--------------- '
+    print(line + message + '\n')
 
 
 # TODO : Check for requirements, check for config.ini

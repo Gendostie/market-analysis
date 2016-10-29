@@ -4,7 +4,7 @@ from os import path
 import json
 import configparser
 from Manager_DB import ManagerCompany
-from Manager_DB.DbConnection import DBConnection
+from Manager_DB.DbConnection import DbConnection
 
 
 def insert_company_snp500():
@@ -37,7 +37,7 @@ def create_db_mysql():
     path_data_db = config['path']['PATH_DATA_DB']
 
     # Drop the database if it already exists
-    db = DBConnection(host, user, password, '')  # no database, because we don't know if database exists
+    db = DbConnection(host, user, password, '')  # no database, because we don't know if database exists
     query = """DROP DATABASE IF EXISTS %s""" % ('`' + database + '`')
     print('Number of tables removed: %s' % db.modified_db(query))
 
@@ -47,7 +47,7 @@ def create_db_mysql():
     db.close_connection()
 
     # Create another connection, because now we are sure that database exists
-    db = DBConnection(host, user, password, database)
+    db = DbConnection(host, user, password, database)
 
     # Create tables
     list_tables_name = json.loads(config.get('list', 'TABLES_NAME'))
