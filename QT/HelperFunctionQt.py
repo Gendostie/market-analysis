@@ -116,7 +116,7 @@ def add_companies_to_portfolio_db(portfolio_name, list_company):
     # add portfolio if is new
     portfolio_id = ManagerPortfolio.create_portfolio(portfolio_name)
     # add company to portfolio in db
-    nb_company_added = ManagerPortfolio.add_companies_to_portfolio(portfolio_id, list_company)
+    nb_company_added = ManagerPortfolio.add_companies_to_portfolio(portfolio_id[0].get('id_portfolio')[0], list_company)
     print("Nb company added: %s" % nb_company_added)
 
 
