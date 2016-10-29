@@ -153,7 +153,7 @@ def get_historic_value_all_company(db=None):
                              'gross_margin': gross_margin, 'income': income, 'earning': earning, 'dividends': dividends,
                              'book_value': book_value, 'cash_flow': cash_flow})
     return return_value
-print(get_historic_value_all_company())
+
 
 def update_snp550_to_db(db=None):
     """
