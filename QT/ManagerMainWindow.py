@@ -2,10 +2,10 @@
 # -*- coding: utf-8 -*-
 from PyQt4 import QtCore, QtGui
 
-from MainWindow import Ui_MainWindow, _translate
-import ManagerCompany
-import ManagerPortfolio
-import HelperFunctionQt
+from QT.MainWindow import Ui_MainWindow, _translate
+import Manager_DB.ManagerCompany as ManagerCompany
+import Manager_DB.ManagerPortfolio as ManagerPortfolio
+import QT.HelperFunctionQt as HelperFunctionQt
 
 
 class ManagerMainWindow(Ui_MainWindow):
