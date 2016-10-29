@@ -52,7 +52,7 @@ class ManagerMainWindow(Ui_MainWindow):
                     # create new row
                     cell = QtGui.QTableWidgetItem()
                     # we don't want user can change value of cell in table
-                    cell.setFlags(QtCore.Qt.ItemIsEditable | QtCore.Qt.ItemIsUserCheckable | QtCore.Qt.ItemIsEnabled)
+                    cell.setFlags(QtCore.Qt.ItemIsUserCheckable | QtCore.Qt.ItemIsEnabled)
                     value = company.get(key) if company.get(key) is not None else ""
                     cell.setText(_translate("MainWindow", value, None))
                     self.tableWidget_stockScreener.setItem(idx_row, idx_column, cell)
