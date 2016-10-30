@@ -6,6 +6,7 @@ from QT.MainWindow import Ui_MainWindow, _translate
 import Manager_DB.ManagerCompany as ManagerCompany
 import Manager_DB.ManagerPortfolio as ManagerPortfolio
 import QT.HelperFunctionQt as HelperFunctionQt
+import QT.TableItem_Value as TB
 
 
 class ManagerMainWindow(Ui_MainWindow):
@@ -18,7 +19,8 @@ class ManagerMainWindow(Ui_MainWindow):
         MainWindow.setMaximumSize(MainWindow.size())
         MainWindow.setMinimumSize(MainWindow.size())
         # adjust column of table widget
-        self.tableWidget_stockScreener.horizontalHeader().setSectionResizeMode(QtGui.QHeaderView.ResizeToContents)
+        # TODO : Ne fonctionne pas sur mon ordinateur alors temporairement désactivé.
+        # self.tableWidget_stockScreener.horizontalHeader().setSectionResizeMode(QtGui.QHeaderView.ResizeToContents)
 
     def setup_manager(self):
         """
@@ -50,7 +52,8 @@ class ManagerMainWindow(Ui_MainWindow):
                     assert (idx_column > 0 or idx_column < self.tableWidget_stockScreener.rowCount()), \
                         'Problem index of column when insert new row'
                     # create new row
-                    cell = QtGui.QTableWidgetItem()
+                    #cell = QtGui.QTableWidgetItem()
+                    cell = TB.value_tableitem()
                     # we don't want user can change value of cell in table
                     cell.setFlags(QtCore.Qt.ItemIsUserCheckable | QtCore.Qt.ItemIsEnabled)
                     value = company.get(key) if company.get(key) is not None else ""
