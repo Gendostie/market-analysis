@@ -6,7 +6,7 @@ from QT.MainWindow import Ui_MainWindow, _translate
 import Manager_DB.ManagerCompany as ManagerCompany
 import Manager_DB.ManagerPortfolio as ManagerPortfolio
 import QT.HelperFunctionQt as HelperFunctionQt
-import QT.ValueTableItem as TB
+import QT.ValueTableItem as ValueTableItem
 
 
 class ManagerMainWindow(Ui_MainWindow):
@@ -22,6 +22,11 @@ class ManagerMainWindow(Ui_MainWindow):
         # TODO : Ne fonctionne pas sur mon ordinateur alors temporairement désactivé.
         # self.tableWidget_stockScreener.horizontalHeader().setSectionResizeMode(QtGui.QHeaderView.ResizeToContents)
 
+        # link slider and spin box of box layout to left
+        HelperFunctionQt.set_min_max_slider_layout(self.verticalLayout_left)
+        # link slider and spin box of box layout to right
+        HelperFunctionQt.set_min_max_slider_layout(self.verticalLayout_right)
+
     def setup_manager(self):
         """
         Setup for widget already in MainWindow.ui to modify
@@ -35,9 +40,8 @@ class ManagerMainWindow(Ui_MainWindow):
         Create data in table widget stock screener with data SQL
         :return: None
         """
-        list_column_table = ['company_name', 'symbol', 'stock_value', 'income', 'gross_margin',
-                             'dividends', 'market_capitaisation', 'finantical_index', 'index_end', 'earning',
-                             'book_value', 'sales_value', 'cash_flow']
+        list_column_table = ['company_name', 'symbol', 'close', 'revenue', 'gross_margin', 'net_income', 'dividends',
+                             'EPS', 'BVPS', 'free_cash_flow_per_share']
         list_company = ManagerCompany.get_historic_value_all_company()
 
         if self.tableWidget_stockScreener.rowCount() < len(list_company):
@@ -53,7 +57,7 @@ class ManagerMainWindow(Ui_MainWindow):
                         'Problem index of column when insert new row'
                     # create new row
                     #cell = QtGui.QTableWidgetItem()
-                    cell = TB.value_tableitem()
+                    cell = ValueTableItem.value_tableitem()
                     # we don't want user can change value of cell in table
                     cell.setFlags(QtCore.Qt.ItemIsUserCheckable | QtCore.Qt.ItemIsEnabled)
                     value = company.get(key) if company.get(key) is not None else ""
