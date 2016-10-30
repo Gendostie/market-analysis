@@ -1,11 +1,12 @@
 from PyQt4 import QtGui
+from QT.MainWindow import Ui_MainWindow
 
+# TODO : Add comments
 class value_tableitem(QtGui.QTableWidgetItem):
-
     def __lt__(self, other):
         try:
             if self.text() == "":
-                value = float("inf")
+                value = float("-inf") if Ui_MainWindow.is_descending else float("inf")
             else:
                 value = float(self.text())
         except ValueError:
@@ -15,7 +16,7 @@ class value_tableitem(QtGui.QTableWidgetItem):
     def __le__(self, other):
         try:
             if self.text() == "":
-                value = float("inf")
+                value = float("-inf") if Ui_MainWindow.is_descending else float("inf")
             else:
                 value = float(self.text())
         except ValueError:
@@ -25,7 +26,7 @@ class value_tableitem(QtGui.QTableWidgetItem):
     def __eq__(self, other):
         try:
             if self.text() == "":
-                value = float("inf")
+                value = float("nan")
             else:
                 value = float(self.text())
         except ValueError:
@@ -35,7 +36,7 @@ class value_tableitem(QtGui.QTableWidgetItem):
     def __ne__(self, other):
         try:
             if self.text() == "":
-                value = float("inf")
+                value = float("nan")
             else:
                 value = float(self.text())
         except ValueError:
@@ -43,10 +44,9 @@ class value_tableitem(QtGui.QTableWidgetItem):
         return value != other
 
     def __gt__(self, other):
-        #return self > other
         try:
             if self.text() == "":
-                value = float("inf")
+                value = float("-inf") if Ui_MainWindow.is_descending else float("inf")
             else:
                 value = float(self.text())
         except ValueError:
@@ -54,10 +54,9 @@ class value_tableitem(QtGui.QTableWidgetItem):
         return value > other
 
     def __ge__(self, other):
-        #return self >= other
         try:
             if self.text() == "":
-                value = float("inf")
+                value = float("-inf") if Ui_MainWindow.is_descending else float("inf")
             else:
                 value = float(self.text())
         except ValueError:

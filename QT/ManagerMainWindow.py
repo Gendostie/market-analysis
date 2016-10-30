@@ -6,7 +6,7 @@ from QT.MainWindow import Ui_MainWindow, _translate
 import Manager_DB.ManagerCompany as ManagerCompany
 import Manager_DB.ManagerPortfolio as ManagerPortfolio
 import QT.HelperFunctionQt as HelperFunctionQt
-import QT.TableItem_Value as TB
+import QT.ValueTableItem as TB
 
 
 class ManagerMainWindow(Ui_MainWindow):
@@ -141,6 +141,15 @@ class Slots:
         :return: None
         """
         table_widget = ui.tableWidget_stockScreener
+
+        # TODO: Check if OK to do that
+        # When a click is made on a column's name, a sorting is done. We are changing the indicator in MainWindow
+        # accordingly. The ValueTableItems that we are using use that indicator to adjust their comparison's algorithms.
+        if table_widget.horizontalHeader().sortIndicatorOrder() == 0:
+            Ui_MainWindow.is_descending = True
+        else:
+            Ui_MainWindow.is_descending = False
+
         if column == table_widget.columnCount() - 1:
             # sort_order = 0 => ascending ; Qt::Unchecked = 0  Qt::Checked = 2  Qt::PartiallyChecked = 1
             sort_order = table_widget.horizontalHeader().sortIndicatorOrder()

@@ -24,6 +24,11 @@ except AttributeError:
         return QtGui.QApplication.translate(context, str(text), disambig)
 
 class Ui_MainWindow(object):
+    # TODO : Check if OK to do that
+    # Value that indicates the type of sorting (ascending = 0, descending = 1).
+    # Is used by ValueTableItem when sorting Null values.
+    is_descending = False
+
     def setupUi(self, MainWindow):
         MainWindow.setObjectName(_fromUtf8("MainWindow"))
         MainWindow.resize(1280, 800)
