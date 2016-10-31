@@ -22,9 +22,8 @@ class ManagerMainWindow(Ui_MainWindow):
         # TODO : Ne fonctionne pas sur mon ordinateur alors temporairement désactivé.
         # self.tableWidget_stockScreener.horizontalHeader().setSectionResizeMode(QtGui.QHeaderView.ResizeToContents)
 
-        # link slider and spin box of box layout to left
+        # TODO : Add comment
         HelperFunctionQt.set_min_max_slider_layout(self.verticalLayout_left)
-        # link slider and spin box of box layout to right
         HelperFunctionQt.set_min_max_slider_layout(self.verticalLayout_right)
 
     def setup_manager(self):
