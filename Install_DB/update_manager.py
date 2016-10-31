@@ -32,7 +32,7 @@ def get_csv(is_fetching_histo=True, is_fetching_daily=True, is_fetching_div=True
     # Get all symbols of the S&P500.
     # TODO: Get all the companies that were in the S&P500 between two dates. Otherwise -> survivor bias.
     # When testing, you might consider lowering the number of companies by slicing this list. ex: add [:50] at the end
-    sp500 = finsymbols.get_sp500_symbols()[:25]
+    sp500 = finsymbols.get_sp500_symbols()
 
     # Get the configuration file
     config = configparser.ConfigParser()

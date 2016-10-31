@@ -22,10 +22,6 @@ class ManagerMainWindow(Ui_MainWindow):
         # TODO : Ne fonctionne pas sur mon ordinateur alors temporairement désactivé.
         # self.tableWidget_stockScreener.horizontalHeader().setSectionResizeMode(QtGui.QHeaderView.ResizeToContents)
 
-        # TODO : Add comment
-        HelperFunctionQt.set_min_max_slider_layout(self.verticalLayout_left)
-        HelperFunctionQt.set_min_max_slider_layout(self.verticalLayout_right)
-
     def setup_manager(self):
         """
         Setup for widget already in MainWindow.ui to modify
@@ -117,6 +113,11 @@ class ManagerMainWindow(Ui_MainWindow):
         list_portfolio = ManagerPortfolio.get_all_portfolio_info()
         for dict_portfolio in list_portfolio:
             cb.addItem(dict_portfolio.get('name'))
+
+    def set_min_max(self):
+        # TODO : Add comment
+        HelperFunctionQt.set_min_max_slider_layout(self.verticalLayout_left)
+        HelperFunctionQt.set_min_max_slider_layout(self.verticalLayout_right)
 
 
 class Slots:
@@ -228,6 +229,7 @@ if __name__ == "__main__":
     ui.setup_size_fixed()
     ui.create_data_table_stock_screener()
     ui.create_connection_signal_slot()
+    ui.set_min_max()
 
     MainWindow.show()
     sys.exit(app.exec_())

@@ -164,6 +164,7 @@ def link_spin_slider_layout(layout):
         min_range_slider.valueChanged.connect(max_range_slider.setMinimum)
         max_range_slider.valueChanged.connect(min_range_slider.setMaximum)
 
+
 # TODO: Commenting
 # TODO: Create a DbConnection Object
 def set_min_max_slider_layout(layout):
@@ -192,17 +193,25 @@ def set_min_max_slider_layout(layout):
         min_range_slider = get_widget_of_layout(layout.itemAt(idx_layout), QtGui.QSlider)
         if name_attr == "Dividend yield":
             min_spin_box.setMinimum(min_dict["close"])
+            min_spin_box.setValue(min_dict["close"])
             min_range_slider.setMinimum(min_dict["close"])
+            min_range_slider.setValue(min_dict["close"])
         else:
             min_spin_box.setMinimum(min_dict["revenue"])
+            min_spin_box.setValue(min_dict["revenue"])
             min_range_slider.setMinimum(min_dict["revenue"])
+            min_range_slider.setValue(min_dict["revenue"])
 
         # Max value
         max_spin_box = get_widget_of_layout(layout.itemAt(idx_layout), QtGui.QDoubleSpinBox, 1)
         max_range_slider = get_widget_of_layout(layout.itemAt(idx_layout), QtGui.QSlider, 1)
         if name_attr == "Dividend yield":
             max_spin_box.setMaximum(max_dict["close"])
+            max_spin_box.setValue(max_dict["close"])
             max_range_slider.setMaximum(max_dict["close"])
+            max_range_slider.setValue(max_dict["close"])
         else:
             max_spin_box.setMaximum(max_dict["revenue"])
+            max_spin_box.setValue(max_dict["revenue"])
             max_range_slider.setMaximum(max_dict["revenue"])
+            max_range_slider.setValue(max_dict["revenue"])

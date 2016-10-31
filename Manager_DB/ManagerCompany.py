@@ -174,7 +174,7 @@ def get_historic_value_all_company(db=None):
 #
 #######################################################################################################################
 
-
+# TODO : Error management when nothing in the database
 def get_minimum_value_daily(value, db=None):
     if not db or type(db) is not DbConnection:
         db = DbConnection(HOST, USER, PASSWORD, DATABASE)
@@ -184,6 +184,7 @@ def get_minimum_value_daily(value, db=None):
                                                               FROM daily_value
                                                               WHERE id_symbol = c.symbol);""".format(value)
     return math.floor(db.select_in_db(query)[0][0])
+
 
 def get_maximum_value_daily(value, db=None):
     if not db or type(db) is not DbConnection:
@@ -222,6 +223,7 @@ def get_maximum_value_historical(value, db=None):
 #                                                                                                                     #
 #                                                                                                                     #
 #######################################################################################################################
+
 
 def update_snp550_to_db(db=None):
     """
