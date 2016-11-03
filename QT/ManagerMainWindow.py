@@ -2,10 +2,9 @@
 # -*- coding: utf-8 -*-
 from PyQt4 import QtCore, QtGui
 
-from MainWindow import Ui_MainWindow, _translate
-import ManagerCompany
-import ManagerPortfolio
-import HelperFunctionQt
+from QT.MainWindow import Ui_MainWindow, _translate
+from Manager_DB import  ManagerPortfolio, ManagerCompany
+from QT import HelperFunctionQt
 
 
 class ManagerMainWindow(Ui_MainWindow):
@@ -18,7 +17,7 @@ class ManagerMainWindow(Ui_MainWindow):
         MainWindow.setMaximumSize(MainWindow.size())
         MainWindow.setMinimumSize(MainWindow.size())
         # adjust column of table widget
-        self.tableWidget_stockScreener.horizontalHeader().setSectionResizeMode(QtGui.QHeaderView.ResizeToContents)
+        self.tableWidget_stockScreener.horizontalHeader().setResizeMode(QtGui.QHeaderView.ResizeToContents)
 
     def setup_manager(self):
         """
@@ -54,7 +53,7 @@ class ManagerMainWindow(Ui_MainWindow):
                     # we don't want user can change value of cell in table
                     cell.setFlags(QtCore.Qt.ItemIsUserCheckable | QtCore.Qt.ItemIsEnabled)
                     value = company.get(key) if company.get(key) is not None else ""
-                    cell.setText(_translate("MainWindow", value, None))
+                    cell.setText(_translate("MainWindow", str(value), None))
                     self.tableWidget_stockScreener.setItem(idx_row, idx_column, cell)
                 except ValueError:
                     continue  # if column no exists in table stock screener, we continue

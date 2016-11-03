@@ -25,8 +25,8 @@ DROP TABLE IF EXISTS `daily_value`;
 CREATE TABLE `daily_value` (
   `date_daily_value` datetime NOT NULL,
   `id_symbol` varchar(10) NOT NULL,
-  `stock_value` decimal(3,0) DEFAULT '0',
-  `52w_price_change` decimal(3,0) DEFAULT '0',
+  `close_val` float DEFAULT '0',
+  `adj_close` float DEFAULT '0',
   PRIMARY KEY (`date_daily_value`,`id_symbol`),
   KEY `id_symbol_idx` (`id_symbol`),
   CONSTRAINT `id_symbol_fk_daily_value` FOREIGN KEY (`id_symbol`) REFERENCES `company` (`symbol`) ON DELETE NO ACTION ON UPDATE NO ACTION
