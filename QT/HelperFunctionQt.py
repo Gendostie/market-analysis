@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 from PyQt4 import QtCore, QtGui
 
-import Manager_DB.ManagerPortfolio as ManagerPortfolio
+from Manager_DB import ManagerPortfolio
 
 
 def take_row_table_widget(table_widget, idx_row):
