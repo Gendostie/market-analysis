@@ -2,6 +2,8 @@
 # -*- coding: utf-8 -*-
 import finsymbols
 import sys
+
+import math
 from DbConnection import DbConnection
 
 # TODO : Config
@@ -144,17 +146,84 @@ def get_historic_value_all_company(db=None):
     """
     if not db or type(db) is not DbConnection:
         db = DbConnection(HOST, USER, PASSWORD, DATABASE)
-    query = """SELECT c.name, c.symbol, date_historic_value, revenu_usd_mil, gross_margin_pct,
-                net_income_usd_mil, earning_per_share_usd, dividends_usd, book_value_per_share_usd,
+    query = """SELECT c.name, c.symbol, d.date_daily_value, d.close_val, date_historic_value, revenu_usd_mil,
+                gross_margin_pct, net_income_usd_mil, earning_per_share_usd, dividends_usd, book_value_per_share_usd,
                 free_cash_flow_per_share_usd
-                FROM company c left join historic_value hv on c.symbol = hv.id_symbol"""
+                FROM company c LEFT JOIN historic_value hv ON c.symbol = hv.id_symbol
+                               LEFT JOIN daily_value d ON c.symbol = d.id_symbol
+                WHERE c.is_in_snp500 AND hv.date_historic_value = (SELECT max(date_historic_value)
+                                                                   FROM historic_value
+                                                                   WHERE id_symbol = c.symbol)
+                                     AND d.date_daily_value = (SELECT max(date_daily_value)
+                                                               FROM daily_value
+                                                               WHERE id_symbol = c.symbol);"""
     res = db.select_in_db(query)
     return_value = []
-    for company_name, symbol, datetime_value, revenue, gross_margin, income, earning, dividends, book_value, cash_flow in res:
-        return_value.append({'company_name': company_name, 'symbol': symbol, 'datetime_value': datetime_value, 'revenue': revenue,
-                             'gross_margin': gross_margin, 'income': income, 'earning': earning, 'dividends': dividends,
-                             'book_value': book_value, 'cash_flow': cash_flow})
+    for company_name, symbol, date_daily_value, close_val,  \
+        datetime_value, revenue, gross_margin, income, earning, dividends, book_value, cash_flow in res:
+        return_value.append({'company_name': company_name, 'symbol': symbol, 'datetime_value': datetime_value,
+                             'revenue': revenue, 'gross_margin': gross_margin, 'net_income': income, 'EPS': earning,
+                             'dividends': dividends, 'BVPS': book_value, 'free_cash_flow_per_share': cash_flow,
+                             'datetime_daily_value': date_daily_value, 'close': close_val})
     return return_value
+
+
+#######################################################################################################################
+#
+#                                                GET MIN/MAX
+#
+#
+#######################################################################################################################
+
+# TODO : Error management when nothing in the database
+def get_minimum_value_daily(value, db=None):
+    if not db or type(db) is not DbConnection:
+        db = DbConnection(HOST, USER, PASSWORD, DATABASE)
+    query="""SELECT MIN({})
+             FROM company c LEFT JOIN daily_value dv ON c.symbol = dv.id_symbol
+             WHERE is_in_snp500 AND dv.date_daily_value = (SELECT MAX(date_daily_value)
+                                                              FROM daily_value
+                                                              WHERE id_symbol = c.symbol);""".format(value)
+    return math.floor(db.select_in_db(query)[0][0])
+
+
+def get_maximum_value_daily(value, db=None):
+    if not db or type(db) is not DbConnection:
+        db = DbConnection(HOST, USER, PASSWORD, DATABASE)
+    query="""SELECT MAX({})
+             FROM company c LEFT JOIN daily_value dv ON c.symbol = dv.id_symbol
+             WHERE is_in_snp500 AND dv.date_daily_value = (SELECT MAX(date_daily_value)
+                                                              FROM daily_value
+                                                              WHERE id_symbol = c.symbol);""".format(value)
+    return math.ceil(db.select_in_db(query)[0][0])
+
+
+# TODO : Add comments
+def get_minimum_value_historical(value, db=None):
+    if not db or type(db) is not DbConnection:
+        db = DbConnection(HOST, USER, PASSWORD, DATABASE)
+    query="""SELECT MIN({})
+             FROM company c LEFT JOIN historic_value hv ON c.symbol = hv.id_symbol
+             WHERE is_in_snp500 AND hv.date_historic_value = (SELECT MAX(date_historic_value)
+                                                              FROM historic_value
+                                                              WHERE id_symbol = c.symbol);""".format(value)
+    return math.floor(db.select_in_db(query)[0][0])
+
+
+def get_maximum_value_historical(value, db=None):
+    if not db or type(db) is not DbConnection:
+        db = DbConnection(HOST, USER, PASSWORD, DATABASE)
+    query="""SELECT MAX({})
+             FROM company c LEFT JOIN historic_value hv ON c.symbol = hv.id_symbol
+             WHERE is_in_snp500 AND hv.date_historic_value = (SELECT MAX(date_historic_value)
+                                                              FROM historic_value
+                                                              WHERE id_symbol = c.symbol);""".format(value)
+    return math.ceil(db.select_in_db(query)[0][0])
+
+#######################################################################################################################
+#                                                                                                                     #
+#                                                                                                                     #
+#######################################################################################################################
 
 
 def update_snp550_to_db(db=None):
