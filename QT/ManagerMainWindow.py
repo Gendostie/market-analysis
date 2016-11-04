@@ -5,7 +5,7 @@ from PyQt4 import QtCore, QtGui
 from QT.MainWindow import Ui_MainWindow, _translate
 from Manager_DB import  ManagerPortfolio, ManagerCompany
 from QT import HelperFunctionQt, ValueTableItem
-from QT.Order_Manager import order_manager
+from QT.Order_Manager import singleton
 
 
 class ManagerMainWindow(Ui_MainWindow):
@@ -148,9 +148,9 @@ class Slots:
         # When a click is made on a column's name, a sorting is done. We are changing the indicator in MainWindow
         # accordingly. The ValueTableItems that we are using use that indicator to adjust their comparison's algorithms.
         if table_widget.horizontalHeader().sortIndicatorOrder() == 0:
-            order_manager.is_descending = True
+            singleton.set_order(singleton(), True)
         else:
-            order_manager.is_descending = False
+            singleton.set_order(singleton(), False)
 
         if column == table_widget.columnCount() - 1:
             # sort_order = 0 => ascending ; Qt::Unchecked = 0  Qt::Checked = 2  Qt::PartiallyChecked = 1
