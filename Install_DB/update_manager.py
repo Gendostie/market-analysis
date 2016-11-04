@@ -31,8 +31,11 @@ def get_csv(is_fetching_histo=True, is_fetching_daily=True, is_fetching_div=True
     """Intermediary function in charge of centralizing the fetching of the selected CSVs.
 
     :param is_fetching_histo: If True, the historical information will be downloaded from MorningStar. Default is True.
+    :type is_fetching_histo: bool
     :param is_fetching_daily: If True, the daily information will be downloaded from Yahoo Finance. Default is True.
+    :type is_fetching_daily: bool
     :param is_fetching_div: If True, the dividend information will be downloaded from Yahoo Finance. Default is True.
+    :type is_fetching_div: bool
     :return: Nothing. All CSVs downloaded will be found in the directory SNP500 located in the project's directory.
     """
     # Get all symbols of the S&P500.
