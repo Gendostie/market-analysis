@@ -2,9 +2,10 @@
 # -*- coding: utf-8 -*-
 from PyQt4 import QtCore, QtGui
 
-from QT.MainWindow import Ui_MainWindow, _translate
-from Manager_DB import  ManagerPortfolio, ManagerCompany
+from QT.MainWindow import Ui_MainWindow
+from Manager_DB import ManagerPortfolio, ManagerCompany
 from QT import HelperFunctionQt
+from QT.Order_Manager import singleton
 
 
 class ManagerMainWindow(Ui_MainWindow):
@@ -17,8 +18,8 @@ class ManagerMainWindow(Ui_MainWindow):
         MainWindow.setMaximumSize(MainWindow.size())
         MainWindow.setMinimumSize(MainWindow.size())
         # adjust column of table widget
-        self.tableWidget_stockScreener.horizontalHeader().setSectionResizeMode(QtGui.QHeaderView.ResizeToContents)
-        self.tableWidget_portfolio.horizontalHeader().setSectionResizeMode(QtGui.QHeaderView.ResizeToContents)
+        self.tableWidget_stockScreener.horizontalHeader().setResizeMode(QtGui.QHeaderView.ResizeToContents)
+        self.tableWidget_portfolio.horizontalHeader().setResizeMode(QtGui.QHeaderView.ResizeToContents)
 
     def setup_manager(self):
         """
@@ -41,9 +42,10 @@ class ManagerMainWindow(Ui_MainWindow):
         Create data in table widget stock screener with data SQL
         :return: None
         """
-        list_column_table = ['company_name', 'symbol', 'revenue', 'income', 'gross_margin', 'earning', 'dividends',
-                             'dividend_yield', 'esp', 'price_esp', 'book_value', 'price_book', 'cash_flow', 'close',
+        list_column_table = ['company_name', 'symbol', 'revenue', 'net_income', 'gross_margin', 'dividends',
+                             'dividend_yield', 'eps', 'price_esp', 'BVPS', 'price_book', 'FCFPS', 'close',
                              '52wk']
+
         list_company = ManagerCompany.get_historic_value_all_company()
 
         if self.tableWidget_stockScreener.rowCount() < len(list_company):
@@ -133,6 +135,11 @@ class ManagerMainWindow(Ui_MainWindow):
         for dict_portfolio in list_portfolio:
             cb.addItem(dict_portfolio.get('name'))
 
+    def set_min_max(self):
+        # TODO : Add comment
+        HelperFunctionQt.set_min_max_slider_layout(self.verticalLayout_left)
+        HelperFunctionQt.set_min_max_slider_layout(self.verticalLayout_right)
+
     def create_combobox_company_portfolio_manager(self):
         list_company = ManagerCompany.get_snp500()
 
@@ -214,8 +221,18 @@ class Slots:
         :type column: int
         :return: None
         """
-        if column == ui.tableWidget_stockScreener.columnCount() - 1:
-            HelperFunctionQt.sorted_column_checkbox_table_widget(ui.tableWidget_stockScreener)
+        table_widget = ui.tableWidget_stockScreener
+
+        # TODO: Check if OK to do that
+        # When a click is made on a column's name, a sorting is done. We are changing the indicator in MainWindow
+        # accordingly. The ValueTableItems that we are using use that indicator to adjust their comparison's algorithms.
+        if table_widget.horizontalHeader().sortIndicatorOrder() == 0:
+            singleton.set_order(singleton(), True)
+        else:
+            singleton.set_order(singleton(), False)
+
+        if column == table_widget.columnCount() - 1:
+            HelperFunctionQt.sorted_column_checkbox_table_widget(table_widget)
 
     @staticmethod
     def add_company_to_portfolio_stock_screener():
@@ -344,6 +361,7 @@ class Slots:
 
 if __name__ == "__main__":
     import sys
+
     app = QtGui.QApplication(sys.argv)
     MainWindow = QtGui.QMainWindow()
     ui = ManagerMainWindow()
@@ -352,6 +370,7 @@ if __name__ == "__main__":
     ui.setup_manager()
     ui.setup_size_fixed()
     ui.create_connection_signal_slot()
+    ui.set_min_max()
 
     MainWindow.show()
     sys.exit(app.exec_())
