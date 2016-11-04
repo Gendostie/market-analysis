@@ -4,7 +4,8 @@ from PyQt4 import QtCore, QtGui
 
 from QT.MainWindow import Ui_MainWindow, _translate
 from Manager_DB import  ManagerPortfolio, ManagerCompany
-from QT import HelperFunctionQt
+from QT import HelperFunctionQt, ValueTableItem
+
 
 
 class ManagerMainWindow(Ui_MainWindow):
@@ -32,9 +33,8 @@ class ManagerMainWindow(Ui_MainWindow):
         Create data in table widget stock screener with data SQL
         :return: None
         """
-        list_column_table = ['company_name', 'symbol', 'stock_value', 'income', 'gross_margin',
-                             'dividends', 'market_capitaisation', 'finantical_index', 'index_end', 'earning',
-                             'book_value', 'sales_value', 'cash_flow']
+        list_column_table = ['company_name', 'symbol', 'close', 'revenue', 'gross_margin', 'net_income', 'dividends',
+                             'EPS', 'BVPS', 'free_cash_flow_per_share']
         list_company = ManagerCompany.get_historic_value_all_company()
 
         if self.tableWidget_stockScreener.rowCount() < len(list_company):
@@ -49,7 +49,8 @@ class ManagerMainWindow(Ui_MainWindow):
                     assert (idx_column > 0 or idx_column < self.tableWidget_stockScreener.rowCount()), \
                         'Problem index of column when insert new row'
                     # create new row
-                    cell = QtGui.QTableWidgetItem()
+                    #cell = QtGui.QTableWidgetItem()
+                    cell = ValueTableItem.value_tableitem()
                     # we don't want user can change value of cell in table
                     cell.setFlags(QtCore.Qt.ItemIsUserCheckable | QtCore.Qt.ItemIsEnabled)
                     value = company.get(key) if company.get(key) is not None else ""
@@ -111,6 +112,11 @@ class ManagerMainWindow(Ui_MainWindow):
         for dict_portfolio in list_portfolio:
             cb.addItem(dict_portfolio.get('name'))
 
+    def set_min_max(self):
+        # TODO : Add comment
+        HelperFunctionQt.set_min_max_slider_layout(self.verticalLayout_left)
+        HelperFunctionQt.set_min_max_slider_layout(self.verticalLayout_right)
+
 
 class Slots:
     @staticmethod
@@ -137,6 +143,15 @@ class Slots:
         :return: None
         """
         table_widget = ui.tableWidget_stockScreener
+
+        # TODO: Check if OK to do that
+        # When a click is made on a column's name, a sorting is done. We are changing the indicator in MainWindow
+        # accordingly. The ValueTableItems that we are using use that indicator to adjust their comparison's algorithms.
+        if table_widget.horizontalHeader().sortIndicatorOrder() == 0:
+            Ui_MainWindow.is_descending = True
+        else:
+            Ui_MainWindow.is_descending = False
+
         if column == table_widget.columnCount() - 1:
             # sort_order = 0 => ascending ; Qt::Unchecked = 0  Qt::Checked = 2  Qt::PartiallyChecked = 1
             sort_order = table_widget.horizontalHeader().sortIndicatorOrder()
@@ -212,6 +227,7 @@ if __name__ == "__main__":
     ui.setup_size_fixed()
     ui.create_data_table_stock_screener()
     ui.create_connection_signal_slot()
+    ui.set_min_max()
 
     MainWindow.show()
     sys.exit(app.exec_())
