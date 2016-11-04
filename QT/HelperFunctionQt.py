@@ -182,7 +182,7 @@ def create_new_cell_item_table_widget(table_widget, idx_row, idx_column, value):
     cell.setFlags(QtCore.Qt.ItemIsUserCheckable | QtCore.Qt.ItemIsEnabled)
 
     value = value if value is not None else ""
-    cell.setText(_translate("MainWindow", value, None))
+    cell.setText(_translate("MainWindow", str(value), None))
     table_widget.setItem(idx_row, idx_column, cell)
 
 
