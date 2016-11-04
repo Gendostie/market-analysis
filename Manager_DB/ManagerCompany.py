@@ -123,7 +123,7 @@ def get_historic_value_company(symbol, db=None):
     query = """SELECT c.name, c.symbol, date_historic_value, revenu_usd_mil, gross_margin_pct,
                 net_income_usd_mil, earning_per_share_usd, dividends_usd, book_value_per_share_usd,
                 free_cash_flow_per_share_usd
-                FROM company c left join historic_value hv on c.symbol = hv.id_symbol
+                FROM company c LEFT JOIN historic_value hv ON c.symbol = hv.id_symbol
                 WHERE c.symbol = %(symbol)s"""
     res = db.select_in_db(query, {'symbol': symbol})
     return_value = []
@@ -147,7 +147,7 @@ def get_historic_value_all_company(db=None):
     query = """SELECT c.name, c.symbol, date_historic_value, revenu_usd_mil, gross_margin_pct,
                 net_income_usd_mil, earning_per_share_usd, dividends_usd, book_value_per_share_usd,
                 free_cash_flow_per_share_usd
-                FROM company c left join historic_value hv on c.symbol = hv.id_symbol"""
+                FROM company c LEFT JOIN historic_value hv ON c.symbol = hv.id_symbol"""
     res = db.select_in_db(query)
     return_value = []
     for company_name, symbol, datetime_value, revenue, gross_margin, income, earning, dividends, book_value, cash_flow in res:

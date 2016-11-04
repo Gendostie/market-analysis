@@ -41,9 +41,9 @@ class ManagerMainWindow(Ui_MainWindow):
         Create data in table widget stock screener with data SQL
         :return: None
         """
-        list_column_table = ['company_name', 'symbol', 'stock_value', 'income', 'gross_margin',
-                             'dividends', 'market_capitaisation', 'finantical_index', 'index_end', 'earning',
-                             'book_value', 'sales_value', 'cash_flow']
+        list_column_table = ['company_name', 'symbol', 'revenue', 'income', 'gross_margin', 'earning', 'dividends',
+                             'dividend_yield', 'esp', 'price_esp', 'book_value', 'price_book', 'cash_flow', 'close',
+                             '52wk']
         list_company = ManagerCompany.get_historic_value_all_company()
 
         if self.tableWidget_stockScreener.rowCount() < len(list_company):
