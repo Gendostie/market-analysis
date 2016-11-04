@@ -42,8 +42,10 @@ class ManagerMainWindow(Ui_MainWindow):
         Create data in table widget stock screener with data SQL
         :return: None
         """
-        list_column_table = ['company_name', 'symbol', 'close', 'revenue', 'gross_margin', 'net_income', 'dividends',
-                             'EPS', 'BVPS', 'free_cash_flow_per_share']
+        list_column_table = ['company_name', 'symbol', 'revenue', 'net_income', 'gross_margin', 'dividends',
+                             'dividend_yield', 'eps', 'price_esp', 'BVPS', 'price_book', 'FCFPS', 'close',
+                             '52wk']
+
         list_company = ManagerCompany.get_historic_value_all_company()
 
         if self.tableWidget_stockScreener.rowCount() < len(list_company):
@@ -101,6 +103,8 @@ class ManagerMainWindow(Ui_MainWindow):
         # connection combo box line edit to portfolio of Portfolio Manager to same fct of btn Add to portfolio
         self.comboBox_portfolioManager_addCompany.lineEdit().returnPressed \
             .connect(Slots.add_company_to_portfolio_portfolio_manager)
+        # Refresh table and global ranking depending on criteria selected
+        self.btn_RefreshTableStockScreener.clicked.connect(Slots.refresh_table_stock_screener)
 
         # Portfolio Manager
         # connection btn Add to portfolio of Portfolio Manager
@@ -355,6 +359,10 @@ class Slots:
             HelperFunctionQt.delete_companies_to_portfolio_db(portfolio_id, list_company_deleted)
             # refresh table portfolio
             ui.refresh_data_table_portfolio()
+
+    @staticmethod
+    def refresh_table_stock_screener():
+        print('Refresh table Stock Screener')
 
 
 if __name__ == "__main__":
