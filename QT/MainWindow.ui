@@ -3051,7 +3051,7 @@
         </spacer>
        </item>
        <item>
-        <widget class="QPushButton" name="btn_Refresh">
+        <widget class="QPushButton" name="btn_RefreshTableStockScreener">
          <property name="minimumSize">
           <size>
            <width>145</width>
