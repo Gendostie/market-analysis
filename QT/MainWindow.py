@@ -17,12 +17,18 @@ except AttributeError:
 try:
     _encoding = QtGui.QApplication.UnicodeUTF8
     def _translate(context, text, disambig):
-        return QtGui.QApplication.translate(context, text, disambig, _encoding)
+        # TODO : Sur mon ordinateur, quand un INT/FLOAT est passé, ça cause une erreur. D'où le cast en string.
+        return QtGui.QApplication.translate(context, str(text), disambig, _encoding)
 except AttributeError:
     def _translate(context, text, disambig):
-        return QtGui.QApplication.translate(context, text, disambig)
+        return QtGui.QApplication.translate(context, str(text), disambig)
 
 class Ui_MainWindow(object):
+    # TODO : Check if OK to do that
+    # Value that indicates the type of sorting (ascending = 0, descending = 1).
+    # Is used by ValueTableItem when sorting Null values.
+    is_descending = False
+
     def setupUi(self, MainWindow):
         MainWindow.setObjectName(_fromUtf8("MainWindow"))
         MainWindow.resize(1280, 800)

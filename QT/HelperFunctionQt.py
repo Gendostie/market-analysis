@@ -3,7 +3,10 @@
 from PyQt4 import QtCore, QtGui
 
 from MainWindow import _translate
-from Manager_DB import ManagerPortfolio
+from Manager_DB import ManagerPortfolio, ManagerCompany
+from Manager_DB.DbConnection import DbConnection
+from QT import ValueTableItem
+import configparser
 
 
 def get_row_table_widget(table_widget, idx_row):
@@ -163,6 +166,58 @@ def link_spin_slider_layout(layout):
         max_range_slider.valueChanged.connect(min_range_slider.setMaximum)
 
 
+# TODO: Commenting
+# TODO: Create a DbConnection Object
+def set_min_max_slider_layout(layout):
+    config = configparser.ConfigParser()
+    config.read('../config.ini')
+
+    db = DbConnection(config.get('database', 'HOST'),
+                      config.get('database', 'USER'),
+                      config.get('database', 'PASSWORD'),
+                      config.get('database', 'DATABASE'))
+
+    list_column_table = ['close', 'revenue', 'gross_margin', 'net_income', 'dividends',
+                         'EPS', 'BVPS', 'free_cash_flow_per_share']
+    min_dict = {'close': ManagerCompany.get_minimum_value_daily("close_val", db),
+                'revenue': ManagerCompany.get_minimum_value_historical("revenu_usd_mil", db)}
+    max_dict = {'close': ManagerCompany.get_maximum_value_daily("close_val", db),
+                'revenue': ManagerCompany.get_maximum_value_historical("revenu_usd_mil", db)}
+
+    #for idx_layout in range(len(list_column_table)):
+    for idx_layout in range(layout.count()):
+        # Name of the attribute
+        name_attr = get_widget_of_layout(layout.itemAt(idx_layout), QtGui.QCheckBox).text()
+
+        # Min value
+        min_spin_box = get_widget_of_layout(layout.itemAt(idx_layout), QtGui.QDoubleSpinBox)
+        min_range_slider = get_widget_of_layout(layout.itemAt(idx_layout), QtGui.QSlider)
+        if name_attr == "Dividend yield":
+            min_spin_box.setMinimum(min_dict["close"])
+            min_spin_box.setValue(min_dict["close"])
+            min_range_slider.setMinimum(min_dict["close"])
+            min_range_slider.setValue(min_dict["close"])
+        else:
+            min_spin_box.setMinimum(min_dict["revenue"])
+            min_spin_box.setValue(min_dict["revenue"])
+            min_range_slider.setMinimum(min_dict["revenue"])
+            min_range_slider.setValue(min_dict["revenue"])
+
+        # Max value
+        max_spin_box = get_widget_of_layout(layout.itemAt(idx_layout), QtGui.QDoubleSpinBox, 1)
+        max_range_slider = get_widget_of_layout(layout.itemAt(idx_layout), QtGui.QSlider, 1)
+        if name_attr == "Dividend yield":
+            max_spin_box.setMaximum(max_dict["close"])
+            max_spin_box.setValue(max_dict["close"])
+            max_range_slider.setMaximum(max_dict["close"])
+            max_range_slider.setValue(max_dict["close"])
+        else:
+            max_spin_box.setMaximum(max_dict["revenue"])
+            max_spin_box.setValue(max_dict["revenue"])
+            max_range_slider.setMaximum(max_dict["revenue"])
+            max_range_slider.setValue(max_dict["revenue"])
+
+
 def create_new_cell_item_table_widget(table_widget, idx_row, idx_column, value):
     """
     Create a cell item in row to column specify of table widget chosen
@@ -177,7 +232,7 @@ def create_new_cell_item_table_widget(table_widget, idx_row, idx_column, value):
     :return: None
     """
     # create new row
-    cell = QtGui.QTableWidgetItem()
+    cell = ValueTableItem.value_tableitem()
     # we don't want user can change value of cell in table QtCore.Qt.ItemIsEditable
     cell.setFlags(QtCore.Qt.ItemIsUserCheckable | QtCore.Qt.ItemIsEnabled)
 
