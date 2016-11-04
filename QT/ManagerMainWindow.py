@@ -36,6 +36,7 @@ class ManagerMainWindow(Ui_MainWindow):
         if self.comboBox_portfolioManager_portfolio.count() > 0:
             self.refresh_data_table_portfolio()
         self.create_combobox_company_portfolio_manager()
+        self.set_min_max()
 
     def create_data_table_stock_screener(self):
         """
@@ -376,7 +377,6 @@ if __name__ == "__main__":
     ui.setup_manager()
     ui.setup_size_fixed()
     ui.create_connection_signal_slot()
-    ui.set_min_max()
 
     MainWindow.show()
     sys.exit(app.exec_())
