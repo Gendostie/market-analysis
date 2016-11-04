@@ -130,9 +130,10 @@ def get_historic_value_company(symbol, db=None):
     res = db.select_in_db(query, {'symbol': symbol})
     return_value = []
     for company_name, symbol, datetime_value, revenue, gross_margin, income, earning, dividends, book_value, cash_flow in res:
-        return_value.append({'company_name': company_name, 'symbol': symbol, 'datetime_value': datetime_value, 'revenue': revenue,
-                             'gross_margin': gross_margin, 'income': income, 'earning': earning, 'dividends': dividends,
-                             'book_value': book_value, 'cash_flow': cash_flow})
+        return_value.append(
+            {'company_name': company_name, 'symbol': symbol, 'datetime_value': datetime_value, 'revenue': revenue,
+             'gross_margin': gross_margin, 'income': income, 'earning': earning, 'dividends': dividends,
+             'book_value': book_value, 'cash_flow': cash_flow})
     return return_value
 
 
@@ -159,7 +160,7 @@ def get_historic_value_all_company(db=None):
                                                                WHERE id_symbol = c.symbol);"""
     res = db.select_in_db(query)
     return_value = []
-    for company_name, symbol, date_daily_value, close_val,  \
+    for company_name, symbol, date_daily_value, close_val, \
         datetime_value, revenue, gross_margin, income, earning, dividends, book_value, cash_flow in res:
         return_value.append({'company_name': company_name, 'symbol': symbol, 'datetime_value': datetime_value,
                              'revenue': revenue, 'gross_margin': gross_margin, 'net_income': income, 'EPS': earning,
@@ -179,7 +180,7 @@ def get_historic_value_all_company(db=None):
 def get_minimum_value_daily(value, db=None):
     if not db or type(db) is not DbConnection:
         db = DbConnection(HOST, USER, PASSWORD, DATABASE)
-    query="""SELECT MIN({})
+    query = """SELECT MIN({})
              FROM company c LEFT JOIN daily_value dv ON c.symbol = dv.id_symbol
              WHERE is_in_snp500 AND dv.date_daily_value = (SELECT MAX(date_daily_value)
                                                               FROM daily_value
@@ -190,7 +191,7 @@ def get_minimum_value_daily(value, db=None):
 def get_maximum_value_daily(value, db=None):
     if not db or type(db) is not DbConnection:
         db = DbConnection(HOST, USER, PASSWORD, DATABASE)
-    query="""SELECT MAX({})
+    query = """SELECT MAX({})
              FROM company c LEFT JOIN daily_value dv ON c.symbol = dv.id_symbol
              WHERE is_in_snp500 AND dv.date_daily_value = (SELECT MAX(date_daily_value)
                                                               FROM daily_value
@@ -202,7 +203,7 @@ def get_maximum_value_daily(value, db=None):
 def get_minimum_value_historical(value, db=None):
     if not db or type(db) is not DbConnection:
         db = DbConnection(HOST, USER, PASSWORD, DATABASE)
-    query="""SELECT MIN({})
+    query = """SELECT MIN({})
              FROM company c LEFT JOIN historic_value hv ON c.symbol = hv.id_symbol
              WHERE is_in_snp500 AND hv.date_historic_value = (SELECT MAX(date_historic_value)
                                                               FROM historic_value
@@ -213,12 +214,13 @@ def get_minimum_value_historical(value, db=None):
 def get_maximum_value_historical(value, db=None):
     if not db or type(db) is not DbConnection:
         db = DbConnection(HOST, USER, PASSWORD, DATABASE)
-    query="""SELECT MAX({})
+    query = """SELECT MAX({})
              FROM company c LEFT JOIN historic_value hv ON c.symbol = hv.id_symbol
              WHERE is_in_snp500 AND hv.date_historic_value = (SELECT MAX(date_historic_value)
                                                               FROM historic_value
                                                               WHERE id_symbol = c.symbol);""".format(value)
     return math.ceil(db.select_in_db(query)[0][0])
+
 
 #######################################################################################################################
 #                                                                                                                     #
@@ -351,6 +353,7 @@ def insert_dividend_to_db(symbol_company, datetime, dividend, db=None):
     db.modified_db(query, params)
 
     return 0
+
 
 if __name__ == '__main__':
     if len(sys.argv) > 1:
