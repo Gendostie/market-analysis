@@ -2,8 +2,12 @@
 # -*- coding: utf-8 -*-
 from PyQt4 import QtCore, QtGui
 
+<<<<<<< HEAD
 from MainWindow import _translate
 import ManagerPortfolio
+=======
+from Manager_DB import ManagerPortfolio
+>>>>>>> master
 
 
 def get_row_table_widget(table_widget, idx_row):
