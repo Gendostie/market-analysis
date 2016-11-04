@@ -20,6 +20,13 @@ class singleton:
         self.is_descending = value
 
 
+# TODO: Add comment
+def divide(num, denom, mult=1):
+    if (num is None) or (denom is None):
+        return None
+    else:
+        return "{0:.2f}".format(num/denom*mult)
+
 def get_snp500():
     return [{'symbol': 'MMM', 'company': '3M Company'}, {'symbol': 'ABT', 'company': 'Abbott Laboratories'},
             {'symbol': 'ABBV', 'company': 'AbbVie'}, {'symbol': 'ACN', 'company': 'Accenture plc'},

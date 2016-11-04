@@ -3,6 +3,8 @@
 import finsymbols
 import sys
 import math
+from datetime import timedelta
+from QT.Singleton import divide
 
 from DbConnection import DbConnection
 
@@ -13,7 +15,7 @@ PASSWORD = 'root'
 DATABASE = 'market_analysis'
 
 
-def get_snp500(db=None):
+def get_company_in_snp500(db=None):
     """
     Get company with flag is_in_snp500 in db
     :param db: if we have already connexion in other function who cal this function
@@ -173,10 +175,28 @@ def get_historic_value_all_company(db=None):
     return_value = []
     for company_name, symbol, date_daily_value, close_val, \
         datetime_value, revenue, gross_margin, income, earning, dividends, book_value, cash_flow in res:
+        # TODO: Add comment
+        result_52wk = ()
+        addedDays = 0
+        while len(result_52wk) == 0:
+            new_date = date_daily_value.replace(year=date_daily_value.year - 1) + timedelta(days=addedDays)
+
+            query_2 = """SELECT close_val
+                         FROM daily_value
+                         WHERE date_daily_value = "{}"
+                               AND id_symbol = "{}";""".format(new_date, symbol)
+            result_52wk = db.select_in_db(query_2)
+            addedDays += 1
+        last_year_close = result_52wk[0][0]
+
         return_value.append({'company_name': company_name, 'symbol': symbol, 'datetime_value': datetime_value,
                              'revenue': revenue, 'gross_margin': gross_margin, 'net_income': income, 'EPS': earning,
                              'dividends': dividends, 'BVPS': book_value, 'FCFPS': cash_flow,
-                             'datetime_daily_value': date_daily_value, 'close': close_val})
+                             'datetime_daily_value': date_daily_value, 'close': close_val,
+                             'dividend_yield': divide(dividends, close_val, 100),
+                             'price_eps': divide(close_val, earning),
+                             'price_book': divide(close_val, book_value),
+                             '52wk': divide(close_val - last_year_close, last_year_close, 100)})
     return return_value
 
 

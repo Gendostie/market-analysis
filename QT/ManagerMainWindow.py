@@ -43,7 +43,7 @@ class ManagerMainWindow(Ui_MainWindow):
         :return: None
         """
         list_column_table = ['company_name', 'symbol', 'revenue', 'net_income', 'gross_margin', 'dividends',
-                             'dividend_yield', 'eps', 'price_esp', 'BVPS', 'price_book', 'FCFPS', 'close',
+                             'dividend_yield', 'EPS', 'price_eps', 'BVPS', 'price_book', 'FCFPS', 'close',
                              '52wk']
 
         list_company = ManagerCompany.get_historic_value_all_company()
@@ -143,7 +143,7 @@ class ManagerMainWindow(Ui_MainWindow):
         HelperFunctionQt.set_min_max_slider_layout(self.verticalLayout_right)
 
     def create_combobox_company_portfolio_manager(self):
-        list_company = ManagerCompany.get_snp500()
+        list_company = ManagerCompany.get_company_in_snp500()
 
         for company in list_company:
             self.comboBox_portfolioManager_addCompany.addItem(company.get("symbol") + " " + company.get("name"))
