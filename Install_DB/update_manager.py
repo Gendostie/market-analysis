@@ -13,6 +13,12 @@ from Manager_DB.ManagerCompany import insert_historic_value_to_db, insert_daily_
 import sys
 
 
+def print_message(message):
+    """Print a message on the command line. Useful for debugging."""
+    line = '--- '
+    print(line + message + '\n')
+
+
 ################################################################################################
 #
 #                                    GET CSVs FROM THE WEB
@@ -42,12 +48,15 @@ def get_csv(is_fetching_histo=True, is_fetching_daily=True, is_fetching_div=True
     logfile = open(config.get('path', 'PATH_LOG'), 'a')
 
     if is_fetching_histo:
+        print_message("Fetching the historical data from MorningStar.")
         get_all_historical(sp500, config, logfile)
 
     if is_fetching_daily:
+        print_message("Fetching the daily data from Yahoo Finance.")
         get_all_daily(sp500, config, logfile)
 
     if is_fetching_div:
+        print_message("Fetching the dividend data from Yahoo Finance.")
         get_all_dividend(sp500, config, logfile)
 
     logfile.close()
@@ -228,6 +237,7 @@ def update_with_csv(is_updating_histo=True, is_updating_daily=True, is_updating_
 
     # with open(log_path, 'a') as logfile:
     if is_updating_histo:
+        print_message("Updating the database with the historical data downloaded.")
         for filename in glob.glob(dir_path + 'histo_*.csv'):
             if os.stat(filename).st_size != 0:
                 update_historical(filename, config, logfile, db)
@@ -236,6 +246,7 @@ def update_with_csv(is_updating_histo=True, is_updating_daily=True, is_updating_
                               .format(strftime("%d %b %Y %H:%M:%S", localtime()), filename))
 
     if is_updating_daily:
+        print_message("Updating the database with the daily data downloaded.")
         for filename in glob.glob(dir_path + 'daily_*.csv'):
             if os.stat(filename).st_size != 0:
                 update_daily(filename, config, db)
@@ -244,6 +255,7 @@ def update_with_csv(is_updating_histo=True, is_updating_daily=True, is_updating_
                               .format(strftime("%d %b %Y %H:%M:%S", localtime()), filename))
 
     if is_updating_div:
+        print_message("Updating the database with the dividend data downloaded.")
         for filename in glob.glob(dir_path + 'div_*.csv'):
             if os.stat(filename).st_size != 0:
                 update_dividend(filename, db)
