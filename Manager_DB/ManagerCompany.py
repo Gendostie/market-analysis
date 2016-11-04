@@ -2,8 +2,9 @@
 # -*- coding: utf-8 -*-
 import finsymbols
 import sys
+
 import math
-from Manager_DB.DbConnection import DbConnection
+from DbConnection import DbConnection
 
 # TODO : Config
 HOST = '127.0.0.1'
