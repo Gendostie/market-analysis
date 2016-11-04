@@ -313,3 +313,44 @@ def delete_companies_to_portfolio_db(portfolio_id, list_company):
     # delete companies to portfolio in db
     nb_company_added = ManagerPortfolio.delete_companies_to_portfolio(portfolio_id, list_company)
     print("Nb company added: %s" % nb_company_added)
+
+
+def reduce_table(list_cie, list_param):
+    dict_name = [['Revenue (Mil)', "revenue"],
+                 ['Net Income (Mil)', "net_income"],
+                 ['Gross Margin (%)', "gross_margin"],
+                 ['Dividends', "dividends"],
+                 ['EPS', "EPS"],
+                 ['BVPS', "BVPS"],
+                 ['FCFPS', "FCFPS"],
+                 ['Close', "close"],
+                 ['Dividend Yield (%)', "dividend_yield"],
+                 ['P/E Ratio', "price_eps"],
+                 ['P/B Ratio', "price_book"],
+                 ['52wk (%)', "52wk"]]
+    dict_param = {}
+    for param in list_param:
+        dict_param[param['name']] = [param['min'], param['max']]
+
+    new_list_company = []
+    for cie in list_cie:
+        flag = True
+        for name_param, name_cie in dict_name:
+            try:
+                cie_val = float(cie[name_cie])
+            except:
+                continue
+            # Check MIN
+            if cie_val < dict_param[name_param][0]:
+                flag = False
+                break
+            # Check MAX
+            elif cie_val > dict_param[name_param][1]:
+                flag = False
+                break
+        if flag:
+            new_list_company.append(cie)
+
+    return new_list_company
+
+
