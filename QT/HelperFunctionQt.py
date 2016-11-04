@@ -1,7 +1,8 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 from PyQt4 import QtCore, QtGui
-from Manager_DB import ManagerPortfolio, ManagerCompany, DbConnection
+from Manager_DB import ManagerPortfolio, ManagerCompany
+from Manager_DB.DbConnection import DbConnection
 import configparser
 
 

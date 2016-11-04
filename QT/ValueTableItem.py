@@ -1,12 +1,13 @@
 from PyQt4 import QtGui
-from QT.MainWindow import Ui_MainWindow
+from QT.Order_Manager import order_manager
+
 
 # TODO : Add comments
 class value_tableitem(QtGui.QTableWidgetItem):
     def __lt__(self, other):
         try:
             if self.text() == "":
-                value = float("-inf") if Ui_MainWindow.is_descending else float("inf")
+                value = float("-inf") if order_manager.is_descending else float("inf")
             else:
                 value = float(self.text())
         except ValueError:
@@ -16,7 +17,7 @@ class value_tableitem(QtGui.QTableWidgetItem):
     def __le__(self, other):
         try:
             if self.text() == "":
-                value = float("-inf") if Ui_MainWindow.is_descending else float("inf")
+                value = float("-inf") if order_manager.is_descending else float("inf")
             else:
                 value = float(self.text())
         except ValueError:
@@ -46,7 +47,7 @@ class value_tableitem(QtGui.QTableWidgetItem):
     def __gt__(self, other):
         try:
             if self.text() == "":
-                value = float("-inf") if Ui_MainWindow.is_descending else float("inf")
+                value = float("-inf") if order_manager.is_descending else float("inf")
             else:
                 value = float(self.text())
         except ValueError:
@@ -56,7 +57,7 @@ class value_tableitem(QtGui.QTableWidgetItem):
     def __ge__(self, other):
         try:
             if self.text() == "":
-                value = float("-inf") if Ui_MainWindow.is_descending else float("inf")
+                value = float("-inf") if order_manager.is_descending else float("inf")
             else:
                 value = float(self.text())
         except ValueError:
