@@ -61,7 +61,7 @@ class DbConnection:
         :param query: query sql
         :type query: str
         :param params: parameter to put in query, ex: "WHERE id = %s" or "WHERE id = %(id)s",  params = {id: 1}
-        :type params: dict
+        :type params: dict | tuple
         :return: Number row affected
         :rtype: int
         """

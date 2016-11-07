@@ -3,7 +3,8 @@
 import finsymbols
 import sys
 import math
-from Manager_DB.DbConnection import DbConnection
+
+from DbConnection import DbConnection
 
 # TODO : Config
 HOST = '127.0.0.1'
@@ -121,17 +122,27 @@ def get_historic_value_company(symbol, db=None):
 
     if not db or type(db) is not DbConnection:
         db = DbConnection(HOST, USER, PASSWORD, DATABASE)
-    query = """SELECT c.name, c.symbol, date_historic_value, revenu_usd_mil, gross_margin_pct,
-                net_income_usd_mil, earning_per_share_usd, dividends_usd, book_value_per_share_usd,
+    query = """SELECT c.name, c.symbol, d.date_daily_value, d.close_val, date_historic_value, revenu_usd_mil,
+                gross_margin_pct, net_income_usd_mil, earning_per_share_usd, dividends_usd, book_value_per_share_usd,
                 free_cash_flow_per_share_usd
-                FROM company c left join historic_value hv on c.symbol = hv.id_symbol
-                WHERE c.symbol = %(symbol)s"""
+                FROM company c LEFT JOIN historic_value hv ON c.symbol = hv.id_symbol
+                               LEFT JOIN daily_value d ON c.symbol = d.id_symbol
+                WHERE c.is_in_snp500 AND c.symbol = %(symbol)s
+                                     AND hv.date_historic_value = (SELECT max(date_historic_value)
+                                                                   FROM historic_value
+                                                                   WHERE id_symbol = c.symbol)
+                                     AND d.date_daily_value = (SELECT max(date_daily_value)
+                                                               FROM daily_value
+                                                               WHERE id_symbol = c.symbol)"""
+
     res = db.select_in_db(query, {'symbol': symbol})
     return_value = []
-    for company_name, symbol, datetime_value, revenue, gross_margin, income, earning, dividends, book_value, cash_flow in res:
-        return_value.append({'company_name': company_name, 'symbol': symbol, 'datetime_value': datetime_value, 'revenue': revenue,
-                             'gross_margin': gross_margin, 'income': income, 'earning': earning, 'dividends': dividends,
-                             'book_value': book_value, 'cash_flow': cash_flow})
+    for company_name, symbol, date_daily_value, close_val, \
+        datetime_value, revenue, gross_margin, income, earning, dividends, book_value, cash_flow in res:
+        return_value.append({'company_name': company_name, 'symbol': symbol, 'datetime_value': datetime_value,
+                             'revenue': revenue, 'gross_margin': gross_margin, 'net_income': income, 'EPS': earning,
+                             'dividends': dividends, 'BVPS': book_value, 'FCFPS': cash_flow,
+                             'datetime_daily_value': date_daily_value, 'close': close_val})
     return return_value
 
 
@@ -145,6 +156,7 @@ def get_historic_value_all_company(db=None):
     """
     if not db or type(db) is not DbConnection:
         db = DbConnection(HOST, USER, PASSWORD, DATABASE)
+
     query = """SELECT c.name, c.symbol, d.date_daily_value, d.close_val, date_historic_value, revenu_usd_mil,
                 gross_margin_pct, net_income_usd_mil, earning_per_share_usd, dividends_usd, book_value_per_share_usd,
                 free_cash_flow_per_share_usd
@@ -162,7 +174,7 @@ def get_historic_value_all_company(db=None):
         datetime_value, revenue, gross_margin, income, earning, dividends, book_value, cash_flow in res:
         return_value.append({'company_name': company_name, 'symbol': symbol, 'datetime_value': datetime_value,
                              'revenue': revenue, 'gross_margin': gross_margin, 'net_income': income, 'EPS': earning,
-                             'dividends': dividends, 'BVPS': book_value, 'free_cash_flow_per_share': cash_flow,
+                             'dividends': dividends, 'BVPS': book_value, 'FCFPS': cash_flow,
                              'datetime_daily_value': date_daily_value, 'close': close_val})
     return return_value
 

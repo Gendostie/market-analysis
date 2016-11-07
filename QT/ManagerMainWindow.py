@@ -2,10 +2,10 @@
 # -*- coding: utf-8 -*-
 from PyQt4 import QtCore, QtGui
 
-from QT.MainWindow import Ui_MainWindow, _translate
-from Manager_DB import  ManagerPortfolio, ManagerCompany
-from QT import HelperFunctionQt, ValueTableItem
-
+from QT.MainWindow import Ui_MainWindow
+from Manager_DB import ManagerPortfolio, ManagerCompany
+from QT import HelperFunctionQt
+from QT.Order_Manager import singleton
 
 
 class ManagerMainWindow(Ui_MainWindow):
@@ -19,22 +19,34 @@ class ManagerMainWindow(Ui_MainWindow):
         MainWindow.setMinimumSize(MainWindow.size())
         # adjust column of table widget
         self.tableWidget_stockScreener.horizontalHeader().setResizeMode(QtGui.QHeaderView.ResizeToContents)
+        self.tableWidget_portfolio.horizontalHeader().setResizeMode(QtGui.QHeaderView.ResizeToContents)
+
 
     def setup_manager(self):
         """
         Setup for widget already in MainWindow.ui to modify
         :return: None
         """
+        self.create_data_table_stock_screener()
+        # Stock Screener
         self.comboBox_stockScreener_portfolio.lineEdit().setPlaceholderText("Choose your portfolio name.")
-        self.add_portfolio_name_in_combobox('tabStockScreener', 'comboBox_stockScreener_portfolio')
+        self.create_combobox_portfolio('tab_stockScreener', 'comboBox_stockScreener_portfolio')
+        # Portfolio Manager
+        self.comboBox_portfolioManager_portfolio.lineEdit().setPlaceholderText("Choose your portfolio name.")
+        self.create_combobox_portfolio('tab_portfolioManager', 'comboBox_portfolioManager_portfolio')
+        if self.comboBox_portfolioManager_portfolio.count() > 0:
+            self.refresh_data_table_portfolio()
+        self.create_combobox_company_portfolio_manager()
 
     def create_data_table_stock_screener(self):
         """
         Create data in table widget stock screener with data SQL
         :return: None
         """
-        list_column_table = ['company_name', 'symbol', 'close', 'revenue', 'gross_margin', 'net_income', 'dividends',
-                             'EPS', 'BVPS', 'free_cash_flow_per_share']
+        list_column_table = ['company_name', 'symbol', 'revenue', 'net_income', 'gross_margin', 'dividends',
+                             'dividend_yield', 'eps', 'price_esp', 'BVPS', 'price_book', 'FCFPS', 'close',
+                             '52wk']
+
         list_company = ManagerCompany.get_historic_value_all_company()
 
         if self.tableWidget_stockScreener.rowCount() < len(list_company):
@@ -48,28 +60,17 @@ class ManagerMainWindow(Ui_MainWindow):
                     idx_column = list_column_table.index(key)
                     assert (idx_column > 0 or idx_column < self.tableWidget_stockScreener.rowCount()), \
                         'Problem index of column when insert new row'
-                    # create new row
-                    #cell = QtGui.QTableWidgetItem()
-                    cell = ValueTableItem.value_tableitem()
-                    # we don't want user can change value of cell in table
-                    cell.setFlags(QtCore.Qt.ItemIsUserCheckable | QtCore.Qt.ItemIsEnabled)
-                    value = company.get(key) if company.get(key) is not None else ""
-                    cell.setText(_translate("MainWindow", str(value), None))
-                    self.tableWidget_stockScreener.setItem(idx_row, idx_column, cell)
+                    # create new cell
+                    HelperFunctionQt.create_new_cell_item_table_widget(self.tableWidget_stockScreener,
+                                                                       idx_row, idx_column, company.get(key))
                 except ValueError:
                     continue  # if column no exists in table stock screener, we continue
-            # create checkbox in last cell of row
-            widget_cb = QtGui.QWidget()
-            h_box_layout_cb = QtGui.QHBoxLayout()
+            # create cell with checkbox in last column
             cb = QtGui.QCheckBox()
-            h_box_layout_cb.setMargin(1)
-            h_box_layout_cb.setAlignment(QtCore.Qt.AlignCenter)
-            h_box_layout_cb.addWidget(cb)
-            widget_cb.setLayout(h_box_layout_cb)
-            # we suppose checkbox is always in end of row
-            self.tableWidget_stockScreener.setCellWidget(idx_row,
-                                                         self.tableWidget_stockScreener.columnCount() - 1,
-                                                         widget_cb)
+            HelperFunctionQt.create_new_cell_widget_table_widget(self.tableWidget_stockScreener,
+                                                                 idx_row,
+                                                                 self.tableWidget_stockScreener.columnCount() - 1,
+                                                                 cb)
         self.tableWidget_stockScreener.setSortingEnabled(sorting_enable)
 
     def create_connection_signal_slot(self):
@@ -77,15 +78,18 @@ class ManagerMainWindow(Ui_MainWindow):
         Add connection between signal (ex:click button) and slot (action to do, ex: open dialog box)
         :return: None
         """
-        # sort column checkbox of table stock screnner
-        self.tableWidget_stockScreener.horizontalHeader().sectionClicked\
+        # refresh combobox portfolio when we change tab widget, because we could be adding new portfolio
+        self.tab.currentChanged.connect(Slots.refresh_combobox_portfolio_tab_widget)
+        # Stock Screener
+        # sort column checkbox of table stock screener
+        self.tableWidget_stockScreener.horizontalHeader().sectionClicked \
             .connect(Slots.sort_column_checkbox_table_widget_stock_screener)
         # checked or unchecked the checkbox of cell clicked
         self.tableWidget_stockScreener.cellClicked.connect(Slots.modify_checkbox_table_widget_stock_screener)
         # connection btn Add to portfolio of Stock Screener
         self.btn_stockScreener_addPortfolio.clicked.connect(Slots.add_company_to_portfolio_stock_screener)
         # connection combo box line edit to portfolio of Stock Screener to same fct of btn Add to portfolio
-        self.comboBox_stockScreener_portfolio.lineEdit().returnPressed\
+        self.comboBox_stockScreener_portfolio.lineEdit().returnPressed \
             .connect(Slots.add_company_to_portfolio_stock_screener)
         # link slider and spin box of box layout to left
         HelperFunctionQt.link_spin_slider_layout(self.verticalLayout_left)
@@ -95,8 +99,30 @@ class ManagerMainWindow(Ui_MainWindow):
         self.btn_selectAllCriteria.clicked.connect(Slots.select_all_criteria_stock_screener)
         # btn deselect criteria stock sceenner
         self.btn_deselectAllCriteria.clicked.connect(Slots.deselect_all_criteria_stock_screener)
+        # connection btn Add to portfolio of Portfolio Manager
+        self.btn_addCompany.clicked.connect(Slots.add_company_to_portfolio_portfolio_manager)
+        # connection combo box line edit to portfolio of Portfolio Manager to same fct of btn Add to portfolio
+        self.comboBox_portfolioManager_addCompany.lineEdit().returnPressed \
+            .connect(Slots.add_company_to_portfolio_portfolio_manager)
+        # Refresh table and global ranking depending on criteria selected
+        self.btn_RefreshTableStockScreener.clicked.connect(Slots.refresh_table_stock_screener)
 
-    def add_portfolio_name_in_combobox(self, tab_widget_name, combobox_name):
+        # Portfolio Manager
+        # connection btn Add to portfolio of Portfolio Manager
+        self.btn_portfolio_ok.clicked.connect(self.refresh_data_table_portfolio)
+        # connection combo box line edit to portfolio of Portfolio Manager to same fct of btn Add to portfolio
+        self.comboBox_portfolioManager_portfolio.lineEdit().returnPressed \
+            .connect(self.refresh_data_table_portfolio)
+        self.comboBox_portfolioManager_portfolio.currentIndexChanged.connect(self.refresh_data_table_portfolio)
+        # checked or unchecked the checkbox of cell clicked
+        self.tableWidget_portfolio.cellClicked.connect(Slots.modify_checkbox_table_widget_portfolio_manager)
+        # sort column checkbox of table portfolio
+        self.tableWidget_portfolio.horizontalHeader().sectionClicked \
+            .connect(Slots.sort_column_checkbox_table_widget_portfolio_manager)
+        # delete companies selected of portfolio current
+        self.btn_portfolio_delete_company_selected.clicked.connect(Slots.deleted_company_selected_table_portfolio)
+
+    def create_combobox_portfolio(self, tab_widget_name, combobox_name):
         """
         Add portfolio name of DB in combo box chosen
         :param tab_widget_name: name of tabular widget (tabStockScreener, tabPortfolioManager, tabSimmulator)
@@ -117,15 +143,71 @@ class ManagerMainWindow(Ui_MainWindow):
         HelperFunctionQt.set_min_max_slider_layout(self.verticalLayout_left)
         HelperFunctionQt.set_min_max_slider_layout(self.verticalLayout_right)
 
+    def create_combobox_company_portfolio_manager(self):
+        list_company = ManagerCompany.get_snp500()
+
+        for company in list_company:
+            self.comboBox_portfolioManager_addCompany.addItem(company.get("symbol") + " " + company.get("name"))
+
+    def refresh_data_table_portfolio(self):
+        """
+        Refresh data of table portfolio depending on portfolio chosen
+        :return: None
+        """
+        list_column_table = ['name', 'symbol']
+
+        # get name portfolio
+        self.tableWidget_portfolio.setRowCount(0)
+        portfolio_name = self.comboBox_portfolioManager_portfolio.lineEdit().text()
+        if portfolio_name == '' or portfolio_name is None:
+            self.frame_managerPortfolio.setEnabled(False)
+            # self.tableWidget_portfolio.clearContents()
+            return 0  # no portfolio name
+        else:
+            # Refresh combo box if is new
+            if ui.comboBox_portfolioManager_portfolio.findText(portfolio_name) == -1:
+                ui.comboBox_portfolioManager_portfolio.addItem(portfolio_name)
+            self.frame_managerPortfolio.setEnabled(True)
+
+        # add portfolio if is new
+        portfolio_id = ManagerPortfolio.create_portfolio(portfolio_name)[0].get('id_portfolio')[0]
+        self.lineEdit_noPortfolio.setText(str(portfolio_id))  # set id portfolio to line edit
+
+        list_company = ManagerPortfolio.get_companies_to_portfolio(portfolio_id)
+
+        if self.tableWidget_portfolio.rowCount() < len(list_company):
+            self.tableWidget_portfolio.setRowCount(len(list_company))
+
+        sorting_enable = self.tableWidget_portfolio.isSortingEnabled()
+        self.tableWidget_portfolio.setSortingEnabled(False)
+        for idx_row, company in enumerate(list_company):
+            for key in company.keys():
+                try:
+                    idx_column = list_column_table.index(key)
+                    assert (idx_column > 0 or idx_column < self.tableWidget_portfolio.rowCount()), \
+                        'Problem index of column when insert new row'
+                    # create new cell
+                    HelperFunctionQt.create_new_cell_item_table_widget(self.tableWidget_portfolio,
+                                                                       idx_row, idx_column, company.get(key))
+                except ValueError:
+                    continue  # if column no exists in table stock screener, we continue
+            # create cell with checkbox in last column
+            cb = QtGui.QCheckBox()
+            HelperFunctionQt.create_new_cell_widget_table_widget(self.tableWidget_portfolio,
+                                                                 idx_row,
+                                                                 self.tableWidget_portfolio.columnCount() - 1,
+                                                                 cb)
+        self.tableWidget_portfolio.setSortingEnabled(sorting_enable)
+
 
 class Slots:
     @staticmethod
     def modify_checkbox_table_widget_stock_screener(row, column):
         """
-        Give possibility to user to click cell of checkbox fo check or uncheck case
+        Give possibility to user to click cell of checkbox fo checked or unchecked case
         :param row: row cell clicked
         :type row: int
-        :param column: column of celll clicked
+        :param column: column of cell clicked
         :type column: int
         :return: None
         """
@@ -148,31 +230,12 @@ class Slots:
         # When a click is made on a column's name, a sorting is done. We are changing the indicator in MainWindow
         # accordingly. The ValueTableItems that we are using use that indicator to adjust their comparison's algorithms.
         if table_widget.horizontalHeader().sortIndicatorOrder() == 0:
-            Ui_MainWindow.is_descending = True
+            singleton.set_order(singleton(), True)
         else:
-            Ui_MainWindow.is_descending = False
+            singleton.set_order(singleton(), False)
 
         if column == table_widget.columnCount() - 1:
-            # sort_order = 0 => ascending ; Qt::Unchecked = 0  Qt::Checked = 2  Qt::PartiallyChecked = 1
-            sort_order = table_widget.horizontalHeader().sortIndicatorOrder()
-            # sort_indicator = table_widget.horizontalHeader().sortIndicatorSection()
-            # put value of same scale of checkbox state
-            sort_order = 2 if sort_order == 1 else sort_order
-            if table_widget.rowCount() > 0:
-                list_row_remove = []
-                for idx in range(table_widget.rowCount()):
-                    # get checkbox widget
-                    cb = HelperFunctionQt.get_widget_of_layout(table_widget.cellWidget(idx, column).layout(),
-                                                               QtGui.QCheckBox)
-                    if cb.checkState() != sort_order:
-                        row = HelperFunctionQt.take_row_table_widget(table_widget, idx)
-                        HelperFunctionQt.set_row_table_widget(table_widget, row)
-                        list_row_remove.append(idx)
-                list_row_remove.reverse()
-                for idx in list_row_remove:
-                    table_widget.removeRow(idx)
-            sort_order = 1 if sort_order == 2 else sort_order  # put value of sort state
-            table_widget.horizontalHeader().setSortIndicator(column, sort_order)  # set indicator column sort
+            HelperFunctionQt.sorted_column_checkbox_table_widget(table_widget)
 
     @staticmethod
     def add_company_to_portfolio_stock_screener():
@@ -187,8 +250,8 @@ class Slots:
             for idx in range(table_widget.rowCount()):
                 # get checkbox widget
                 cb = HelperFunctionQt.get_widget_of_layout(
-                                                table_widget.cellWidget(idx, table_widget.columnCount() - 1).layout(),
-                                                QtGui.QCheckBox)
+                    table_widget.cellWidget(idx, table_widget.columnCount() - 1).layout(),
+                    QtGui.QCheckBox)
                 if cb.isChecked():
                     # add symbol company in list company to add in DB for a portfolio
                     list_company.append(table_widget.item(idx, 1).text())
@@ -196,6 +259,9 @@ class Slots:
             portfolio_name = ui.comboBox_stockScreener_portfolio.lineEdit().text()
             # add company to portfolio in db
             HelperFunctionQt.add_companies_to_portfolio_db(portfolio_name, list_company)
+            # Refresh combo box if is new
+            if ui.comboBox_stockScreener_portfolio.findText(portfolio_name) == -1:
+                ui.comboBox_stockScreener_portfolio.addItem(portfolio_name)
 
     @staticmethod
     def select_all_criteria_stock_screener():
@@ -215,9 +281,94 @@ class Slots:
         HelperFunctionQt.select_deselect_combobox_layout(ui.verticalLayout_left, QtCore.Qt.Unchecked)
         HelperFunctionQt.select_deselect_combobox_layout(ui.verticalLayout_right, QtCore.Qt.Unchecked)
 
+    @staticmethod
+    def refresh_combobox_portfolio_tab_widget(idx):
+        """
+        Refresh data in combobox of tab widget current
+        :param idx: index of tab widget
+        :type idx: int
+        :return: None
+        """
+        tab_widget = ui.tab.widget(idx)
+        name_tab_widget = tab_widget.objectName()
+        cb = tab_widget.findChild(QtGui.QComboBox, 'comboBox_' + name_tab_widget[len('tab_'):] + '_portfolio')
+
+        if cb is None:
+            return 0  # no combobox portfolio find in tab widget
+
+        cb.clear()  # clear all item of combobox
+        list_portfolio = ManagerPortfolio.get_all_portfolio_info()
+        for dict_portfolio in list_portfolio:
+            cb.addItem(dict_portfolio.get('name'))
+
+    @staticmethod
+    def modify_checkbox_table_widget_portfolio_manager(row, column):
+        """
+        Give possibility to user to click cell of checkbox fo checked or unchecked case
+        :param row: row cell clicked
+        :type row: int
+        :param column: column of cell clicked
+        :type column: int
+        :return: None
+        """
+        if column == ui.tableWidget_portfolio.columnCount() - 1:
+            # get checkbox widget
+            cb = ui.tableWidget_portfolio.cellWidget(row, column).layout().itemAt(0).widget()
+            cb.setChecked(not cb.isChecked())
+
+    @staticmethod
+    def sort_column_checkbox_table_widget_portfolio_manager(column):
+        """
+        Sorted column with checkbox, ascending = Unchecked to Checked ; descending = Checked to Unchecked
+        :param column: column of header cell clicked
+        :type column: int
+        :return: None
+        """
+        if column == ui.tableWidget_portfolio.columnCount() - 1:
+            HelperFunctionQt.sorted_column_checkbox_table_widget(ui.tableWidget_portfolio)
+
+    @staticmethod
+    def add_company_to_portfolio_portfolio_manager():
+        """
+        Add company selected to portfolio selected with call function HelperFunctionQt.add_companies_to_portfolio_db
+        :return: None
+        """
+        company = ui.comboBox_portfolioManager_addCompany.lineEdit().text().split()
+        # get name portfolio
+        portfolio_name = ui.comboBox_portfolioManager_portfolio.lineEdit().text()
+        # add company to portfolio in db
+        HelperFunctionQt.add_companies_to_portfolio_db(portfolio_name, [company[0]])
+        # refresh table portfolio manager
+        ui.refresh_data_table_portfolio()
+
+    @staticmethod
+    def deleted_company_selected_table_portfolio():
+        table_widget = ui.tableWidget_portfolio
+        if table_widget.rowCount() > 0:
+            list_company_deleted = []
+            for idx in range(table_widget.rowCount()):
+                # get checkbox widget
+                cb = HelperFunctionQt.get_widget_of_layout(
+                    table_widget.cellWidget(idx, table_widget.columnCount() - 1).layout(),
+                    QtGui.QCheckBox)
+                if cb.isChecked():
+                    # add symbol company in list company to delete in DB for a portfolio
+                    list_company_deleted.append(table_widget.item(idx, 1).text())
+            # get name portfolio
+            portfolio_id = ui.lineEdit_noPortfolio.text()
+            # add company to portfolio in db
+            HelperFunctionQt.delete_companies_to_portfolio_db(portfolio_id, list_company_deleted)
+            # refresh table portfolio
+            ui.refresh_data_table_portfolio()
+
+    @staticmethod
+    def refresh_table_stock_screener():
+        print('Refresh table Stock Screener')
+
 
 if __name__ == "__main__":
     import sys
+
     app = QtGui.QApplication(sys.argv)
     MainWindow = QtGui.QMainWindow()
     ui = ManagerMainWindow()
@@ -225,7 +376,6 @@ if __name__ == "__main__":
 
     ui.setup_manager()
     ui.setup_size_fixed()
-    ui.create_data_table_stock_screener()
     ui.create_connection_signal_slot()
     ui.set_min_max()
 
