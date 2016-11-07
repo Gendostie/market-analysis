@@ -21,7 +21,6 @@ class ManagerMainWindow(Ui_MainWindow):
         self.tableWidget_stockScreener.horizontalHeader().setResizeMode(QtGui.QHeaderView.ResizeToContents)
         self.tableWidget_portfolio.horizontalHeader().setResizeMode(QtGui.QHeaderView.ResizeToContents)
 
-
     def setup_manager(self):
         """
         Setup for widget already in MainWindow.ui to modify
