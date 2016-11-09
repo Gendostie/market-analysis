@@ -40,7 +40,7 @@ class ManagerCompanyTest(unittest.TestCase):
         self.assertEqual(row_added, len(self.__company), 'It\'s not the number of rows expected in the table Company.')
 
     def test__2_get_snp500(self):
-        res = ManagerCompany.get_company_in_snp500(self.__db)
+        res = ManagerCompany.get_snp500(self.__db)
         self.assertEqual(len(res), len(self.__company), 'It\'s not the number of rows expected in the table Company.')
         for r in res:
             self.assertTrue(r in self.__company, 'Not the expected result for %s, res= %s' % (r, res))

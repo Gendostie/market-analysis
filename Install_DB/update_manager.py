@@ -1,5 +1,4 @@
 import requests
-from QT.Singleton import get_snp500
 import os
 import glob
 import re
@@ -9,7 +8,8 @@ import pandas as pd
 from datetime import datetime
 from time import localtime, strftime
 from Manager_DB.DbConnection import DbConnection
-from Manager_DB.ManagerCompany import insert_historic_value_to_db, insert_daily_value_to_db, insert_dividend_to_db
+from Manager_DB.ManagerCompany import insert_historic_value_to_db, insert_daily_value_to_db, \
+                                      insert_dividend_to_db, get_snp500
 import sys
 
 
@@ -38,7 +38,6 @@ def get_csv(is_fetching_histo=True, is_fetching_daily=True, is_fetching_div=True
     # Get all symbols of the S&P500.
     # TODO: Get all the companies that were in the S&P500 between two dates. Otherwise -> survivor bias.
     # When testing, you might consider lowering the number of companies by slicing this list. ex: add [:50] at the end
-    # TODO: Add comment
     snp500 = get_snp500()
 
     # Get the configuration file

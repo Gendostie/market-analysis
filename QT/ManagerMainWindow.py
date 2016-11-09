@@ -168,7 +168,7 @@ class ManagerMainWindow(Ui_MainWindow):
         return list_min_max
 
     def create_combobox_company_portfolio_manager(self):
-        list_company = ManagerCompany.get_company_in_snp500()
+        list_company = ManagerCompany.get_snp500()
 
         for company in list_company:
             self.comboBox_portfolioManager_addCompany.addItem(company.get("symbol") + " " + company.get("name"))
