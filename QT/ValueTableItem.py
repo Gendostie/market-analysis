@@ -1,5 +1,5 @@
 from PyQt4 import QtGui
-from QT.Order_Manager import singleton
+from QT.Singleton import singleton
 
 
 # TODO : Add comments

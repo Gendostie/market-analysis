@@ -5,7 +5,7 @@ from PyQt4 import QtCore, QtGui
 from QT.MainWindow import Ui_MainWindow
 from Manager_DB import ManagerPortfolio, ManagerCompany
 from QT import HelperFunctionQt
-from QT.Order_Manager import singleton
+from QT.Singleton import singleton
 
 
 class ManagerMainWindow(Ui_MainWindow):
