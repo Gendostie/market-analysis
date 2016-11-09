@@ -337,10 +337,12 @@ def reduce_table(list_cie, list_param):
         flag = True
         for name_param, name_cie in dict_name:
             try:
+                # TODO: List a skipped
                 cie_val = float(cie[name_cie])
             except:
                 continue
             # Check MIN
+            # TODO: Garder le dictionnaire
             if cie_val < dict_param[name_param][0]:
                 flag = False
                 break

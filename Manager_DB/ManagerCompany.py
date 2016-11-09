@@ -15,7 +15,7 @@ PASSWORD = 'root'
 DATABASE = 'market_analysis'
 
 
-def get_company_in_snp500(db=None):
+def get_snp500(db=None):
     """
     Get company with flag is_in_snp500 in db
     :param db: if we have already connexion in other function who cal this function
