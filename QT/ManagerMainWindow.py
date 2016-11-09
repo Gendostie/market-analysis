@@ -6,6 +6,7 @@ from QT.MainWindow import Ui_MainWindow
 from Manager_DB import ManagerPortfolio, ManagerCompany
 from QT import HelperFunctionQt
 from QT.Singleton import singleton
+import pandas as pd
 
 
 class ManagerMainWindow(Ui_MainWindow):
@@ -48,6 +49,7 @@ class ManagerMainWindow(Ui_MainWindow):
                              '52wk']
 
         list_cie = ManagerCompany.get_historic_value_all_company()
+
         list_params = ui.get_all_min_max()
 
         list_company = HelperFunctionQt.reduce_table(list_cie, list_params)
@@ -385,6 +387,7 @@ class Slots:
 
     @staticmethod
     def refresh_table_stock_screener():
+        ui.tableWidget_stockScreener.setRowCount(0)
         ui.create_data_table_stock_screener()
 
 
