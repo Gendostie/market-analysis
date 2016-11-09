@@ -49,10 +49,10 @@ class ManagerMainWindow(Ui_MainWindow):
                              '52wk']
 
         list_cie = ManagerCompany.get_historic_value_all_company()
-
         dict_params = ui.get_all_min_max()
 
         list_company = HelperFunctionQt.reduce_table(list_cie, dict_params)
+        print("Number of rows: {}".format(len(list_company)))
 
         if self.tableWidget_stockScreener.rowCount() < len(list_company):
             self.tableWidget_stockScreener.setRowCount(len(list_company))
