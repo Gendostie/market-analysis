@@ -1,13 +1,13 @@
 from PyQt4 import QtGui
-from QT.Singleton import singleton
+from QT.Singleton import Singleton
 
 
 # TODO : Add comments
-class value_tableitem(QtGui.QTableWidgetItem):
+class ValueTableItem(QtGui.QTableWidgetItem):
     def __lt__(self, other):
         try:
             if self.text() == "":
-                value = float("-inf") if singleton.get_order(singleton()) else float("inf")
+                value = float("-inf") if Singleton.get_order(Singleton()) else float("inf")
             else:
                 value = float(self.text())
         except ValueError:
@@ -17,7 +17,7 @@ class value_tableitem(QtGui.QTableWidgetItem):
     def __le__(self, other):
         try:
             if self.text() == "":
-                value = float("-inf") if singleton.get_order(singleton()) else float("inf")
+                value = float("-inf") if Singleton.get_order(Singleton()) else float("inf")
             else:
                 value = float(self.text())
         except ValueError:
@@ -47,7 +47,7 @@ class value_tableitem(QtGui.QTableWidgetItem):
     def __gt__(self, other):
         try:
             if self.text() == "":
-                value = float("-inf") if singleton.get_order(singleton()) else float("inf")
+                value = float("-inf") if Singleton.get_order(Singleton()) else float("inf")
             else:
                 value = float(self.text())
         except ValueError:
@@ -57,7 +57,7 @@ class value_tableitem(QtGui.QTableWidgetItem):
     def __ge__(self, other):
         try:
             if self.text() == "":
-                value = float("-inf") if singleton.get_order(singleton()) else float("inf")
+                value = float("-inf") if Singleton.get_order(Singleton()) else float("inf")
             else:
                 value = float(self.text())
         except ValueError:

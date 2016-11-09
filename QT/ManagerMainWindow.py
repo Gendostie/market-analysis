@@ -5,8 +5,7 @@ from PyQt4 import QtCore, QtGui
 from QT.MainWindow import Ui_MainWindow
 from Manager_DB import ManagerPortfolio, ManagerCompany
 from QT import HelperFunctionQt
-from QT.Singleton import singleton
-import pandas as pd
+from QT.Singleton import Singleton
 
 
 class ManagerMainWindow(Ui_MainWindow):
@@ -53,6 +52,7 @@ class ManagerMainWindow(Ui_MainWindow):
         list_params = ui.get_all_min_max()
 
         list_company = HelperFunctionQt.reduce_table(list_cie, list_params)
+        list_company = HelperFunctionQt.calculate_global_ranking(list_cie, list_params)
 
         if self.tableWidget_stockScreener.rowCount() < len(list_company):
             self.tableWidget_stockScreener.setRowCount(len(list_company))
@@ -254,9 +254,9 @@ class Slots:
         # When a click is made on a column's name, a sorting is done. We are changing the indicator in MainWindow
         # accordingly. The ValueTableItems that we are using use that indicator to adjust their comparison's algorithms.
         if table_widget.horizontalHeader().sortIndicatorOrder() == 0:
-            singleton.set_order(singleton(), True)
+            Singleton.set_order(Singleton(), True)
         else:
-            singleton.set_order(singleton(), False)
+            Singleton.set_order(Singleton(), False)
 
         if column == table_widget.columnCount() - 1:
             HelperFunctionQt.sorted_column_checkbox_table_widget(table_widget)

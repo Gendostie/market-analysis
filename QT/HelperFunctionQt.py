@@ -1,5 +1,6 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
+import pandas as pd
 from PyQt4 import QtCore, QtGui
 
 from MainWindow import _translate
@@ -241,7 +242,7 @@ def create_new_cell_item_table_widget(table_widget, idx_row, idx_column, value):
     :return: None
     """
     # create new row
-    cell = ValueTableItem.value_tableitem()
+    cell = ValueTableItem.ValueTableItem()
     # we don't want user can change value of cell in table QtCore.Qt.ItemIsEditable
     cell.setFlags(QtCore.Qt.ItemIsUserCheckable | QtCore.Qt.ItemIsEnabled)
 
@@ -315,7 +316,7 @@ def delete_companies_to_portfolio_db(portfolio_id, list_company):
     print("Nb company added: %s" % nb_company_added)
 
 
-def reduce_table(list_cie, list_param):
+def reduce_table(list_cie, list_params):
     dict_name = [['Revenue (Mil)', "revenue"],
                  ['Net Income (Mil)', "net_income"],
                  ['Gross Margin (%)', "gross_margin"],
@@ -329,17 +330,20 @@ def reduce_table(list_cie, list_param):
                  ['P/B Ratio', "price_book"],
                  ['52wk (%)', "52wk"]]
     dict_param = {}
-    for param in list_param:
+    for param in list_params:
         dict_param[param['name']] = [param['min'], param['max']]
 
     new_list_company = []
     for cie in list_cie:
         flag = True
         for name_param, name_cie in dict_name:
+            if cie[name_cie] is None:
+                flag = False
+                break
             try:
                 # TODO: List a skipped
                 cie_val = float(cie[name_cie])
-            except:
+            except ValueError:
                 continue
             # Check MIN
             # TODO: Garder le dictionnaire
@@ -356,3 +360,20 @@ def reduce_table(list_cie, list_param):
     return new_list_company
 
 
+def calculate_global_ranking(list_cie, list_params):
+    """
+    Calculate global ranking for company
+    :param list_cie: list value for all company s&p500
+    :type list_cie: list[dict]
+    :param list_param: list criteria selected
+    :type list_param: list[dict]
+    :return: list value for all company s&p500 with global ranking
+    :rtype: list[dict]
+    """
+    df_company = pd.DataFrame.from_dict(list_cie).set_index(['symbol'])
+
+    dict_ranking_company = {}
+    for symbol in df_company.itertuples():
+        print(symbol)
+
+    print(0)
