@@ -7,9 +7,6 @@ from Manager_DB import ManagerPortfolio, ManagerCompany
 from Manager_DB.DbConnection import DbConnection
 from QT import ValueTableItem
 import configparser
-import pandas as pd
-import matplotlib.pyplot as plt
-
 
 
 def get_row_table_widget(table_widget, idx_row):
