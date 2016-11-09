@@ -18,3 +18,11 @@ class singleton:
 
     def set_order(self, value):
         self.is_descending = value
+
+
+# TODO: Add comment
+def divide(num, denom, mult=1):
+    if (num is None) or (denom is None):
+        return None
+    else:
+        return "{0:.2f}".format(num/denom*mult)
