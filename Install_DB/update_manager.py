@@ -1,5 +1,5 @@
 import requests
-import finsymbols
+from QT.Singleton import get_snp500
 import os
 import glob
 import re
@@ -38,7 +38,8 @@ def get_csv(is_fetching_histo=True, is_fetching_daily=True, is_fetching_div=True
     # Get all symbols of the S&P500.
     # TODO: Get all the companies that were in the S&P500 between two dates. Otherwise -> survivor bias.
     # When testing, you might consider lowering the number of companies by slicing this list. ex: add [:50] at the end
-    sp500 = finsymbols.get_sp500_symbols()
+    # TODO: Add comment
+    snp500 = get_snp500()
 
     # Get the configuration file
     config = configparser.ConfigParser()
@@ -49,15 +50,15 @@ def get_csv(is_fetching_histo=True, is_fetching_daily=True, is_fetching_div=True
 
     if is_fetching_histo:
         print_message("Fetching the historical data from MorningStar.")
-        get_all_historical(sp500, config, logfile)
+        get_all_historical(snp500, config, logfile)
 
     if is_fetching_daily:
         print_message("Fetching the daily data from Yahoo Finance.")
-        get_all_daily(sp500, config, logfile)
+        get_all_daily(snp500, config, logfile)
 
     if is_fetching_div:
         print_message("Fetching the dividend data from Yahoo Finance.")
-        get_all_dividend(sp500, config, logfile)
+        get_all_dividend(snp500, config, logfile)
 
     logfile.close()
 

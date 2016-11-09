@@ -177,45 +177,54 @@ def set_min_max_slider_layout(layout):
                       config.get('database', 'PASSWORD'),
                       config.get('database', 'DATABASE'))
 
-    list_column_table = ['close', 'revenue', 'gross_margin', 'net_income', 'dividends',
-                         'EPS', 'BVPS', 'free_cash_flow_per_share']
-    min_dict = {'close': ManagerCompany.get_minimum_value_daily("close_val", db),
-                'revenue': ManagerCompany.get_minimum_value_historical("revenu_usd_mil", db)}
-    max_dict = {'close': ManagerCompany.get_maximum_value_daily("close_val", db),
-                'revenue': ManagerCompany.get_maximum_value_historical("revenu_usd_mil", db)}
+    list_histo = ['Revenue (Mil)', 'Net Income (Mil)', 'Gross Margin (%)',
+                   'Dividends', 'EPS', 'BVPS', 'FCFPS']
+    list_calc = ['Dividend Yield (%)', 'P/E Ratio', 'P/B Ratio', '52wk (%)']
+    dict_name = {'Revenue (Mil)': "revenu_usd_mil",
+                 'Net Income (Mil)': "net_income_usd_mil",
+                 'Gross Margin (%)': "gross_margin_pct",
+                 'Dividends': "dividends_usd",
+                 'EPS': "earning_per_share_usd",
+                 'BVPS': "book_value_per_share_usd",
+                 'FCFPS': "free_cash_flow_per_share_usd",
+                 'Close': "close_val",
+                 'Dividend Yield (%)': "dividend_yield",
+                 'P/E Ratio': "p_e_ratio",
+                 'P/B Ratio': "p_b_ratio",
+                 '52wk (%)': "52wk"}
 
-    #for idx_layout in range(len(list_column_table)):
     for idx_layout in range(layout.count()):
         # Name of the attribute
         name_attr = get_widget_of_layout(layout.itemAt(idx_layout), QtGui.QCheckBox).text()
+        if name_attr in list_histo:
+            min_val = ManagerCompany.get_minimum_value_historical(dict_name[name_attr], db)
+            max_val = ManagerCompany.get_maximum_value_historical(dict_name[name_attr], db)
+        elif name_attr == 'Close':
+            min_val = ManagerCompany.get_minimum_value_daily(dict_name[name_attr], db)
+            max_val = ManagerCompany.get_maximum_value_daily(dict_name[name_attr], db)
+        elif name_attr in list_calc:
+            min_val = ManagerCompany.get_minimum_value_calculation(dict_name[name_attr], db)
+            max_val = ManagerCompany.get_maximum_value_calculation(dict_name[name_attr], db)
+        else:
+            continue
 
         # Min value
         min_spin_box = get_widget_of_layout(layout.itemAt(idx_layout), QtGui.QDoubleSpinBox)
         min_range_slider = get_widget_of_layout(layout.itemAt(idx_layout), QtGui.QSlider)
-        if name_attr == "Dividend yield":
-            min_spin_box.setMinimum(min_dict["close"])
-            min_spin_box.setValue(min_dict["close"])
-            min_range_slider.setMinimum(min_dict["close"])
-            min_range_slider.setValue(min_dict["close"])
-        else:
-            min_spin_box.setMinimum(min_dict["revenue"])
-            min_spin_box.setValue(min_dict["revenue"])
-            min_range_slider.setMinimum(min_dict["revenue"])
-            min_range_slider.setValue(min_dict["revenue"])
+
+        min_spin_box.setMinimum(min_val)
+        min_spin_box.setValue(min_val)
+        min_range_slider.setMinimum(min_val)
+        min_range_slider.setValue(min_val)
 
         # Max value
         max_spin_box = get_widget_of_layout(layout.itemAt(idx_layout), QtGui.QDoubleSpinBox, 1)
         max_range_slider = get_widget_of_layout(layout.itemAt(idx_layout), QtGui.QSlider, 1)
-        if name_attr == "Dividend yield":
-            max_spin_box.setMaximum(max_dict["close"])
-            max_spin_box.setValue(max_dict["close"])
-            max_range_slider.setMaximum(max_dict["close"])
-            max_range_slider.setValue(max_dict["close"])
-        else:
-            max_spin_box.setMaximum(max_dict["revenue"])
-            max_spin_box.setValue(max_dict["revenue"])
-            max_range_slider.setMaximum(max_dict["revenue"])
-            max_range_slider.setValue(max_dict["revenue"])
+
+        max_spin_box.setMaximum(max_val)
+        max_spin_box.setValue(max_val)
+        max_range_slider.setMaximum(max_val)
+        max_range_slider.setValue(max_val)
 
 
 def create_new_cell_item_table_widget(table_widget, idx_row, idx_column, value):
@@ -304,3 +313,44 @@ def delete_companies_to_portfolio_db(portfolio_id, list_company):
     # delete companies to portfolio in db
     nb_company_added = ManagerPortfolio.delete_companies_to_portfolio(portfolio_id, list_company)
     print("Nb company added: %s" % nb_company_added)
+
+
+def reduce_table(list_cie, list_param):
+    dict_name = [['Revenue (Mil)', "revenue"],
+                 ['Net Income (Mil)', "net_income"],
+                 ['Gross Margin (%)', "gross_margin"],
+                 ['Dividends', "dividends"],
+                 ['EPS', "EPS"],
+                 ['BVPS', "BVPS"],
+                 ['FCFPS', "FCFPS"],
+                 ['Close', "close"],
+                 ['Dividend Yield (%)', "dividend_yield"],
+                 ['P/E Ratio', "price_eps"],
+                 ['P/B Ratio', "price_book"],
+                 ['52wk (%)', "52wk"]]
+    dict_param = {}
+    for param in list_param:
+        dict_param[param['name']] = [param['min'], param['max']]
+
+    new_list_company = []
+    for cie in list_cie:
+        flag = True
+        for name_param, name_cie in dict_name:
+            try:
+                cie_val = float(cie[name_cie])
+            except:
+                continue
+            # Check MIN
+            if cie_val < dict_param[name_param][0]:
+                flag = False
+                break
+            # Check MAX
+            elif cie_val > dict_param[name_param][1]:
+                flag = False
+                break
+        if flag:
+            new_list_company.append(cie)
+
+    return new_list_company
+
+

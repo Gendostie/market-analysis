@@ -5,7 +5,7 @@ from PyQt4 import QtCore, QtGui
 from QT.MainWindow import Ui_MainWindow
 from Manager_DB import ManagerPortfolio, ManagerCompany
 from QT import HelperFunctionQt
-from QT.Order_Manager import singleton
+from QT.Singleton import singleton
 
 
 class ManagerMainWindow(Ui_MainWindow):
@@ -26,6 +26,7 @@ class ManagerMainWindow(Ui_MainWindow):
         Setup for widget already in MainWindow.ui to modify
         :return: None
         """
+        self.set_min_max()
         self.create_data_table_stock_screener()
         # Stock Screener
         self.comboBox_stockScreener_portfolio.lineEdit().setPlaceholderText("Choose your portfolio name.")
@@ -43,10 +44,13 @@ class ManagerMainWindow(Ui_MainWindow):
         :return: None
         """
         list_column_table = ['company_name', 'symbol', 'revenue', 'net_income', 'gross_margin', 'dividends',
-                             'dividend_yield', 'eps', 'price_esp', 'BVPS', 'price_book', 'FCFPS', 'close',
+                             'dividend_yield', 'EPS', 'price_eps', 'BVPS', 'price_book', 'FCFPS', 'close',
                              '52wk']
 
-        list_company = ManagerCompany.get_historic_value_all_company()
+        list_cie = ManagerCompany.get_historic_value_all_company()
+        list_params = ui.get_all_min_max()
+
+        list_company = HelperFunctionQt.reduce_table(list_cie, list_params)
 
         if self.tableWidget_stockScreener.rowCount() < len(list_company):
             self.tableWidget_stockScreener.setRowCount(len(list_company))
@@ -142,8 +146,27 @@ class ManagerMainWindow(Ui_MainWindow):
         HelperFunctionQt.set_min_max_slider_layout(self.verticalLayout_left)
         HelperFunctionQt.set_min_max_slider_layout(self.verticalLayout_right)
 
+    def get_all_min_max(self):
+        # TODO : Add comment
+        list_min_max = []
+        layout_left = self.verticalLayout_left
+        for idx_layout in range(layout_left.count()):
+            name_attr = HelperFunctionQt.get_widget_of_layout(layout_left.itemAt(idx_layout), QtGui.QCheckBox).text()
+            min_val = HelperFunctionQt.get_widget_of_layout(layout_left.itemAt(idx_layout), QtGui.QDoubleSpinBox).text()
+            max_val = HelperFunctionQt.get_widget_of_layout(layout_left.itemAt(idx_layout), QtGui.QDoubleSpinBox, 1).text()
+            list_min_max.append({'name': name_attr, 'min': float(min_val), 'max': float(max_val)})
+
+        layout_right = self.verticalLayout_right
+        for idx_layout in range(layout_right.count()):
+            name_attr = HelperFunctionQt.get_widget_of_layout(layout_right.itemAt(idx_layout), QtGui.QCheckBox).text()
+            min_val = HelperFunctionQt.get_widget_of_layout(layout_right.itemAt(idx_layout), QtGui.QDoubleSpinBox).text()
+            max_val = HelperFunctionQt.get_widget_of_layout(layout_right.itemAt(idx_layout), QtGui.QDoubleSpinBox, 1).text()
+            list_min_max.append({'name': name_attr, 'min': float(min_val), 'max': float(max_val)})
+
+        return list_min_max
+
     def create_combobox_company_portfolio_manager(self):
-        list_company = ManagerCompany.get_snp500()
+        list_company = ManagerCompany.get_company_in_snp500()
 
         for company in list_company:
             self.comboBox_portfolioManager_addCompany.addItem(company.get("symbol") + " " + company.get("name"))
@@ -362,7 +385,7 @@ class Slots:
 
     @staticmethod
     def refresh_table_stock_screener():
-        print('Refresh table Stock Screener')
+        ui.create_data_table_stock_screener()
 
 
 if __name__ == "__main__":
@@ -376,7 +399,6 @@ if __name__ == "__main__":
     ui.setup_manager()
     ui.setup_size_fixed()
     ui.create_connection_signal_slot()
-    ui.set_min_max()
 
     MainWindow.show()
     sys.exit(app.exec_())
