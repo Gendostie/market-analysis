@@ -365,15 +365,17 @@ def calculate_global_ranking(list_cie, list_params):
     Calculate global ranking for company
     :param list_cie: list value for all company s&p500
     :type list_cie: list[dict]
-    :param list_param: list criteria selected
-    :type list_param: list[dict]
+    :param list_params: list criteria selected
+    :type list_params: list[dict]
     :return: list value for all company s&p500 with global ranking
     :rtype: list[dict]
     """
     df_company = pd.DataFrame.from_dict(list_cie).set_index(['symbol'])
 
+    # init dict ranking
     dict_ranking_company = {}
-    for symbol in df_company.itertuples():
-        print(symbol)
+    for symbol in df_company.axes[0]:
+        dict_ranking_company[symbol] = 0
 
-    print(0)
+    for param in list_params:
+        print(0)

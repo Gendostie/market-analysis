@@ -17,6 +17,9 @@ class ManagerMainWindow(Ui_MainWindow):
         # fixed size main window
         MainWindow.setMaximumSize(MainWindow.size())
         MainWindow.setMinimumSize(MainWindow.size())
+        # adjust size tab
+        self.tab.setMinimumSize(self.tab.size())
+        self.tab.setMaximumSize(self.tab.size())
         # adjust column of table widget
         self.tableWidget_stockScreener.horizontalHeader().setResizeMode(QtGui.QHeaderView.ResizeToContents)
         self.tableWidget_portfolio.horizontalHeader().setResizeMode(QtGui.QHeaderView.ResizeToContents)
@@ -52,7 +55,8 @@ class ManagerMainWindow(Ui_MainWindow):
         list_params = ui.get_all_min_max()
 
         list_company = HelperFunctionQt.reduce_table(list_cie, list_params)
-        list_company = HelperFunctionQt.calculate_global_ranking(list_cie, list_params)
+        # list_company =
+        HelperFunctionQt.calculate_global_ranking(list_cie, list_params)
 
         if self.tableWidget_stockScreener.rowCount() < len(list_company):
             self.tableWidget_stockScreener.setRowCount(len(list_company))

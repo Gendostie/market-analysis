@@ -10,6 +10,12 @@
     <height>800</height>
    </rect>
   </property>
+  <property name="maximumSize">
+   <size>
+    <width>1280</width>
+    <height>800</height>
+   </size>
+  </property>
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
@@ -47,19 +53,19 @@
        <rect>
         <x>5</x>
         <y>5</y>
-        <width>1090</width>
+        <width>1095</width>
         <height>180</height>
        </rect>
       </property>
       <property name="minimumSize">
        <size>
-        <width>1090</width>
+        <width>1095</width>
         <height>180</height>
        </size>
       </property>
       <property name="maximumSize">
        <size>
-        <width>1090</width>
+        <width>1095</width>
         <height>180</height>
        </size>
       </property>
@@ -86,50 +92,65 @@
         <rect>
          <x>0</x>
          <y>0</y>
-         <width>1260</width>
-         <height>250</height>
+         <width>1095</width>
+         <height>240</height>
         </rect>
        </property>
        <property name="minimumSize">
         <size>
-         <width>1260</width>
-         <height>250</height>
+         <width>1095</width>
+         <height>240</height>
         </size>
        </property>
        <property name="maximumSize">
         <size>
-         <width>1260</width>
-         <height>16777215</height>
+         <width>1095</width>
+         <height>245</height>
         </size>
        </property>
        <widget class="QWidget" name="horizontalLayoutWidget">
         <property name="geometry">
          <rect>
-          <x>0</x>
+          <x>-3</x>
           <y>0</y>
-          <width>1071</width>
+          <width>1074</width>
           <height>251</height>
          </rect>
         </property>
         <layout class="QHBoxLayout" name="horizontalLayout">
          <property name="spacing">
-          <number>10</number>
+          <number>0</number>
          </property>
          <property name="topMargin">
           <number>0</number>
          </property>
          <item>
           <layout class="QVBoxLayout" name="verticalLayout_left">
+           <property name="spacing">
+            <number>2</number>
+           </property>
+           <property name="rightMargin">
+            <number>5</number>
+           </property>
            <item>
             <layout class="QHBoxLayout" name="horizontalLayout_revenue">
+             <property name="spacing">
+              <number>0</number>
+             </property>
              <property name="sizeConstraint">
               <enum>QLayout::SetDefaultConstraint</enum>
+             </property>
+             <property name="topMargin">
+              <number>2</number>
+             </property>
+             <property name="bottomMargin">
+              <number>2</number>
              </property>
              <item>
               <widget class="QCheckBox" name="checkBox_revenue">
                <property name="minimumSize">
                 <size>
-                 <width>170</width>
+                 <width>158</width>
                  <height>20</height>
                 </size>
                </property>
@@ -184,15 +205,21 @@
              </item>
              <item>
               <widget class="QDoubleSpinBox" name="doubleSpinBox_min_revenue">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
                <property name="minimumSize">
                 <size>
-                 <width>45</width>
+                 <width>80</width>
                  <height>20</height>
                 </size>
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>85</width>
+                 <width>80</width>
                  <height>20</height>
                 </size>
                </property>
@@ -206,7 +233,7 @@
                 <number>0</number>
                </property>
                <property name="maximum">
-                <double>100.000000000000000</double>
+                <double>999999.000000000000000</double>
                </property>
                <property name="value">
                 <double>0.000000000000000</double>
@@ -217,7 +244,7 @@
               <widget class="QSlider" name="horizontalSlider_min_revenue">
                <property name="minimumSize">
                 <size>
-                 <width>65</width>
+                 <width>60</width>
                  <height>10</height>
                 </size>
                </property>
@@ -278,15 +305,21 @@
              </item>
              <item>
               <widget class="QDoubleSpinBox" name="doubleSpinBox_max_revenue">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
                <property name="minimumSize">
                 <size>
-                 <width>45</width>
+                 <width>80</width>
                  <height>20</height>
                 </size>
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>85</width>
+                 <width>80</width>
                  <height>20</height>
                 </size>
                </property>
@@ -299,6 +332,9 @@
                <property name="decimals">
                 <number>0</number>
                </property>
+               <property name="maximum">
+                <double>999999.000000000000000</double>
+               </property>
                <property name="value">
                 <double>100.000000000000000</double>
                </property>
@@ -308,7 +344,7 @@
               <widget class="QSlider" name="horizontalSlider_max_revenue">
                <property name="minimumSize">
                 <size>
-                 <width>65</width>
+                 <width>60</width>
                  <height>10</height>
                 </size>
                </property>
@@ -339,14 +375,23 @@
            </item>
            <item>
             <layout class="QHBoxLayout" name="horizontalLayout_income">
+             <property name="spacing">
+              <number>0</number>
+             </property>
              <property name="sizeConstraint">
               <enum>QLayout::SetDefaultConstraint</enum>
+             </property>
+             <property name="topMargin">
+              <number>2</number>
+             </property>
+             <property name="bottomMargin">
+              <number>2</number>
              </property>
              <item>
               <widget class="QCheckBox" name="checkBox_income">
                <property name="minimumSize">
                 <size>
-                 <width>170</width>
+                 <width>158</width>
                  <height>20</height>
                 </size>
                </property>
@@ -401,15 +446,21 @@
              </item>
              <item>
               <widget class="QDoubleSpinBox" name="doubleSpinBox_min_income">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
                <property name="minimumSize">
                 <size>
-                 <width>45</width>
+                 <width>80</width>
                  <height>20</height>
                 </size>
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>85</width>
+                 <width>80</width>
                  <height>20</height>
                 </size>
                </property>
@@ -423,7 +474,7 @@
                 <number>0</number>
                </property>
                <property name="maximum">
-                <double>100.000000000000000</double>
+                <double>999999.000000000000000</double>
                </property>
                <property name="value">
                 <double>0.000000000000000</double>
@@ -434,7 +485,7 @@
               <widget class="QSlider" name="horizontalSlider_min_income">
                <property name="minimumSize">
                 <size>
-                 <width>65</width>
+                 <width>60</width>
                  <height>10</height>
                 </size>
                </property>
@@ -495,15 +546,21 @@
              </item>
              <item>
               <widget class="QDoubleSpinBox" name="doubleSpinBox_max_income">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
                <property name="minimumSize">
                 <size>
-                 <width>45</width>
+                 <width>80</width>
                  <height>20</height>
                 </size>
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>85</width>
+                 <width>80</width>
                  <height>20</height>
                 </size>
                </property>
@@ -516,6 +573,9 @@
                <property name="decimals">
                 <number>0</number>
                </property>
+               <property name="maximum">
+                <double>999999.000000000000000</double>
+               </property>
                <property name="value">
                 <double>100.000000000000000</double>
                </property>
@@ -525,7 +585,7 @@
               <widget class="QSlider" name="horizontalSlider_max_income">
                <property name="minimumSize">
                 <size>
-                 <width>65</width>
+                 <width>60</width>
                  <height>10</height>
                 </size>
                </property>
@@ -556,14 +616,23 @@
            </item>
            <item>
             <layout class="QHBoxLayout" name="horizontalLayout_grossMargin">
+             <property name="spacing">
+              <number>0</number>
+             </property>
              <property name="sizeConstraint">
               <enum>QLayout::SetDefaultConstraint</enum>
+             </property>
+             <property name="topMargin">
+              <number>2</number>
+             </property>
+             <property name="bottomMargin">
+              <number>2</number>
              </property>
              <item>
               <widget class="QCheckBox" name="checkBox_grossMargin">
                <property name="minimumSize">
                 <size>
-                 <width>170</width>
+                 <width>158</width>
                  <height>20</height>
                 </size>
                </property>
@@ -618,15 +687,21 @@
              </item>
              <item>
               <widget class="QDoubleSpinBox" name="doubleSpinBox_min_grossMargin">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
                <property name="minimumSize">
                 <size>
-                 <width>45</width>
+                 <width>80</width>
                  <height>20</height>
                 </size>
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>85</width>
+                 <width>80</width>
                  <height>20</height>
                 </size>
                </property>
@@ -640,7 +715,7 @@
                 <number>0</number>
                </property>
                <property name="maximum">
-                <double>100.000000000000000</double>
+                <double>999999.000000000000000</double>
                </property>
                <property name="value">
                 <double>0.000000000000000</double>
@@ -651,7 +726,7 @@
               <widget class="QSlider" name="horizontalSlider_min_grossMargin">
                <property name="minimumSize">
                 <size>
-                 <width>65</width>
+                 <width>60</width>
                  <height>10</height>
                 </size>
                </property>
@@ -712,15 +787,21 @@
              </item>
              <item>
               <widget class="QDoubleSpinBox" name="doubleSpinBox_max_grossMargin">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
                <property name="minimumSize">
                 <size>
-                 <width>45</width>
+                 <width>80</width>
                  <height>20</height>
                 </size>
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>85</width>
+                 <width>80</width>
                  <height>20</height>
                 </size>
                </property>
@@ -737,7 +818,7 @@
                 <number>0</number>
                </property>
                <property name="maximum">
-                <double>100.000000000000000</double>
+                <double>999999.000000000000000</double>
                </property>
                <property name="value">
                 <double>100.000000000000000</double>
@@ -748,7 +829,7 @@
               <widget class="QSlider" name="horizontalSlider_max_grossMargin">
                <property name="minimumSize">
                 <size>
-                 <width>65</width>
+                 <width>60</width>
                  <height>10</height>
                 </size>
                </property>
@@ -779,14 +860,23 @@
            </item>
            <item>
             <layout class="QHBoxLayout" name="horizontalLayout_dividends">
+             <property name="spacing">
+              <number>0</number>
+             </property>
              <property name="sizeConstraint">
               <enum>QLayout::SetDefaultConstraint</enum>
+             </property>
+             <property name="topMargin">
+              <number>2</number>
+             </property>
+             <property name="bottomMargin">
+              <number>2</number>
              </property>
              <item>
               <widget class="QCheckBox" name="checkBox_dividends">
                <property name="minimumSize">
                 <size>
-                 <width>170</width>
+                 <width>158</width>
                  <height>20</height>
                 </size>
                </property>
@@ -841,15 +931,21 @@
              </item>
              <item>
               <widget class="QDoubleSpinBox" name="doubleSpinBox_min_dividends">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
                <property name="minimumSize">
                 <size>
-                 <width>45</width>
+                 <width>80</width>
                  <height>20</height>
                 </size>
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>85</width>
+                 <width>80</width>
                  <height>20</height>
                 </size>
                </property>
@@ -863,7 +959,7 @@
                 <number>0</number>
                </property>
                <property name="maximum">
-                <double>100.000000000000000</double>
+                <double>999999.000000000000000</double>
                </property>
               </widget>
              </item>
@@ -871,7 +967,7 @@
               <widget class="QSlider" name="horizontalSlider_min_dividends">
                <property name="minimumSize">
                 <size>
-                 <width>65</width>
+                 <width>60</width>
                  <height>10</height>
                 </size>
                </property>
@@ -932,15 +1028,21 @@
              </item>
              <item>
               <widget class="QDoubleSpinBox" name="doubleSpinBox_max_dividends">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
                <property name="minimumSize">
                 <size>
-                 <width>45</width>
+                 <width>80</width>
                  <height>20</height>
                 </size>
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>85</width>
+                 <width>80</width>
                  <height>20</height>
                 </size>
                </property>
@@ -953,6 +1055,9 @@
                <property name="decimals">
                 <number>0</number>
                </property>
+               <property name="maximum">
+                <double>999999.000000000000000</double>
+               </property>
                <property name="value">
                 <double>100.000000000000000</double>
                </property>
@@ -962,7 +1067,7 @@
               <widget class="QSlider" name="horizontalSlider_max_dividends">
                <property name="minimumSize">
                 <size>
-                 <width>65</width>
+                 <width>60</width>
                  <height>10</height>
                 </size>
                </property>
@@ -993,14 +1098,23 @@
            </item>
            <item>
             <layout class="QHBoxLayout" name="horizontalLayout_dividendYield">
+             <property name="spacing">
+              <number>0</number>
+             </property>
              <property name="sizeConstraint">
               <enum>QLayout::SetDefaultConstraint</enum>
+             </property>
+             <property name="topMargin">
+              <number>2</number>
+             </property>
+             <property name="bottomMargin">
+              <number>2</number>
              </property>
              <item>
               <widget class="QCheckBox" name="checkBox_dividendYield">
                <property name="minimumSize">
                 <size>
-                 <width>170</width>
+                 <width>158</width>
                  <height>20</height>
                 </size>
                </property>
@@ -1011,7 +1125,7 @@
                 </size>
                </property>
                <property name="text">
-                <string>Dividend Yield (%)</string>
+                <string>Div. Yield (%)</string>
                </property>
               </widget>
              </item>
@@ -1055,15 +1169,21 @@
              </item>
              <item>
               <widget class="QDoubleSpinBox" name="doubleSpinBox_min_dividendYield">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
                <property name="minimumSize">
                 <size>
-                 <width>45</width>
+                 <width>80</width>
                  <height>20</height>
                 </size>
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>85</width>
+                 <width>80</width>
                  <height>20</height>
                 </size>
                </property>
@@ -1088,7 +1208,7 @@
               <widget class="QSlider" name="horizontalSlider_min_dividendYield">
                <property name="minimumSize">
                 <size>
-                 <width>65</width>
+                 <width>60</width>
                  <height>10</height>
                 </size>
                </property>
@@ -1149,15 +1269,21 @@
              </item>
              <item>
               <widget class="QDoubleSpinBox" name="doubleSpinBox_max_dividendYield">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
                <property name="minimumSize">
                 <size>
-                 <width>45</width>
+                 <width>80</width>
                  <height>20</height>
                 </size>
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>85</width>
+                 <width>80</width>
                  <height>20</height>
                 </size>
                </property>
@@ -1182,7 +1308,7 @@
               <widget class="QSlider" name="horizontalSlider_max_dividendYield">
                <property name="minimumSize">
                 <size>
-                 <width>65</width>
+                 <width>60</width>
                  <height>10</height>
                 </size>
                </property>
@@ -1213,14 +1339,23 @@
            </item>
            <item>
             <layout class="QHBoxLayout" name="horizontalLayout_esp">
+             <property name="spacing">
+              <number>0</number>
+             </property>
              <property name="sizeConstraint">
               <enum>QLayout::SetDefaultConstraint</enum>
+             </property>
+             <property name="topMargin">
+              <number>2</number>
+             </property>
+             <property name="bottomMargin">
+              <number>2</number>
              </property>
              <item>
               <widget class="QCheckBox" name="checkBox_eps">
                <property name="minimumSize">
                 <size>
-                 <width>170</width>
+                 <width>158</width>
                  <height>20</height>
                 </size>
                </property>
@@ -1275,15 +1410,21 @@
              </item>
              <item>
               <widget class="QDoubleSpinBox" name="doubleSpinBox_min_eps">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
                <property name="minimumSize">
                 <size>
-                 <width>45</width>
+                 <width>80</width>
                  <height>20</height>
                 </size>
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>85</width>
+                 <width>80</width>
                  <height>20</height>
                 </size>
                </property>
@@ -1305,7 +1446,7 @@
               <widget class="QSlider" name="horizontalSlider_min_eps">
                <property name="minimumSize">
                 <size>
-                 <width>65</width>
+                 <width>60</width>
                  <height>10</height>
                 </size>
                </property>
@@ -1366,15 +1507,21 @@
              </item>
              <item>
               <widget class="QDoubleSpinBox" name="doubleSpinBox_max_eps">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
                <property name="minimumSize">
                 <size>
-                 <width>45</width>
+                 <width>80</width>
                  <height>20</height>
                 </size>
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>85</width>
+                 <width>80</width>
                  <height>20</height>
                 </size>
                </property>
@@ -1399,7 +1546,7 @@
               <widget class="QSlider" name="horizontalSlider_max_eps">
                <property name="minimumSize">
                 <size>
-                 <width>65</width>
+                 <width>60</width>
                  <height>10</height>
                 </size>
                </property>
@@ -1431,22 +1578,6 @@
           </layout>
          </item>
          <item>
-          <spacer name="horizontalSpacer1_1">
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-           <property name="sizeType">
-            <enum>QSizePolicy::Minimum</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>5</width>
-             <height>20</height>
-            </size>
-           </property>
-          </spacer>
-         </item>
-         <item>
           <widget class="Line" name="line">
            <property name="orientation">
             <enum>Qt::Vertical</enum>
@@ -1454,33 +1585,35 @@
           </widget>
          </item>
          <item>
-          <spacer name="horizontalSpacer1_2">
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-           <property name="sizeType">
-            <enum>QSizePolicy::Minimum</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>5</width>
-             <height>20</height>
-            </size>
-           </property>
-          </spacer>
-         </item>
-         <item>
           <layout class="QVBoxLayout" name="verticalLayout_right">
+           <property name="spacing">
+            <number>2</number>
+           </property>
+           <property name="leftMargin">
+            <number>5</number>
+           </property>
+           <property name="rightMargin">
+            <number>0</number>
+           </property>
            <item>
             <layout class="QHBoxLayout" name="horizontalLayout_priceEspRatio">
+             <property name="spacing">
+              <number>0</number>
+             </property>
              <property name="sizeConstraint">
               <enum>QLayout::SetDefaultConstraint</enum>
+             </property>
+             <property name="topMargin">
+              <number>2</number>
+             </property>
+             <property name="bottomMargin">
+              <number>2</number>
              </property>
              <item>
               <widget class="QCheckBox" name="checkBox_priceEspRatio">
                <property name="minimumSize">
                 <size>
-                 <width>100</width>
+                 <width>102</width>
                  <height>20</height>
                 </size>
                </property>
@@ -1535,15 +1668,21 @@
              </item>
              <item>
               <widget class="QDoubleSpinBox" name="doubleSpinBox_min_priceEspRatio">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
                <property name="minimumSize">
                 <size>
-                 <width>45</width>
+                 <width>80</width>
                  <height>20</height>
                 </size>
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>85</width>
+                 <width>80</width>
                  <height>20</height>
                 </size>
                </property>
@@ -1557,7 +1696,7 @@
                 <number>0</number>
                </property>
                <property name="maximum">
-                <double>100.000000000000000</double>
+                <double>999999.000000000000000</double>
                </property>
               </widget>
              </item>
@@ -1565,7 +1704,7 @@
               <widget class="QSlider" name="horizontalSlider_min_priceEspRatio">
                <property name="minimumSize">
                 <size>
-                 <width>65</width>
+                 <width>60</width>
                  <height>10</height>
                 </size>
                </property>
@@ -1626,15 +1765,21 @@
              </item>
              <item>
               <widget class="QDoubleSpinBox" name="doubleSpinBox_max_priceEspRatio">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
                <property name="minimumSize">
                 <size>
-                 <width>45</width>
+                 <width>80</width>
                  <height>20</height>
                 </size>
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>85</width>
+                 <width>80</width>
                  <height>20</height>
                 </size>
                </property>
@@ -1647,6 +1792,9 @@
                <property name="decimals">
                 <number>0</number>
                </property>
+               <property name="maximum">
+                <double>999999.000000000000000</double>
+               </property>
                <property name="value">
                 <double>100.000000000000000</double>
                </property>
@@ -1656,7 +1804,7 @@
               <widget class="QSlider" name="horizontalSlider_max_priceEspRatio">
                <property name="minimumSize">
                 <size>
-                 <width>65</width>
+                 <width>60</width>
                  <height>10</height>
                 </size>
                </property>
@@ -1687,8 +1835,17 @@
            </item>
            <item>
             <layout class="QHBoxLayout" name="horizontalLayout_bvps">
+             <property name="spacing">
+              <number>0</number>
+             </property>
              <property name="sizeConstraint">
               <enum>QLayout::SetDefaultConstraint</enum>
+             </property>
+             <property name="topMargin">
+              <number>2</number>
+             </property>
+             <property name="bottomMargin">
+              <number>2</number>
              </property>
              <item>
               <widget class="QCheckBox" name="checkBox_bvps">
@@ -1697,7 +1854,7 @@
                </property>
                <property name="minimumSize">
                 <size>
-                 <width>100</width>
+                 <width>102</width>
                  <height>16</height>
                 </size>
                </property>
@@ -1752,15 +1909,21 @@
              </item>
              <item>
               <widget class="QDoubleSpinBox" name="doubleSpinBox_min_bvps">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
                <property name="minimumSize">
                 <size>
-                 <width>45</width>
+                 <width>80</width>
                  <height>20</height>
                 </size>
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>85</width>
+                 <width>80</width>
                  <height>20</height>
                 </size>
                </property>
@@ -1774,7 +1937,7 @@
                 <number>0</number>
                </property>
                <property name="maximum">
-                <double>100.000000000000000</double>
+                <double>999999.000000000000000</double>
                </property>
                <property name="value">
                 <double>0.000000000000000</double>
@@ -1785,7 +1948,7 @@
               <widget class="QSlider" name="horizontalSlider_min_bvps">
                <property name="minimumSize">
                 <size>
-                 <width>65</width>
+                 <width>60</width>
                  <height>10</height>
                 </size>
                </property>
@@ -1846,15 +2009,21 @@
              </item>
              <item>
               <widget class="QDoubleSpinBox" name="doubleSpinBox_max_bvps">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
                <property name="minimumSize">
                 <size>
-                 <width>45</width>
+                 <width>80</width>
                  <height>20</height>
                 </size>
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>85</width>
+                 <width>80</width>
                  <height>20</height>
                 </size>
                </property>
@@ -1867,6 +2036,9 @@
                <property name="decimals">
                 <number>0</number>
                </property>
+               <property name="maximum">
+                <double>999999.000000000000000</double>
+               </property>
                <property name="value">
                 <double>100.000000000000000</double>
                </property>
@@ -1876,7 +2048,7 @@
               <widget class="QSlider" name="horizontalSlider_max_bvps">
                <property name="minimumSize">
                 <size>
-                 <width>65</width>
+                 <width>60</width>
                  <height>10</height>
                 </size>
                </property>
@@ -1907,14 +2079,23 @@
            </item>
            <item>
             <layout class="QHBoxLayout" name="horizontalLayout_priceBookRatio">
+             <property name="spacing">
+              <number>0</number>
+             </property>
              <property name="sizeConstraint">
               <enum>QLayout::SetDefaultConstraint</enum>
+             </property>
+             <property name="topMargin">
+              <number>2</number>
+             </property>
+             <property name="bottomMargin">
+              <number>2</number>
              </property>
              <item>
               <widget class="QCheckBox" name="checkBox_priceBookRatio">
                <property name="minimumSize">
                 <size>
-                 <width>100</width>
+                 <width>102</width>
                  <height>16</height>
                 </size>
                </property>
@@ -1969,15 +2150,21 @@
              </item>
              <item>
               <widget class="QDoubleSpinBox" name="doubleSpinBox_min_priceBookRatio">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
                <property name="minimumSize">
                 <size>
-                 <width>45</width>
+                 <width>80</width>
                  <height>20</height>
                 </size>
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>85</width>
+                 <width>80</width>
                  <height>20</height>
                 </size>
                </property>
@@ -1991,7 +2178,7 @@
                 <number>0</number>
                </property>
                <property name="maximum">
-                <double>100.000000000000000</double>
+                <double>999999.000000000000000</double>
                </property>
                <property name="value">
                 <double>0.000000000000000</double>
@@ -2002,7 +2189,7 @@
               <widget class="QSlider" name="horizontalSlider_min_priceBookRatio">
                <property name="minimumSize">
                 <size>
-                 <width>65</width>
+                 <width>60</width>
                  <height>10</height>
                 </size>
                </property>
@@ -2063,15 +2250,21 @@
              </item>
              <item>
               <widget class="QDoubleSpinBox" name="doubleSpinBox_max_priceBookRatio">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
                <property name="minimumSize">
                 <size>
-                 <width>45</width>
+                 <width>80</width>
                  <height>20</height>
                 </size>
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>85</width>
+                 <width>80</width>
                  <height>20</height>
                 </size>
                </property>
@@ -2084,6 +2277,9 @@
                <property name="decimals">
                 <number>0</number>
                </property>
+               <property name="maximum">
+                <double>999999.000000000000000</double>
+               </property>
                <property name="value">
                 <double>100.000000000000000</double>
                </property>
@@ -2093,7 +2289,7 @@
               <widget class="QSlider" name="horizontalSlider_max_priceBookRatio">
                <property name="minimumSize">
                 <size>
-                 <width>65</width>
+                 <width>60</width>
                  <height>10</height>
                 </size>
                </property>
@@ -2124,14 +2320,23 @@
            </item>
            <item>
             <layout class="QHBoxLayout" name="horizontalLayout_fcfps">
+             <property name="spacing">
+              <number>0</number>
+             </property>
              <property name="sizeConstraint">
               <enum>QLayout::SetDefaultConstraint</enum>
+             </property>
+             <property name="topMargin">
+              <number>2</number>
+             </property>
+             <property name="bottomMargin">
+              <number>2</number>
              </property>
              <item>
               <widget class="QCheckBox" name="checkBox_fcfps">
                <property name="minimumSize">
                 <size>
-                 <width>100</width>
+                 <width>102</width>
                  <height>16</height>
                 </size>
                </property>
@@ -2186,15 +2391,21 @@
              </item>
              <item>
               <widget class="QDoubleSpinBox" name="doubleSpinBox_min_fcfps">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
                <property name="minimumSize">
                 <size>
-                 <width>45</width>
+                 <width>80</width>
                  <height>20</height>
                 </size>
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>85</width>
+                 <width>80</width>
                  <height>20</height>
                 </size>
                </property>
@@ -2208,7 +2419,7 @@
                 <number>0</number>
                </property>
                <property name="maximum">
-                <double>100.000000000000000</double>
+                <double>999999.000000000000000</double>
                </property>
                <property name="value">
                 <double>0.000000000000000</double>
@@ -2219,7 +2430,7 @@
               <widget class="QSlider" name="horizontalSlider_min_fcfps">
                <property name="minimumSize">
                 <size>
-                 <width>65</width>
+                 <width>60</width>
                  <height>10</height>
                 </size>
                </property>
@@ -2280,15 +2491,21 @@
              </item>
              <item>
               <widget class="QDoubleSpinBox" name="doubleSpinBox_max_fcfps">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
                <property name="minimumSize">
                 <size>
-                 <width>45</width>
+                 <width>80</width>
                  <height>20</height>
                 </size>
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>85</width>
+                 <width>80</width>
                  <height>20</height>
                 </size>
                </property>
@@ -2301,6 +2518,9 @@
                <property name="decimals">
                 <number>0</number>
                </property>
+               <property name="maximum">
+                <double>999999.000000000000000</double>
+               </property>
                <property name="value">
                 <double>100.000000000000000</double>
                </property>
@@ -2310,7 +2530,7 @@
               <widget class="QSlider" name="horizontalSlider_max_fcfps">
                <property name="minimumSize">
                 <size>
-                 <width>65</width>
+                 <width>60</width>
                  <height>10</height>
                 </size>
                </property>
@@ -2341,14 +2561,23 @@
            </item>
            <item>
             <layout class="QHBoxLayout" name="horizontalLayout_close">
+             <property name="spacing">
+              <number>0</number>
+             </property>
              <property name="sizeConstraint">
               <enum>QLayout::SetDefaultConstraint</enum>
+             </property>
+             <property name="topMargin">
+              <number>2</number>
+             </property>
+             <property name="bottomMargin">
+              <number>2</number>
              </property>
              <item>
               <widget class="QCheckBox" name="checkBox_close">
                <property name="minimumSize">
                 <size>
-                 <width>100</width>
+                 <width>102</width>
                  <height>16</height>
                 </size>
                </property>
@@ -2403,15 +2632,21 @@
              </item>
              <item>
               <widget class="QDoubleSpinBox" name="doubleSpinBox_min_close">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
                <property name="minimumSize">
                 <size>
-                 <width>45</width>
+                 <width>80</width>
                  <height>20</height>
                 </size>
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>85</width>
+                 <width>80</width>
                  <height>20</height>
                 </size>
                </property>
@@ -2436,7 +2671,7 @@
               <widget class="QSlider" name="horizontalSlider_min_close">
                <property name="minimumSize">
                 <size>
-                 <width>65</width>
+                 <width>60</width>
                  <height>10</height>
                 </size>
                </property>
@@ -2497,15 +2732,21 @@
              </item>
              <item>
               <widget class="QDoubleSpinBox" name="doubleSpinBox_max_close">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
                <property name="minimumSize">
                 <size>
-                 <width>45</width>
+                 <width>80</width>
                  <height>20</height>
                 </size>
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>85</width>
+                 <width>80</width>
                  <height>20</height>
                 </size>
                </property>
@@ -2527,7 +2768,7 @@
               <widget class="QSlider" name="horizontalSlider_max_close">
                <property name="minimumSize">
                 <size>
-                 <width>65</width>
+                 <width>60</width>
                  <height>10</height>
                 </size>
                </property>
@@ -2558,14 +2799,23 @@
            </item>
            <item>
             <layout class="QHBoxLayout" name="horizontalLayout_52wk">
+             <property name="spacing">
+              <number>0</number>
+             </property>
              <property name="sizeConstraint">
               <enum>QLayout::SetDefaultConstraint</enum>
+             </property>
+             <property name="topMargin">
+              <number>2</number>
+             </property>
+             <property name="bottomMargin">
+              <number>2</number>
              </property>
              <item>
               <widget class="QCheckBox" name="checkBox_52wk">
                <property name="minimumSize">
                 <size>
-                 <width>100</width>
+                 <width>102</width>
                  <height>16</height>
                 </size>
                </property>
@@ -2620,15 +2870,21 @@
              </item>
              <item>
               <widget class="QDoubleSpinBox" name="doubleSpinBox_min_52wk">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
                <property name="minimumSize">
                 <size>
-                 <width>45</width>
+                 <width>80</width>
                  <height>20</height>
                 </size>
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>85</width>
+                 <width>80</width>
                  <height>20</height>
                 </size>
                </property>
@@ -2650,7 +2906,7 @@
               <widget class="QSlider" name="horizontalSlider_min_52wk">
                <property name="minimumSize">
                 <size>
-                 <width>65</width>
+                 <width>60</width>
                  <height>10</height>
                 </size>
                </property>
@@ -2711,15 +2967,21 @@
              </item>
              <item>
               <widget class="QDoubleSpinBox" name="doubleSpinBox_max_52wk">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
                <property name="minimumSize">
                 <size>
-                 <width>45</width>
+                 <width>80</width>
                  <height>20</height>
                 </size>
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>85</width>
+                 <width>80</width>
                  <height>20</height>
                 </size>
                </property>
@@ -2741,7 +3003,7 @@
               <widget class="QSlider" name="horizontalSlider_max_52wk">
                <property name="minimumSize">
                 <size>
-                 <width>65</width>
+                 <width>60</width>
                  <height>10</height>
                 </size>
                </property>
@@ -2790,7 +3052,7 @@
       </property>
       <property name="minimumSize">
        <size>
-        <width>1255</width>
+        <width>1250</width>
         <height>460</height>
        </size>
       </property>
@@ -2834,6 +3096,9 @@
        <property name="text">
         <string>Company name</string>
        </property>
+       <property name="whatsThis">
+        <string/>
+       </property>
        <property name="font">
         <font>
          <weight>50</weight>
@@ -2848,7 +3113,7 @@
       </column>
       <column>
        <property name="text">
-        <string>Revenu (Mil)</string>
+        <string>Revenue (Mil)</string>
        </property>
       </column>
       <column>
@@ -2868,7 +3133,10 @@
       </column>
       <column>
        <property name="text">
-        <string>Dividend Yield (%)</string>
+        <string>Div. Yield (%)</string>
+       </property>
+       <property name="whatsThis">
+        <string/>
        </property>
       </column>
       <column>
@@ -2973,25 +3241,31 @@
      <widget class="QWidget" name="layoutWidget">
       <property name="geometry">
        <rect>
-        <x>1110</x>
-        <y>7</y>
-        <width>147</width>
-        <height>176</height>
+        <x>1100</x>
+        <y>5</y>
+        <width>161</width>
+        <height>179</height>
        </rect>
       </property>
       <layout class="QVBoxLayout" name="verticalLayout_button">
+       <property name="spacing">
+        <number>0</number>
+       </property>
+       <property name="sizeConstraint">
+        <enum>QLayout::SetFixedSize</enum>
+       </property>
        <item>
         <widget class="QPushButton" name="btn_selectAllCriteria">
          <property name="minimumSize">
           <size>
            <width>145</width>
-           <height>30</height>
+           <height>35</height>
           </size>
          </property>
          <property name="maximumSize">
           <size>
-           <width>145</width>
-           <height>30</height>
+           <width>160</width>
+           <height>40</height>
           </size>
          </property>
          <property name="text">
@@ -3009,7 +3283,7 @@
          </property>
          <property name="sizeHint" stdset="0">
           <size>
-           <width>20</width>
+           <width>30</width>
            <height>10</height>
           </size>
          </property>
@@ -3020,13 +3294,13 @@
          <property name="minimumSize">
           <size>
            <width>145</width>
-           <height>30</height>
+           <height>35</height>
           </size>
          </property>
          <property name="maximumSize">
           <size>
-           <width>145</width>
-           <height>30</height>
+           <width>160</width>
+           <height>40</height>
           </size>
          </property>
          <property name="text">
@@ -3044,8 +3318,8 @@
          </property>
          <property name="sizeHint" stdset="0">
           <size>
-           <width>20</width>
-           <height>50</height>
+           <width>30</width>
+           <height>40</height>
           </size>
          </property>
         </spacer>
@@ -3055,13 +3329,13 @@
          <property name="minimumSize">
           <size>
            <width>145</width>
-           <height>30</height>
+           <height>35</height>
           </size>
          </property>
          <property name="maximumSize">
           <size>
-           <width>145</width>
-           <height>30</height>
+           <width>160</width>
+           <height>40</height>
           </size>
          </property>
          <property name="text">
@@ -3070,6 +3344,10 @@
         </widget>
        </item>
       </layout>
+      <zorder>btn_deselectAllCriteria</zorder>
+      <zorder>btn_selectAllCriteria</zorder>
+      <zorder>btn_RefreshTableStockScreener</zorder>
+      <zorder>verticalSpacer_middle2Btn</zorder>
      </widget>
     </widget>
     <widget class="QWidget" name="tab_portfolioManager">
@@ -3475,7 +3753,7 @@
         <x>1110</x>
         <y>8</y>
         <width>147</width>
-        <height>176</height>
+        <height>188</height>
        </rect>
       </property>
       <layout class="QVBoxLayout" name="verticalLayout_button_2">
@@ -6313,7 +6591,7 @@
      <x>0</x>
      <y>0</y>
      <width>1280</width>
-     <height>21</height>
+     <height>31</height>
     </rect>
    </property>
   </widget>
