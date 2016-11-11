@@ -179,7 +179,7 @@ def set_min_max_slider_layout(layout):
 
     list_histo = ['Revenue (Mil)', 'Net Income (Mil)', 'Gross Margin (%)',
                    'Dividends', 'EPS', 'BVPS', 'FCFPS']
-    list_calc = ['Dividend Yield (%)', 'P/E Ratio', 'P/B Ratio', '52wk (%)']
+    list_calc = ['Div. Yield (%)', 'P/E Ratio', 'P/B Ratio', '52wk (%)']
     dict_name = {'Revenue (Mil)': "revenu_usd_mil",
                  'Net Income (Mil)': "net_income_usd_mil",
                  'Gross Margin (%)': "gross_margin_pct",
@@ -188,7 +188,7 @@ def set_min_max_slider_layout(layout):
                  'BVPS': "book_value_per_share_usd",
                  'FCFPS': "free_cash_flow_per_share_usd",
                  'Close': "close_val",
-                 'Dividend Yield (%)': "dividend_yield",
+                 'Div. Yield (%)': "dividend_yield",
                  'P/E Ratio': "p_e_ratio",
                  'P/B Ratio': "p_b_ratio",
                  '52wk (%)': "52wk"}
@@ -225,6 +225,13 @@ def set_min_max_slider_layout(layout):
         max_spin_box.setValue(max_val)
         max_range_slider.setMaximum(max_val)
         max_range_slider.setValue(max_val)
+
+        # Dividends is float
+        if name_attr == 'Dividends' or name_attr == 'Div. Yield (%)':
+            min_spin_box.setDecimals(2)
+            min_spin_box.setSingleStep((max_val-min_val)/100)
+            max_spin_box.setDecimals(2)
+            max_spin_box.setSingleStep((max_val-min_val)/100)
 
 
 def create_new_cell_item_table_widget(table_widget, idx_row, idx_column, value):
@@ -316,26 +323,13 @@ def delete_companies_to_portfolio_db(portfolio_id, list_company):
 
 
 def reduce_table(list_cie, dict_param):
-    dict_name = {'Revenue (Mil)': "revenue",
-                 'Net Income (Mil)': "net_income",
-                 'Gross Margin (%)': "gross_margin",
-                 'Dividends': "dividends",
-                 'EPS': "EPS",
-                 'BVPS': "BVPS",
-                 'FCFPS': "FCFPS",
-                 'Close': "close",
-                 'Dividend Yield (%)': "dividend_yield",
-                 'P/E Ratio': "price_eps",
-                 'P/B Ratio': "price_book",
-                 '52wk (%)': "52wk"}
-
     new_list_company = []
     for cie in list_cie:
         flag = True
         for name_param, params in dict_param.items():
             # If a value is None for a parameter that is checked, we remove the company.
-            if cie[dict_name[name_param]] is not None:
-                cie_val = float(cie[dict_name[name_param]])
+            if cie[name_param] is not None:
+                cie_val = float(cie[name_param])
             else:
                 flag = False
                 break
