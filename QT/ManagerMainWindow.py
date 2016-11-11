@@ -7,6 +7,7 @@ from Manager_DB import ManagerPortfolio, ManagerCompany
 from QT import HelperFunctionQt
 from QT.Singleton import Singleton
 
+
 class ManagerMainWindow(Ui_MainWindow):
     def setup_size_fixed(self):
         """
@@ -48,22 +49,22 @@ class ManagerMainWindow(Ui_MainWindow):
         list_column_table = ['company_name', 'symbol', 'Revenue (Mil)', 'Net Income (Mil)',
                              'Gross Margin (%)', 'Dividends',
                              'Div. Yield (%)', 'EPS', 'P/E Ratio',
-                             'BVPS', 'P/B Ratio', 'FCFPS', 'Close', '52wk (%)']
+                             'BVPS', 'P/B Ratio', 'FCFPS', 'Close', '52wk (%)', 'Global Ranking']
 
-        list_cie = ManagerCompany.get_historic_value_all_company()
-        dict_params = ui.get_all_min_max()
+        dict_company = ManagerCompany.get_historic_value_all_company()
+        dict_params = self.get_all_min_max()
 
-        list_company = HelperFunctionQt.reduce_table(list_cie, dict_params)
-        # list_company =
-        HelperFunctionQt.calculate_global_ranking(list_cie, dict_params)
-        print("Number of rows: {}".format(len(list_company)))
+        max_nb_company = len(dict_company)
+        dict_company = HelperFunctionQt.reduce_table(dict_company, dict_params)
+        dict_company = HelperFunctionQt.calculate_global_ranking(dict_company, dict_params)
+        self.lineEdit_nb_company.setText('%s/%s' % (str(len(dict_company)), str(max_nb_company)))
 
-        if self.tableWidget_stockScreener.rowCount() < len(list_company):
-            self.tableWidget_stockScreener.setRowCount(len(list_company))
+        if self.tableWidget_stockScreener.rowCount() < len(dict_company):
+            self.tableWidget_stockScreener.setRowCount(len(dict_company))
 
         sorting_enable = self.tableWidget_stockScreener.isSortingEnabled()
         self.tableWidget_stockScreener.setSortingEnabled(False)
-        for idx_row, company in enumerate(list_company):
+        for idx_row, company in enumerate(dict_company):
             for key in company.keys():
                 try:
                     idx_column = list_column_table.index(key)

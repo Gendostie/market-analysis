@@ -3071,26 +3071,17 @@
       <property name="sortingEnabled">
        <bool>true</bool>
       </property>
-      <attribute name="horizontalHeaderCascadingSectionResizes">
-       <bool>true</bool>
-      </attribute>
       <attribute name="horizontalHeaderMinimumSectionSize">
-       <number>50</number>
+       <number>30</number>
       </attribute>
       <attribute name="horizontalHeaderShowSortIndicator" stdset="0">
        <bool>true</bool>
       </attribute>
-      <attribute name="horizontalHeaderStretchLastSection">
-       <bool>false</bool>
-      </attribute>
       <attribute name="verticalHeaderVisible">
        <bool>false</bool>
       </attribute>
-      <attribute name="verticalHeaderCascadingSectionResizes">
-       <bool>true</bool>
-      </attribute>
       <attribute name="verticalHeaderMinimumSectionSize">
-       <number>30</number>
+       <number>20</number>
       </attribute>
       <column>
        <property name="text">
@@ -3348,6 +3339,67 @@
       <zorder>btn_selectAllCriteria</zorder>
       <zorder>btn_RefreshTableStockScreener</zorder>
       <zorder>verticalSpacer_middle2Btn</zorder>
+     </widget>
+     <widget class="QLabel" name="label_nb_company">
+      <property name="geometry">
+       <rect>
+        <x>18</x>
+        <y>692</y>
+        <width>121</width>
+        <height>16</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>10</pointsize>
+       </font>
+      </property>
+      <property name="frameShape">
+       <enum>QFrame::NoFrame</enum>
+      </property>
+      <property name="frameShadow">
+       <enum>QFrame::Plain</enum>
+      </property>
+      <property name="text">
+       <string>Number of company:</string>
+      </property>
+     </widget>
+     <widget class="QLineEdit" name="lineEdit_nb_company">
+      <property name="enabled">
+       <bool>true</bool>
+      </property>
+      <property name="geometry">
+       <rect>
+        <x>142</x>
+        <y>688</y>
+        <width>80</width>
+        <height>25</height>
+       </rect>
+      </property>
+      <property name="minimumSize">
+       <size>
+        <width>80</width>
+        <height>25</height>
+       </size>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>80</width>
+        <height>25</height>
+       </size>
+      </property>
+      <property name="text">
+       <string>99999/99999</string>
+      </property>
+      <property name="maxLength">
+       <number>11</number>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignCenter</set>
+      </property>
+      <property name="readOnly">
+       <bool>true</bool>
+      </property>
      </widget>
     </widget>
     <widget class="QWidget" name="tab_portfolioManager">
@@ -6591,7 +6643,7 @@
      <x>0</x>
      <y>0</y>
      <width>1280</width>
-     <height>31</height>
+     <height>21</height>
     </rect>
    </property>
   </widget>
