@@ -189,6 +189,10 @@ def get_historic_value_all_company(db=None):
             addedDays += 1
         last_year_close = result_52wk[0][0]
 
+        # If dividends = None, we change it to 0
+        if dividends is None:
+            dividends = 0
+
         return_value.append({'company_name': company_name, 'symbol': symbol, 'datetime_value': datetime_value,
                              'revenue': revenue, 'gross_margin': gross_margin, 'net_income': income, 'EPS': earning,
                              'dividends': dividends, 'BVPS': book_value, 'FCFPS': cash_flow,

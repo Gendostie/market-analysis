@@ -50,9 +50,9 @@ class ManagerMainWindow(Ui_MainWindow):
 
         list_cie = ManagerCompany.get_historic_value_all_company()
 
-        list_params = ui.get_all_min_max()
+        dict_params = ui.get_all_min_max()
 
-        list_company = HelperFunctionQt.reduce_table(list_cie, list_params)
+        list_company = HelperFunctionQt.reduce_table(list_cie, dict_params)
 
         if self.tableWidget_stockScreener.rowCount() < len(list_company):
             self.tableWidget_stockScreener.setRowCount(len(list_company))
@@ -150,22 +150,24 @@ class ManagerMainWindow(Ui_MainWindow):
 
     def get_all_min_max(self):
         # TODO : Add comment
-        list_min_max = []
+        dict_min_max = {}
         layout_left = self.verticalLayout_left
         for idx_layout in range(layout_left.count()):
-            name_attr = HelperFunctionQt.get_widget_of_layout(layout_left.itemAt(idx_layout), QtGui.QCheckBox).text()
-            min_val = HelperFunctionQt.get_widget_of_layout(layout_left.itemAt(idx_layout), QtGui.QDoubleSpinBox).text()
-            max_val = HelperFunctionQt.get_widget_of_layout(layout_left.itemAt(idx_layout), QtGui.QDoubleSpinBox, 1).text()
-            list_min_max.append({'name': name_attr, 'min': float(min_val), 'max': float(max_val)})
+            if HelperFunctionQt.get_widget_of_layout(layout_left.itemAt(idx_layout), QtGui.QCheckBox).isChecked():
+                name_attr = HelperFunctionQt.get_widget_of_layout(layout_left.itemAt(idx_layout), QtGui.QCheckBox).text()
+                min_val = HelperFunctionQt.get_widget_of_layout(layout_left.itemAt(idx_layout), QtGui.QDoubleSpinBox).text()
+                max_val = HelperFunctionQt.get_widget_of_layout(layout_left.itemAt(idx_layout), QtGui.QDoubleSpinBox, 1).text()
+                dict_min_max[name_attr] = {'min': float(min_val), 'max': float(max_val)}
 
         layout_right = self.verticalLayout_right
         for idx_layout in range(layout_right.count()):
-            name_attr = HelperFunctionQt.get_widget_of_layout(layout_right.itemAt(idx_layout), QtGui.QCheckBox).text()
-            min_val = HelperFunctionQt.get_widget_of_layout(layout_right.itemAt(idx_layout), QtGui.QDoubleSpinBox).text()
-            max_val = HelperFunctionQt.get_widget_of_layout(layout_right.itemAt(idx_layout), QtGui.QDoubleSpinBox, 1).text()
-            list_min_max.append({'name': name_attr, 'min': float(min_val), 'max': float(max_val)})
+            if HelperFunctionQt.get_widget_of_layout(layout_right.itemAt(idx_layout), QtGui.QCheckBox).isChecked():
+                name_attr = HelperFunctionQt.get_widget_of_layout(layout_right.itemAt(idx_layout), QtGui.QCheckBox).text()
+                min_val = HelperFunctionQt.get_widget_of_layout(layout_right.itemAt(idx_layout), QtGui.QDoubleSpinBox).text()
+                max_val = HelperFunctionQt.get_widget_of_layout(layout_right.itemAt(idx_layout), QtGui.QDoubleSpinBox, 1).text()
+                dict_min_max[name_attr] = {'min': float(min_val), 'max': float(max_val)}
 
-        return list_min_max
+        return dict_min_max
 
     def create_combobox_company_portfolio_manager(self):
         list_company = ManagerCompany.get_snp500()
