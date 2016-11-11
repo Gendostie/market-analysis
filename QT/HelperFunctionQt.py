@@ -180,7 +180,7 @@ def set_min_max_slider_layout(layout):
 
     list_histo = ['Revenue (Mil)', 'Net Income (Mil)', 'Gross Margin (%)',
                    'Dividends', 'EPS', 'BVPS', 'FCFPS']
-    list_calc = ['Dividend Yield (%)', 'P/E Ratio', 'P/B Ratio', '52wk (%)']
+    list_calc = ['Div. Yield (%)', 'P/E Ratio', 'P/B Ratio', '52wk (%)']
     dict_name = {'Revenue (Mil)': "revenu_usd_mil",
                  'Net Income (Mil)': "net_income_usd_mil",
                  'Gross Margin (%)': "gross_margin_pct",
@@ -189,7 +189,7 @@ def set_min_max_slider_layout(layout):
                  'BVPS': "book_value_per_share_usd",
                  'FCFPS': "free_cash_flow_per_share_usd",
                  'Close': "close_val",
-                 'Dividend Yield (%)': "dividend_yield",
+                 'Div. Yield (%)': "dividend_yield",
                  'P/E Ratio': "p_e_ratio",
                  'P/B Ratio': "p_b_ratio",
                  '52wk (%)': "52wk"}
@@ -226,6 +226,13 @@ def set_min_max_slider_layout(layout):
         max_spin_box.setValue(max_val)
         max_range_slider.setMaximum(max_val)
         max_range_slider.setValue(max_val)
+
+        # Dividends is float
+        if name_attr == 'Dividends' or name_attr == 'Div. Yield (%)':
+            min_spin_box.setDecimals(2)
+            min_spin_box.setSingleStep((max_val-min_val)/100)
+            max_spin_box.setDecimals(2)
+            max_spin_box.setSingleStep((max_val-min_val)/100)
 
 
 def create_new_cell_item_table_widget(table_widget, idx_row, idx_column, value):
@@ -316,42 +323,23 @@ def delete_companies_to_portfolio_db(portfolio_id, list_company):
     print("Nb company added: %s" % nb_company_added)
 
 
-def reduce_table(list_cie, list_params):
-    dict_name = [['Revenue (Mil)', "revenue"],
-                 ['Net Income (Mil)', "net_income"],
-                 ['Gross Margin (%)', "gross_margin"],
-                 ['Dividends', "dividends"],
-                 ['EPS', "EPS"],
-                 ['BVPS', "BVPS"],
-                 ['FCFPS', "FCFPS"],
-                 ['Close', "close"],
-                 ['Dividend Yield (%)', "dividend_yield"],
-                 ['P/E Ratio', "price_eps"],
-                 ['P/B Ratio', "price_book"],
-                 ['52wk (%)', "52wk"]]
-    dict_param = {}
-    for param in list_params:
-        dict_param[param['name']] = [param['min'], param['max']]
-
+def reduce_table(list_cie, dict_param):
     new_list_company = []
     for cie in list_cie:
         flag = True
-        for name_param, name_cie in dict_name:
-            if cie[name_cie] is None:
+        for name_param, params in dict_param.items():
+            # If a value is None for a parameter that is checked, we remove the company.
+            if cie[name_param] is not None:
+                cie_val = float(cie[name_param])
+            else:
                 flag = False
                 break
-            try:
-                # TODO: List a skipped
-                cie_val = float(cie[name_cie])
-            except ValueError:
-                continue
             # Check MIN
-            # TODO: Garder le dictionnaire
-            if cie_val < dict_param[name_param][0]:
+            if cie_val < params['min']:
                 flag = False
                 break
             # Check MAX
-            elif cie_val > dict_param[name_param][1]:
+            elif cie_val > params['max']:
                 flag = False
                 break
         if flag:
@@ -366,7 +354,7 @@ def calculate_global_ranking(list_cie, list_params):
     :param list_cie: list value for all company s&p500
     :type list_cie: list[dict]
     :param list_params: list criteria selected
-    :type list_params: list[dict]
+    :type list_params: dict[dict]
     :return: list value for all company s&p500 with global ranking
     :rtype: list[dict]
     """

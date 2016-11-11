@@ -109,46 +109,6 @@ def get_company_by_name(name, db=None):
     return return_value
 
 
-def get_historic_value_company(symbol, db=None):
-    """
-    Get historic value of a company
-    :param symbol: symbol of a company we search
-    :type symbol: str
-    :param db: if we have already connexion in other function who cal this function
-    :type db: DbConnection
-    :return: return list of dict of historic value a company who correspond to symbol
-    :rtype: list[dict]
-    """
-    if not symbol:
-        raise ValueError('Symbol company is None.')
-
-    if not db or type(db) is not DbConnection:
-        db = DbConnection(HOST, USER, PASSWORD, DATABASE)
-    query = """SELECT c.name, c.symbol, d.date_daily_value, d.close_val, date_historic_value, revenu_usd_mil,
-                gross_margin_pct, net_income_usd_mil, earning_per_share_usd, dividends_usd, book_value_per_share_usd,
-                free_cash_flow_per_share_usd
-                FROM company c LEFT JOIN historic_value hv ON c.symbol = hv.id_symbol
-                               LEFT JOIN daily_value d ON c.symbol = d.id_symbol
-                WHERE c.is_in_snp500 AND c.symbol = %(symbol)s
-                                     AND hv.date_historic_value = (SELECT max(date_historic_value)
-                                                                   FROM historic_value
-                                                                   WHERE id_symbol = c.symbol)
-                                     AND d.date_daily_value = (SELECT max(date_daily_value)
-                                                               FROM daily_value
-                                                               WHERE id_symbol = c.symbol)"""
-
-    res = db.select_in_db(query, {'symbol': symbol})
-    return_value = []
-
-    for company_name, symbol, date_daily_value, close_val, \
-        datetime_value, revenue, gross_margin, income, earning, dividends, book_value, cash_flow in res:
-        return_value.append({'company_name': company_name, 'symbol': symbol, 'datetime_value': datetime_value,
-                             'revenue': revenue, 'gross_margin': gross_margin, 'net_income': income, 'EPS': earning,
-                             'dividends': dividends, 'BVPS': book_value, 'FCFPS': cash_flow,
-                             'datetime_daily_value': date_daily_value, 'close': close_val})
-    return return_value
-
-
 def get_historic_value_all_company(db=None):
     """
     Get historic value of all company
@@ -189,14 +149,26 @@ def get_historic_value_all_company(db=None):
             addedDays += 1
         last_year_close = result_52wk[0][0]
 
-        return_value.append({'company_name': company_name, 'symbol': symbol, 'datetime_value': datetime_value,
-                             'revenue': revenue, 'gross_margin': gross_margin, 'net_income': income, 'EPS': earning,
-                             'dividends': dividends, 'BVPS': book_value, 'FCFPS': cash_flow,
-                             'datetime_daily_value': date_daily_value, 'close': close_val,
-                             'dividend_yield': divide(dividends, close_val, 100),
-                             'price_eps': divide(close_val, earning),
-                             'price_book': divide(close_val, book_value),
-                             '52wk': divide(close_val - last_year_close, last_year_close, 100)})
+        # If dividends = None, we change it to 0
+        if dividends is None:
+            dividends = 0
+
+        return_value.append({'company_name': company_name,
+                             'symbol': symbol,
+                             'datetime_value': datetime_value,
+                             'Revenue (Mil)': revenue,
+                             'Gross Margin (%)': gross_margin,
+                             'Net Income (Mil)': income,
+                             'EPS': earning,
+                             'Dividends': dividends,
+                             'BVPS': book_value,
+                             'FCFPS': cash_flow,
+                             'datetime_daily_value': date_daily_value,
+                             'Close': close_val,
+                             'Div. Yield (%)': divide(dividends, close_val, 100),
+                             'P/E Ratio': divide(close_val, earning),
+                             'P/B Ratio': divide(close_val, book_value),
+                             '52wk (%)': divide(close_val - last_year_close, last_year_close, 100)})
     return return_value
 
 

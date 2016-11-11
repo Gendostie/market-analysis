@@ -21,7 +21,7 @@ config.read('../config.ini')
 if config['installer'].getboolean('INSTALL_DB'):
     print_message('Installing the database')
     init_sql.create_db_mysql()
-    init_sql.insert_company_snp500()
+    # init_sql.insert_company_snp500()
 
 # Make directory if it doesn't exist
 if not os.path.exists(config['path']['PATH_SNP500']):
@@ -42,10 +42,10 @@ um.update_with_csv(config['installer'].getboolean('INSTALL_SET_HISTO'),
 # Update the configuration file so, next time, it won't try to update what was already done.
 # Also, next time, it won't drop the database or try to update the historical data (which rarely changes)
 # Note: The months begin with 0. So 0 = January and 11 = December
-# TODO : Add an option so the user can update manually the historical data
+# config['installer']['install_fetch_histo'] = "False"
+# config['installer']['install_set_histo'] = "False"
 config['installer']['install_db'] = "False"
-config['installer']['install_fetch_histo'] = "False"
-config['installer']['install_set_histo'] = "False"
+
 
 if config['installer'].getboolean('INSTALL_FETCH_DAILY'):
     config['daily']['DAY_MIN'] = strftime("%d", localtime())
