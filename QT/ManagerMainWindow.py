@@ -5,7 +5,7 @@ from PyQt4 import QtCore, QtGui
 from QT.MainWindow import Ui_MainWindow
 from Manager_DB import ManagerPortfolio, ManagerCompany
 from QT import HelperFunctionQt
-from QT.Order_Manager import singleton
+from QT.Singleton import Singleton
 
 
 class ManagerMainWindow(Ui_MainWindow):
@@ -17,6 +17,9 @@ class ManagerMainWindow(Ui_MainWindow):
         # fixed size main window
         MainWindow.setMaximumSize(MainWindow.size())
         MainWindow.setMinimumSize(MainWindow.size())
+        # adjust size tab
+        self.tab.setMinimumSize(self.tab.size())
+        self.tab.setMaximumSize(self.tab.size())
         # adjust column of table widget
         self.tableWidget_stockScreener.horizontalHeader().setResizeMode(QtGui.QHeaderView.ResizeToContents)
         self.tableWidget_portfolio.horizontalHeader().setResizeMode(QtGui.QHeaderView.ResizeToContents)
@@ -26,6 +29,7 @@ class ManagerMainWindow(Ui_MainWindow):
         Setup for widget already in MainWindow.ui to modify
         :return: None
         """
+        self.set_min_max()
         self.create_data_table_stock_screener()
         # Stock Screener
         self.comboBox_stockScreener_portfolio.lineEdit().setPlaceholderText("Choose your portfolio name.")
@@ -42,18 +46,25 @@ class ManagerMainWindow(Ui_MainWindow):
         Create data in table widget stock screener with data SQL
         :return: None
         """
-        list_column_table = ['company_name', 'symbol', 'revenue', 'net_income', 'gross_margin', 'dividends',
-                             'dividend_yield', 'eps', 'price_esp', 'BVPS', 'price_book', 'FCFPS', 'close',
-                             '52wk']
+        list_column_table = ['company_name', 'symbol', 'Revenue (Mil)', 'Net Income (Mil)',
+                             'Gross Margin (%)', 'Dividends',
+                             'Div. Yield (%)', 'EPS', 'P/E Ratio',
+                             'BVPS', 'P/B Ratio', 'FCFPS', 'Close', '52wk (%)', 'Global Ranking']
 
-        list_company = ManagerCompany.get_historic_value_all_company()
+        dict_company = ManagerCompany.get_historic_value_all_company()
+        dict_params = self.get_all_min_max()
 
-        if self.tableWidget_stockScreener.rowCount() < len(list_company):
-            self.tableWidget_stockScreener.setRowCount(len(list_company))
+        max_nb_company = len(dict_company)
+        dict_company = HelperFunctionQt.reduce_table(dict_company, dict_params)
+        dict_company = HelperFunctionQt.calculate_global_ranking(dict_company, dict_params)
+        self.lineEdit_nb_company.setText('%s/%s' % (str(len(dict_company)), str(max_nb_company)))
+
+        if self.tableWidget_stockScreener.rowCount() < len(dict_company):
+            self.tableWidget_stockScreener.setRowCount(len(dict_company))
 
         sorting_enable = self.tableWidget_stockScreener.isSortingEnabled()
         self.tableWidget_stockScreener.setSortingEnabled(False)
-        for idx_row, company in enumerate(list_company):
+        for idx_row, company in enumerate(dict_company):
             for key in company.keys():
                 try:
                     idx_column = list_column_table.index(key)
@@ -142,6 +153,27 @@ class ManagerMainWindow(Ui_MainWindow):
         HelperFunctionQt.set_min_max_slider_layout(self.verticalLayout_left)
         HelperFunctionQt.set_min_max_slider_layout(self.verticalLayout_right)
 
+    def get_all_min_max(self):
+        # TODO : Add comment
+        dict_min_max = {}
+        layout_left = self.verticalLayout_left
+        for idx_layout in range(layout_left.count()):
+            if HelperFunctionQt.get_widget_of_layout(layout_left.itemAt(idx_layout), QtGui.QCheckBox).isChecked():
+                name_attr = HelperFunctionQt.get_widget_of_layout(layout_left.itemAt(idx_layout), QtGui.QCheckBox).text()
+                min_val = HelperFunctionQt.get_widget_of_layout(layout_left.itemAt(idx_layout), QtGui.QDoubleSpinBox).text()
+                max_val = HelperFunctionQt.get_widget_of_layout(layout_left.itemAt(idx_layout), QtGui.QDoubleSpinBox, 1).text()
+                dict_min_max[name_attr] = {'min': float(min_val.replace(',', '.')), 'max': float(max_val.replace(',', '.'))}
+
+        layout_right = self.verticalLayout_right
+        for idx_layout in range(layout_right.count()):
+            if HelperFunctionQt.get_widget_of_layout(layout_right.itemAt(idx_layout), QtGui.QCheckBox).isChecked():
+                name_attr = HelperFunctionQt.get_widget_of_layout(layout_right.itemAt(idx_layout), QtGui.QCheckBox).text()
+                min_val = HelperFunctionQt.get_widget_of_layout(layout_right.itemAt(idx_layout), QtGui.QDoubleSpinBox).text()
+                max_val = HelperFunctionQt.get_widget_of_layout(layout_right.itemAt(idx_layout), QtGui.QDoubleSpinBox, 1).text()
+                dict_min_max[name_attr] = {'min': float(min_val.replace(',', '.')), 'max': float(max_val.replace(',', '.'))}
+
+        return dict_min_max
+
     def create_combobox_company_portfolio_manager(self):
         list_company = ManagerCompany.get_snp500()
 
@@ -229,9 +261,9 @@ class Slots:
         # When a click is made on a column's name, a sorting is done. We are changing the indicator in MainWindow
         # accordingly. The ValueTableItems that we are using use that indicator to adjust their comparison's algorithms.
         if table_widget.horizontalHeader().sortIndicatorOrder() == 0:
-            singleton.set_order(singleton(), True)
+            Singleton.set_order(Singleton(), True)
         else:
-            singleton.set_order(singleton(), False)
+            Singleton.set_order(Singleton(), False)
 
         if column == table_widget.columnCount() - 1:
             HelperFunctionQt.sorted_column_checkbox_table_widget(table_widget)
@@ -362,7 +394,8 @@ class Slots:
 
     @staticmethod
     def refresh_table_stock_screener():
-        print('Refresh table Stock Screener')
+        ui.tableWidget_stockScreener.setRowCount(0)
+        ui.create_data_table_stock_screener()
 
 
 if __name__ == "__main__":
@@ -376,7 +409,6 @@ if __name__ == "__main__":
     ui.setup_manager()
     ui.setup_size_fixed()
     ui.create_connection_signal_slot()
-    ui.set_min_max()
 
     MainWindow.show()
     sys.exit(app.exec_())

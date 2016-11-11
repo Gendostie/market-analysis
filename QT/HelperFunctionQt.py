@@ -1,12 +1,14 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
+import pandas as pd
 from PyQt4 import QtCore, QtGui
+import configparser
 
 from MainWindow import _translate
 from Manager_DB import ManagerPortfolio, ManagerCompany
 from Manager_DB.DbConnection import DbConnection
 from QT import ValueTableItem
-import configparser
+from Singleton import divide
 
 
 def get_row_table_widget(table_widget, idx_row):
@@ -177,45 +179,61 @@ def set_min_max_slider_layout(layout):
                       config.get('database', 'PASSWORD'),
                       config.get('database', 'DATABASE'))
 
-    list_column_table = ['close', 'revenue', 'gross_margin', 'net_income', 'dividends',
-                         'EPS', 'BVPS', 'free_cash_flow_per_share']
-    min_dict = {'close': ManagerCompany.get_minimum_value_daily("close_val", db),
-                'revenue': ManagerCompany.get_minimum_value_historical("revenu_usd_mil", db)}
-    max_dict = {'close': ManagerCompany.get_maximum_value_daily("close_val", db),
-                'revenue': ManagerCompany.get_maximum_value_historical("revenu_usd_mil", db)}
+    list_histo = ['Revenue (Mil)', 'Net Income (Mil)', 'Gross Margin (%)',
+                   'Dividends', 'EPS', 'BVPS', 'FCFPS']
+    list_calc = ['Div. Yield (%)', 'P/E Ratio', 'P/B Ratio', '52wk (%)']
+    dict_name = {'Revenue (Mil)': "revenu_usd_mil",
+                 'Net Income (Mil)': "net_income_usd_mil",
+                 'Gross Margin (%)': "gross_margin_pct",
+                 'Dividends': "dividends_usd",
+                 'EPS': "earning_per_share_usd",
+                 'BVPS': "book_value_per_share_usd",
+                 'FCFPS': "free_cash_flow_per_share_usd",
+                 'Close': "close_val",
+                 'Div. Yield (%)': "dividend_yield",
+                 'P/E Ratio': "p_e_ratio",
+                 'P/B Ratio': "p_b_ratio",
+                 '52wk (%)': "52wk"}
 
-    #for idx_layout in range(len(list_column_table)):
     for idx_layout in range(layout.count()):
         # Name of the attribute
         name_attr = get_widget_of_layout(layout.itemAt(idx_layout), QtGui.QCheckBox).text()
+        if name_attr in list_histo:
+            min_val = ManagerCompany.get_minimum_value_historical(dict_name[name_attr], db)
+            max_val = ManagerCompany.get_maximum_value_historical(dict_name[name_attr], db)
+        elif name_attr == 'Close':
+            min_val = ManagerCompany.get_minimum_value_daily(dict_name[name_attr], db)
+            max_val = ManagerCompany.get_maximum_value_daily(dict_name[name_attr], db)
+        elif name_attr in list_calc:
+            min_val = ManagerCompany.get_minimum_value_calculation(dict_name[name_attr], db)
+            max_val = ManagerCompany.get_maximum_value_calculation(dict_name[name_attr], db)
+        else:
+            continue
 
         # Min value
         min_spin_box = get_widget_of_layout(layout.itemAt(idx_layout), QtGui.QDoubleSpinBox)
         min_range_slider = get_widget_of_layout(layout.itemAt(idx_layout), QtGui.QSlider)
-        if name_attr == "Dividend yield":
-            min_spin_box.setMinimum(min_dict["close"])
-            min_spin_box.setValue(min_dict["close"])
-            min_range_slider.setMinimum(min_dict["close"])
-            min_range_slider.setValue(min_dict["close"])
-        else:
-            min_spin_box.setMinimum(min_dict["revenue"])
-            min_spin_box.setValue(min_dict["revenue"])
-            min_range_slider.setMinimum(min_dict["revenue"])
-            min_range_slider.setValue(min_dict["revenue"])
+
+        min_spin_box.setMinimum(min_val)
+        min_spin_box.setValue(min_val)
+        min_range_slider.setMinimum(min_val)
+        min_range_slider.setValue(min_val)
 
         # Max value
         max_spin_box = get_widget_of_layout(layout.itemAt(idx_layout), QtGui.QDoubleSpinBox, 1)
         max_range_slider = get_widget_of_layout(layout.itemAt(idx_layout), QtGui.QSlider, 1)
-        if name_attr == "Dividend yield":
-            max_spin_box.setMaximum(max_dict["close"])
-            max_spin_box.setValue(max_dict["close"])
-            max_range_slider.setMaximum(max_dict["close"])
-            max_range_slider.setValue(max_dict["close"])
-        else:
-            max_spin_box.setMaximum(max_dict["revenue"])
-            max_spin_box.setValue(max_dict["revenue"])
-            max_range_slider.setMaximum(max_dict["revenue"])
-            max_range_slider.setValue(max_dict["revenue"])
+
+        max_spin_box.setMaximum(max_val)
+        max_spin_box.setValue(max_val)
+        max_range_slider.setMaximum(max_val)
+        max_range_slider.setValue(max_val)
+
+        # Dividends is float
+        if name_attr == 'Dividends' or name_attr == 'Div. Yield (%)':
+            min_spin_box.setDecimals(2)
+            min_spin_box.setSingleStep((max_val-min_val)/100)
+            max_spin_box.setDecimals(2)
+            max_spin_box.setSingleStep((max_val-min_val)/100)
 
 
 def create_new_cell_item_table_widget(table_widget, idx_row, idx_column, value):
@@ -232,11 +250,14 @@ def create_new_cell_item_table_widget(table_widget, idx_row, idx_column, value):
     :return: None
     """
     # create new row
-    cell = ValueTableItem.value_tableitem()
+    cell = ValueTableItem.ValueTableItem()
     # we don't want user can change value of cell in table QtCore.Qt.ItemIsEditable
     cell.setFlags(QtCore.Qt.ItemIsUserCheckable | QtCore.Qt.ItemIsEnabled)
 
     value = value if value is not None else ""
+    if idx_column > 1:
+        cell.setTextAlignment(QtCore.Qt.AlignRight + QtCore.Qt.AlignVCenter)
+
     cell.setText(_translate("MainWindow", str(value), None))
     table_widget.setItem(idx_row, idx_column, cell)
 
@@ -304,3 +325,73 @@ def delete_companies_to_portfolio_db(portfolio_id, list_company):
     # delete companies to portfolio in db
     nb_company_added = ManagerPortfolio.delete_companies_to_portfolio(portfolio_id, list_company)
     print("Nb company added: %s" % nb_company_added)
+
+
+def reduce_table(list_cie, dict_param):
+    new_list_company = []
+    for cie in list_cie:
+        flag = True
+        for name_param, params in dict_param.items():
+            # If a value is None for a parameter that is checked, we remove the company.
+            if cie[name_param] is not None:
+                cie_val = float(cie[name_param])
+            else:
+                flag = False
+                break
+            # Check MIN
+            if cie_val < params['min']:
+                flag = False
+                break
+            # Check MAX
+            elif cie_val > params['max']:
+                flag = False
+                break
+        if flag:
+            new_list_company.append(cie)
+
+    return new_list_company
+
+
+def calculate_global_ranking(list_company, dict_params):
+    """
+    Calculate global ranking for company
+    :param list_company: list value for all company s&p500
+    :type list_company: list[dict]
+    :param dict_params: list criteria selected
+    :type dict_params: dict[dict]
+    :return: list value for all company s&p500 with adding global ranking
+    :rtype: list[dict]
+    """
+    # Check if we have company
+    if len(list_company) > 0:
+        df_company = pd.DataFrame.from_dict(list_company).set_index(['symbol'])
+    else:
+        return list_company
+
+    # init dict ranking
+    dict_ranking_company = {}
+    for symbol in df_company.axes[0]:
+        dict_ranking_company[symbol] = 0
+
+    # Delete param Close if exists
+    if dict_params.get('Close'):
+        dict_params.pop('Close')
+
+    # Sum ranking params of company
+    for param in dict_params:
+        cpt = 1
+        param_value_company = df_company[param].sort_values(ascending=False)
+        for symbol in param_value_company.keys():
+            dict_ranking_company[symbol] += cpt
+            cpt += 1
+
+    # Means of sum ranking and put in list_ci
+    for company in list_company:
+        global_ranking = 0
+        if len(dict_params) != 0:
+            global_ranking = divide(dict_ranking_company[company['symbol']], len(dict_params))
+        if 0 <= float(global_ranking) <= len(list_company):
+            company['Global Ranking'] = global_ranking
+        else:
+            print('Global ranking out range: %s, max: %s' % (global_ranking, len(list_company)))
+    return list_company

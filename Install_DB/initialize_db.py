@@ -1,5 +1,4 @@
 #!/usr/bin/python
-import finsymbols
 from os import path
 import json
 import configparser
@@ -9,7 +8,7 @@ from Manager_DB.DbConnection import DbConnection
 
 def insert_company_snp500():
     """Insert in the db the name and the symbol of every S&P500's company."""
-    snp500 = finsymbols.get_sp500_symbols()
+    snp500 = ManagerCompany.get_snp500()
 
     row_affected = 0
     for company in snp500:
