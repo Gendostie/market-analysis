@@ -6,7 +6,6 @@ from QT.MainWindow import Ui_MainWindow
 from Manager_DB import ManagerPortfolio, ManagerCompany
 from QT import HelperFunctionQt
 from QT.Singleton import singleton
-import pandas as pd
 
 
 class ManagerMainWindow(Ui_MainWindow):
@@ -44,9 +43,10 @@ class ManagerMainWindow(Ui_MainWindow):
         Create data in table widget stock screener with data SQL
         :return: None
         """
-        list_column_table = ['company_name', 'symbol', 'revenue', 'net_income', 'gross_margin', 'dividends',
-                             'dividend_yield', 'EPS', 'price_eps', 'BVPS', 'price_book', 'FCFPS', 'close',
-                             '52wk']
+        list_column_table = ['company_name', 'symbol', 'Revenue (Mil)', 'Net Income (Mil)',
+                             'Gross Margin (%)', 'Dividends',
+                             'Div. Yield (%)', 'EPS', 'P/E Ratio',
+                             'BVPS', 'P/B Ratio', 'FCFPS', 'Close', '52wk (%)']
 
         list_cie = ManagerCompany.get_historic_value_all_company()
         dict_params = ui.get_all_min_max()
@@ -157,7 +157,7 @@ class ManagerMainWindow(Ui_MainWindow):
                 name_attr = HelperFunctionQt.get_widget_of_layout(layout_left.itemAt(idx_layout), QtGui.QCheckBox).text()
                 min_val = HelperFunctionQt.get_widget_of_layout(layout_left.itemAt(idx_layout), QtGui.QDoubleSpinBox).text()
                 max_val = HelperFunctionQt.get_widget_of_layout(layout_left.itemAt(idx_layout), QtGui.QDoubleSpinBox, 1).text()
-                dict_min_max[name_attr] = {'min': float(min_val), 'max': float(max_val)}
+                dict_min_max[name_attr] = {'min': float(min_val.replace(',', '.')), 'max': float(max_val.replace(',', '.'))}
 
         layout_right = self.verticalLayout_right
         for idx_layout in range(layout_right.count()):
@@ -165,7 +165,7 @@ class ManagerMainWindow(Ui_MainWindow):
                 name_attr = HelperFunctionQt.get_widget_of_layout(layout_right.itemAt(idx_layout), QtGui.QCheckBox).text()
                 min_val = HelperFunctionQt.get_widget_of_layout(layout_right.itemAt(idx_layout), QtGui.QDoubleSpinBox).text()
                 max_val = HelperFunctionQt.get_widget_of_layout(layout_right.itemAt(idx_layout), QtGui.QDoubleSpinBox, 1).text()
-                dict_min_max[name_attr] = {'min': float(min_val), 'max': float(max_val)}
+                dict_min_max[name_attr] = {'min': float(min_val.replace(',', '.')), 'max': float(max_val.replace(',', '.'))}
 
         return dict_min_max
 
