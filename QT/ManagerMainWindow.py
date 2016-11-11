@@ -7,6 +7,10 @@ from Manager_DB import ManagerPortfolio, ManagerCompany
 from QT import HelperFunctionQt
 from QT.Singleton import singleton
 
+# TODO: REMOVE
+from Simulator import market_simulator as ms
+# TODO: REMOVE
+
 
 class ManagerMainWindow(Ui_MainWindow):
     def setup_size_fixed(self):
@@ -252,7 +256,6 @@ class Slots:
         """
         table_widget = ui.tableWidget_stockScreener
 
-        # TODO: Check if OK to do that
         # When a click is made on a column's name, a sorting is done. We are changing the indicator in MainWindow
         # accordingly. The ValueTableItems that we are using use that indicator to adjust their comparison's algorithms.
         if table_widget.horizontalHeader().sortIndicatorOrder() == 0:
@@ -389,6 +392,9 @@ class Slots:
 
     @staticmethod
     def refresh_table_stock_screener():
+        # TODO: REMOVE
+        ms.main_simulator(1000, 20)
+        # TODO: REMOVE
         ui.tableWidget_stockScreener.setRowCount(0)
         ui.create_data_table_stock_screener()
 

@@ -345,5 +345,3 @@ def reduce_table(list_cie, dict_param):
             new_list_company.append(cie)
 
     return new_list_company
-
-
