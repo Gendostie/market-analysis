@@ -317,14 +317,16 @@ def sorted_column_checkbox_table_widget(table_widget):
 
 def delete_companies_to_portfolio_db(portfolio_id, list_company):
     """
-
-    :param portfolio_id:
-    :param list_company:
-    :return:
+    Delete companies checked in table portfolio for deleted of bd for a portfolio_id specific
+    :param portfolio_id: id of portfolio
+    :type portfolio_id: int
+    :param list_company: list of companies checked to deleted
+    :type list_company: list[str]
+    :return: None
     """
     # delete companies to portfolio in db
-    nb_company_added = ManagerPortfolio.delete_companies_to_portfolio(portfolio_id, list_company)
-    print("Nb company added: %s" % nb_company_added)
+    nb_company_deleted = ManagerPortfolio.delete_companies_to_portfolio(portfolio_id, list_company)
+    print("Nb company deleted: %s" % nb_company_deleted)
 
 
 def reduce_table(list_cie, dict_param):
@@ -395,3 +397,21 @@ def calculate_global_ranking(list_company, dict_params):
         else:
             print('Global ranking out range: %s, max: %s' % (global_ranking, len(list_company)))
     return list_company
+
+
+def get_min_max_layout_checked(layout):
+    """
+    Get min and max checked in layout left or right
+    :param layout: layout left or right
+    :type layout: QtGui.QBoxLayout
+    :return: dict of min max of layout
+    :rtype: dict
+    """
+    dict_min_max = {}
+    for idx_layout in range(layout.count()):
+        if get_widget_of_layout(layout.itemAt(idx_layout), QtGui.QCheckBox).isChecked():
+            name_attr = get_widget_of_layout(layout.itemAt(idx_layout), QtGui.QCheckBox).text()
+            min_val = get_widget_of_layout(layout.itemAt(idx_layout), QtGui.QDoubleSpinBox).text()
+            max_val = get_widget_of_layout(layout.itemAt(idx_layout), QtGui.QDoubleSpinBox, 1).text()
+            dict_min_max[name_attr] = {'min': float(min_val.replace(',', '.')), 'max': float(max_val.replace(',', '.'))}
+    return dict_min_max

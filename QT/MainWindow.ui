@@ -3344,14 +3344,32 @@
       <property name="geometry">
        <rect>
         <x>18</x>
-        <y>692</y>
-        <width>121</width>
-        <height>16</height>
+        <y>690</y>
+        <width>155</width>
+        <height>20</height>
        </rect>
+      </property>
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="minimumSize">
+       <size>
+        <width>155</width>
+        <height>20</height>
+       </size>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>155</width>
+        <height>20</height>
+       </size>
       </property>
       <property name="font">
        <font>
-        <pointsize>10</pointsize>
+        <pointsize>8</pointsize>
        </font>
       </property>
       <property name="frameShape">
@@ -3370,21 +3388,21 @@
       </property>
       <property name="geometry">
        <rect>
-        <x>142</x>
+        <x>170</x>
         <y>688</y>
-        <width>80</width>
+        <width>110</width>
         <height>25</height>
        </rect>
       </property>
       <property name="minimumSize">
        <size>
-        <width>80</width>
+        <width>110</width>
         <height>25</height>
        </size>
       </property>
       <property name="maximumSize">
        <size>
-        <width>80</width>
+        <width>110</width>
         <height>25</height>
        </size>
       </property>
@@ -3845,7 +3863,7 @@
          <property name="sizeHint" stdset="0">
           <size>
            <width>30</width>
-           <height>10</height>
+           <height>20</height>
           </size>
          </property>
         </spacer>
@@ -3880,29 +3898,10 @@
          <property name="sizeHint" stdset="0">
           <size>
            <width>30</width>
-           <height>40</height>
+           <height>60</height>
           </size>
          </property>
         </spacer>
-       </item>
-       <item>
-        <widget class="QPushButton" name="btn_RefreshTableStockScreener_2">
-         <property name="minimumSize">
-          <size>
-           <width>145</width>
-           <height>35</height>
-          </size>
-         </property>
-         <property name="maximumSize">
-          <size>
-           <width>160</width>
-           <height>40</height>
-          </size>
-         </property>
-         <property name="text">
-          <string>Refresh</string>
-         </property>
-        </widget>
        </item>
       </layout>
      </widget>
@@ -6905,7 +6904,7 @@
      <x>0</x>
      <y>0</y>
      <width>1280</width>
-     <height>21</height>
+     <height>31</height>
     </rect>
    </property>
   </widget>
