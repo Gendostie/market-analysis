@@ -5,7 +5,7 @@ from PyQt4 import QtCore, QtGui
 from QT.MainWindow import Ui_MainWindow
 from Manager_DB import ManagerPortfolio, ManagerCompany
 from QT import HelperFunctionQt
-from QT.Singleton import singleton
+from QT.Singleton import Singleton
 
 
 class ManagerMainWindow(Ui_MainWindow):
@@ -17,6 +17,9 @@ class ManagerMainWindow(Ui_MainWindow):
         # fixed size main window
         MainWindow.setMaximumSize(MainWindow.size())
         MainWindow.setMinimumSize(MainWindow.size())
+        # adjust size tab
+        self.tab.setMinimumSize(self.tab.size())
+        self.tab.setMaximumSize(self.tab.size())
         # adjust column of table widget
         self.tableWidget_stockScreener.horizontalHeader().setResizeMode(QtGui.QHeaderView.ResizeToContents)
         self.tableWidget_portfolio.horizontalHeader().setResizeMode(QtGui.QHeaderView.ResizeToContents)
@@ -46,20 +49,22 @@ class ManagerMainWindow(Ui_MainWindow):
         list_column_table = ['company_name', 'symbol', 'Revenue (Mil)', 'Net Income (Mil)',
                              'Gross Margin (%)', 'Dividends',
                              'Div. Yield (%)', 'EPS', 'P/E Ratio',
-                             'BVPS', 'P/B Ratio', 'FCFPS', 'Close', '52wk (%)']
+                             'BVPS', 'P/B Ratio', 'FCFPS', 'Close', '52wk (%)', 'Global Ranking']
 
-        list_cie = ManagerCompany.get_historic_value_all_company()
-        dict_params = ui.get_all_min_max()
+        dict_company = ManagerCompany.get_historic_value_all_company()
+        dict_params = self.get_all_min_max()
 
-        list_company = HelperFunctionQt.reduce_table(list_cie, dict_params)
-        print("Number of rows: {}".format(len(list_company)))
+        max_nb_company = len(dict_company)
+        dict_company = HelperFunctionQt.reduce_table(dict_company, dict_params)
+        dict_company = HelperFunctionQt.calculate_global_ranking(dict_company, dict_params)
+        self.lineEdit_nb_company.setText('%s/%s' % (str(len(dict_company)), str(max_nb_company)))
 
-        if self.tableWidget_stockScreener.rowCount() < len(list_company):
-            self.tableWidget_stockScreener.setRowCount(len(list_company))
+        if self.tableWidget_stockScreener.rowCount() < len(dict_company):
+            self.tableWidget_stockScreener.setRowCount(len(dict_company))
 
         sorting_enable = self.tableWidget_stockScreener.isSortingEnabled()
         self.tableWidget_stockScreener.setSortingEnabled(False)
-        for idx_row, company in enumerate(list_company):
+        for idx_row, company in enumerate(dict_company):
             for key in company.keys():
                 try:
                     idx_column = list_column_table.index(key)
@@ -256,9 +261,9 @@ class Slots:
         # When a click is made on a column's name, a sorting is done. We are changing the indicator in MainWindow
         # accordingly. The ValueTableItems that we are using use that indicator to adjust their comparison's algorithms.
         if table_widget.horizontalHeader().sortIndicatorOrder() == 0:
-            singleton.set_order(singleton(), True)
+            Singleton.set_order(Singleton(), True)
         else:
-            singleton.set_order(singleton(), False)
+            Singleton.set_order(Singleton(), False)
 
         if column == table_widget.columnCount() - 1:
             HelperFunctionQt.sorted_column_checkbox_table_widget(table_widget)
