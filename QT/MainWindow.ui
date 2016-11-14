@@ -6895,31 +6895,6 @@
        </widget>
       </widget>
      </widget>
-     <widget class="QPushButton" name="btn_startSimulation">
-      <property name="geometry">
-       <rect>
-        <x>10</x>
-        <y>240</y>
-        <width>130</width>
-        <height>30</height>
-       </rect>
-      </property>
-      <property name="minimumSize">
-       <size>
-        <width>120</width>
-        <height>30</height>
-       </size>
-      </property>
-      <property name="maximumSize">
-       <size>
-        <width>130</width>
-        <height>30</height>
-       </size>
-      </property>
-      <property name="text">
-       <string>Start simulation</string>
-      </property>
-     </widget>
      <widget class="QFrame" name="frame">
       <property name="geometry">
        <rect>
@@ -6975,21 +6950,21 @@
       <property name="geometry">
        <rect>
         <x>5</x>
-        <y>193</y>
-        <width>1255</width>
-        <height>40</height>
+        <y>191</y>
+        <width>1000</width>
+        <height>80</height>
        </rect>
       </property>
       <property name="minimumSize">
        <size>
-        <width>1255</width>
-        <height>40</height>
+        <width>1000</width>
+        <height>80</height>
        </size>
       </property>
       <property name="maximumSize">
        <size>
-        <width>1255</width>
-        <height>40</height>
+        <width>1000</width>
+        <height>80</height>
        </size>
       </property>
       <property name="frameShape">
@@ -7001,33 +6976,33 @@
       <widget class="QPushButton" name="btn_setParamsSimulation">
        <property name="geometry">
         <rect>
-         <x>1051</x>
-         <y>6</y>
-         <width>200</width>
+         <x>367</x>
+         <y>43</y>
+         <width>120</width>
          <height>30</height>
         </rect>
        </property>
        <property name="minimumSize">
         <size>
-         <width>200</width>
+         <width>120</width>
          <height>30</height>
         </size>
        </property>
        <property name="maximumSize">
         <size>
-         <width>200</width>
+         <width>120</width>
          <height>30</height>
         </size>
        </property>
        <property name="text">
-        <string>Set parameters simulation</string>
+        <string>Set parameters</string>
        </property>
       </widget>
       <widget class="QLabel" name="label_valuePortfolio">
        <property name="geometry">
         <rect>
          <x>6</x>
-         <y>8</y>
+         <y>7</y>
          <width>110</width>
          <height>25</height>
         </rect>
@@ -7051,8 +7026,8 @@
       <widget class="QDateEdit" name="dateEdit_simulatorFrom">
        <property name="geometry">
         <rect>
-         <x>361</x>
-         <y>8</y>
+         <x>723</x>
+         <y>7</y>
          <width>115</width>
          <height>25</height>
         </rect>
@@ -7069,22 +7044,12 @@
          <height>25</height>
         </size>
        </property>
-       <property name="maximumDateTime">
-        <datetime>
-         <hour>23</hour>
-         <minute>59</minute>
-         <second>59</second>
-         <year>7999</year>
-         <month>12</month>
-         <day>31</day>
-        </datetime>
-       </property>
       </widget>
       <widget class="QDateEdit" name="dateEdit_simulatorTo">
        <property name="geometry">
         <rect>
-         <x>517</x>
-         <y>8</y>
+         <x>879</x>
+         <y>7</y>
          <width>115</width>
          <height>25</height>
         </rect>
@@ -7105,8 +7070,8 @@
       <widget class="QLabel" name="label_dateFrom">
        <property name="geometry">
         <rect>
-         <x>318</x>
-         <y>8</y>
+         <x>680</x>
+         <y>7</y>
          <width>40</width>
          <height>25</height>
         </rect>
@@ -7130,8 +7095,8 @@
       <widget class="QLabel" name="label_dateTo">
        <property name="geometry">
         <rect>
-         <x>491</x>
-         <y>6</y>
+         <x>853</x>
+         <y>5</y>
          <width>22</width>
          <height>30</height>
         </rect>
@@ -7152,48 +7117,11 @@
         <string>To</string>
        </property>
       </widget>
-      <widget class="QLineEdit" name="lineEdit_valuePortfolio">
-       <property name="geometry">
-        <rect>
-         <x>116</x>
-         <y>8</y>
-         <width>120</width>
-         <height>25</height>
-        </rect>
-       </property>
-       <property name="minimumSize">
-        <size>
-         <width>120</width>
-         <height>25</height>
-        </size>
-       </property>
-       <property name="maximumSize">
-        <size>
-         <width>120</width>
-         <height>25</height>
-        </size>
-       </property>
-       <property name="inputMask">
-        <string/>
-       </property>
-       <property name="text">
-        <string>0</string>
-       </property>
-       <property name="maxLength">
-        <number>32767</number>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-       </property>
-       <property name="placeholderText">
-        <string>Value portfolio</string>
-       </property>
-      </widget>
       <widget class="QLabel" name="label">
        <property name="geometry">
         <rect>
-         <x>689</x>
-         <y>8</y>
+         <x>5</x>
+         <y>45</y>
          <width>115</width>
          <height>25</height>
         </rect>
@@ -7217,28 +7145,158 @@
       <widget class="QComboBox" name="comboBox_typeSimulation">
        <property name="geometry">
         <rect>
-         <x>808</x>
-         <y>8</y>
+         <x>124</x>
+         <y>43</y>
          <width>230</width>
-         <height>25</height>
+         <height>30</height>
         </rect>
        </property>
        <property name="minimumSize">
         <size>
          <width>230</width>
-         <height>25</height>
+         <height>30</height>
         </size>
        </property>
        <property name="maximumSize">
         <size>
          <width>240</width>
-         <height>25</height>
+         <height>30</height>
         </size>
+       </property>
+       <property name="editable">
+        <bool>false</bool>
        </property>
        <property name="currentText" stdset="0">
         <string/>
        </property>
       </widget>
+      <widget class="QDoubleSpinBox" name="doubleSpinBox_valuePortfolio">
+       <property name="geometry">
+        <rect>
+         <x>124</x>
+         <y>7</y>
+         <width>130</width>
+         <height>25</height>
+        </rect>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>130</width>
+         <height>25</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>130</width>
+         <height>25</height>
+        </size>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+       </property>
+       <property name="buttonSymbols">
+        <enum>QAbstractSpinBox::NoButtons</enum>
+       </property>
+       <property name="prefix">
+        <string/>
+       </property>
+       <property name="suffix">
+        <string> $</string>
+       </property>
+       <property name="maximum">
+        <double>99999999.989999994635582</double>
+       </property>
+       <property name="value">
+        <double>99999999.989999994635582</double>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_2">
+       <property name="geometry">
+        <rect>
+         <x>367</x>
+         <y>7</y>
+         <width>115</width>
+         <height>25</height>
+        </rect>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>115</width>
+         <height>25</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>115</width>
+         <height>25</height>
+        </size>
+       </property>
+       <property name="text">
+        <string>Transaction fee</string>
+       </property>
+      </widget>
+      <widget class="QDoubleSpinBox" name="doubleSpinBox">
+       <property name="geometry">
+        <rect>
+         <x>488</x>
+         <y>7</y>
+         <width>90</width>
+         <height>25</height>
+        </rect>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>90</width>
+         <height>25</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>90</width>
+         <height>25</height>
+        </size>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+       </property>
+       <property name="buttonSymbols">
+        <enum>QAbstractSpinBox::NoButtons</enum>
+       </property>
+       <property name="suffix">
+        <string> $</string>
+       </property>
+       <property name="maximum">
+        <double>9999.989999999999782</double>
+       </property>
+       <property name="value">
+        <double>9999.989999999999782</double>
+       </property>
+      </widget>
+     </widget>
+     <widget class="QPushButton" name="btn_startSimulation">
+      <property name="geometry">
+       <rect>
+        <x>1098</x>
+        <y>211</y>
+        <width>160</width>
+        <height>40</height>
+       </rect>
+      </property>
+      <property name="minimumSize">
+       <size>
+        <width>145</width>
+        <height>35</height>
+       </size>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>160</width>
+        <height>40</height>
+       </size>
+      </property>
+      <property name="text">
+       <string>Start simulation</string>
+      </property>
      </widget>
     </widget>
    </widget>
@@ -7408,13 +7466,7 @@
   <tabstop>horizontalSlider_min_52wk_2</tabstop>
   <tabstop>doubleSpinBox_max_52wk_2</tabstop>
   <tabstop>horizontalSlider_max_52wk_2</tabstop>
-  <tabstop>btn_startSimulation</tabstop>
   <tabstop>btn_showReport</tabstop>
-  <tabstop>lineEdit_valuePortfolio</tabstop>
-  <tabstop>dateEdit_simulatorFrom</tabstop>
-  <tabstop>dateEdit_simulatorTo</tabstop>
-  <tabstop>comboBox_typeSimulation</tabstop>
-  <tabstop>btn_setParamsSimulation</tabstop>
  </tabstops>
  <resources/>
  <connections/>
