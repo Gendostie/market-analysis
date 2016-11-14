@@ -7,10 +7,6 @@ from Manager_DB import ManagerPortfolio, ManagerCompany
 from QT import HelperFunctionQt
 from QT.Singleton import singleton
 
-# TODO: REMOVE
-from Simulator import market_simulator as ms
-# TODO: REMOVE
-
 
 class ManagerMainWindow(Ui_MainWindow):
     def setup_size_fixed(self):
@@ -392,9 +388,6 @@ class Slots:
 
     @staticmethod
     def refresh_table_stock_screener():
-        # TODO: REMOVE
-        ms.main_simulator(1000, 20)
-        # TODO: REMOVE
         ui.tableWidget_stockScreener.setRowCount(0)
         ui.create_data_table_stock_screener()
 

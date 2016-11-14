@@ -49,14 +49,65 @@ class Market:
         print(self.df_market.loc[self.df_market['date'] == self.current_date])
 
     def get_current_date(self):
-        """Return the current date of the simulation."""
+        """Return the current date of the simulation.
+
+        :rtype: datetime
+        """
         return self.current_date
+
+    def get_trading_stocks(self):
+        """Return a list of all companies that you can trade for the current date.
+
+        :rtype: list
+        """
+        return self.df_market.loc[self.df_market['date'] == self.current_date, 'symbol'].tolist()
+
+    def get_price(self, symbol):
+        """Return the closing price of a company for the current day.
+
+        :param symbol: Symbol of the company of which we are requesting the price.
+        :type symbol: str
+        :return: The "close" price of the company for the current day. Return 0 if the company is not trading that day.
+        :rtype: float
+        """
+        if symbol in self.get_trading_stocks():
+            price = self.df_market.loc[(self.df_market['date'] == self.current_date) &
+                                       (self.df_market['symbol'] == symbol), 'close'].values[0]
+        else:
+            price = 0
+        return price
+
+    def sell(self, symbol, nb_stocks):
+        """Return how much you get for selling a certain number of stocks of a company for the current day.
+
+        :param symbol: Symbol of the company of the stocks we are trying to sell.
+        :type symbol: str
+        :param nb_stocks: Number of stocks we are trying to sell. To be useful, must be > 0.
+        :type nb_stocks: int
+        :return: How much money you get for selling this number of stocks for this company for the current day.
+        :rtype: float
+        """
+        price = self.get_price(symbol)
+        return price * nb_stocks
+
+    def buy(self, symbol, nb_stocks):
+        """Return how much you must pay to acquire a certain number of stocks of a company for the current day.
+
+        :param symbol: Symbol of the company of the stocks we are trying to buy.
+        :type symbol: str
+        :param nb_stocks: Number of stocks we are trying to buy. To be useful, must be > 0.
+        :type nb_stocks: int
+        :return: How much money you must pay to acquire this number of stocks for this company for the current day.
+        :rtype: float
+        """
+        price = self.get_price(symbol)
+        return price * nb_stocks
 
     ####################################################################################################
     #     Set up some variables for the simulation
     ####################################################################################################
     def __load_all_data(self):
-        # TODO: Take a lot of time.
+        # TODO: Take a lot of time. Charge only a year?
         """Load the daily information of the database in a DataFrame (pandas's object).
 
         The starting and ending dates are defined when the object is initialized and cannot be changed
@@ -117,14 +168,15 @@ class Market:
         return False
 
     def __is_over(self):
+        # TODO: >= is for testing. Set to > after
         """Boolean function that verify is the simulation is over.
 
         :return: True if the current day comes after the ending date. False otherwise.
         :rtype: bool
         """
-        if self.current_date.year > self.end_date.year and\
-           self.current_date.month > self.end_date.month and\
-           self.current_date.day > self.end_date.day:
+        if self.current_date.year >= self.end_date.year and\
+           self.current_date.month >= self.end_date.month and\
+           self.current_date.day >= self.end_date.day:
             return True
         else:
             return False

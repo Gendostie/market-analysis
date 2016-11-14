@@ -18,10 +18,13 @@ def main_simulator(initial_value, transaction_cost, begin=None, end=None):
             begin = get_min_trading_date(db)
         if end is None:
             end = get_max_trading_date(db)
-        market = Market(transaction_cost, begin, end, db)
+        market = Market(begin, end, db)
 
         # TODO: ONLY FOR TESTING
         market.debug_print()
+        print(market.get_price("ZTS"))
+        print(market.sell("ZTS", 1))
+        print(market.sell("ZTS", 100))
         cpt = 0
         flag = market.next()
         while flag:
@@ -31,6 +34,9 @@ def main_simulator(initial_value, transaction_cost, begin=None, end=None):
                 print(market.get_current_date())
             flag = market.next()
         market.debug_print()
+        print(market.get_price("ZTS"))
+        print(market.sell("ZTS", 1))
+        print(market.sell("ZTS", 100))
         # TODO: ONLY FOR TESTING
 
 
@@ -44,3 +50,6 @@ def get_min_trading_date(db):
     query = """SELECT MIN(date_daily_value) FROM daily_value;"""
     date = db.select_in_db(query)[0][0]
     return datetime(date.year, date.month, date.day)
+
+if __name__ == "__main__":
+    main_simulator(1000, 20)
