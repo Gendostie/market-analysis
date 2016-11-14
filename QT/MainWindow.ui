@@ -42,7 +42,7 @@
      </size>
     </property>
     <property name="currentIndex">
-     <number>2</number>
+     <number>0</number>
     </property>
     <widget class="QWidget" name="tab_stockScreener">
      <attribute name="title">
@@ -7001,8 +7001,8 @@
       <widget class="QPushButton" name="btn_setParamsSimulation">
        <property name="geometry">
         <rect>
-         <x>1050</x>
-         <y>5</y>
+         <x>1051</x>
+         <y>6</y>
          <width>200</width>
          <height>30</height>
         </rect>
@@ -7026,8 +7026,8 @@
       <widget class="QLabel" name="label_valuePortfolio">
        <property name="geometry">
         <rect>
-         <x>5</x>
-         <y>7</y>
+         <x>6</x>
+         <y>8</y>
          <width>110</width>
          <height>25</height>
         </rect>
@@ -7051,8 +7051,8 @@
       <widget class="QDateEdit" name="dateEdit_simulatorFrom">
        <property name="geometry">
         <rect>
-         <x>360</x>
-         <y>7</y>
+         <x>361</x>
+         <y>8</y>
          <width>115</width>
          <height>25</height>
         </rect>
@@ -7069,12 +7069,22 @@
          <height>25</height>
         </size>
        </property>
+       <property name="maximumDateTime">
+        <datetime>
+         <hour>23</hour>
+         <minute>59</minute>
+         <second>59</second>
+         <year>7999</year>
+         <month>12</month>
+         <day>31</day>
+        </datetime>
+       </property>
       </widget>
       <widget class="QDateEdit" name="dateEdit_simulatorTo">
        <property name="geometry">
         <rect>
-         <x>516</x>
-         <y>7</y>
+         <x>517</x>
+         <y>8</y>
          <width>115</width>
          <height>25</height>
         </rect>
@@ -7095,8 +7105,8 @@
       <widget class="QLabel" name="label_dateFrom">
        <property name="geometry">
         <rect>
-         <x>317</x>
-         <y>7</y>
+         <x>318</x>
+         <y>8</y>
          <width>40</width>
          <height>25</height>
         </rect>
@@ -7120,8 +7130,8 @@
       <widget class="QLabel" name="label_dateTo">
        <property name="geometry">
         <rect>
-         <x>490</x>
-         <y>5</y>
+         <x>491</x>
+         <y>6</y>
          <width>22</width>
          <height>30</height>
         </rect>
@@ -7145,8 +7155,8 @@
       <widget class="QLineEdit" name="lineEdit_valuePortfolio">
        <property name="geometry">
         <rect>
-         <x>115</x>
-         <y>7</y>
+         <x>116</x>
+         <y>8</y>
          <width>120</width>
          <height>25</height>
         </rect>
@@ -7163,8 +7173,11 @@
          <height>25</height>
         </size>
        </property>
-       <property name="text">
+       <property name="inputMask">
         <string/>
+       </property>
+       <property name="text">
+        <string>0</string>
        </property>
        <property name="maxLength">
         <number>32767</number>
@@ -7179,8 +7192,8 @@
       <widget class="QLabel" name="label">
        <property name="geometry">
         <rect>
-         <x>688</x>
-         <y>7</y>
+         <x>689</x>
+         <y>8</y>
          <width>115</width>
          <height>25</height>
         </rect>
@@ -7201,33 +7214,35 @@
         <string>Type simulation</string>
        </property>
       </widget>
-      <widget class="QComboBox" name="comboBox">
+      <widget class="QComboBox" name="comboBox_typeSimulation">
        <property name="geometry">
         <rect>
-         <x>807</x>
-         <y>5</y>
+         <x>808</x>
+         <y>8</y>
          <width>230</width>
-         <height>30</height>
+         <height>25</height>
         </rect>
        </property>
        <property name="minimumSize">
         <size>
          <width>230</width>
-         <height>30</height>
+         <height>25</height>
         </size>
        </property>
        <property name="maximumSize">
         <size>
          <width>240</width>
-         <height>30</height>
+         <height>25</height>
         </size>
        </property>
-       <property name="editable">
-        <bool>true</bool>
+       <property name="currentText" stdset="0">
+        <string>Test</string>
        </property>
-       <property name="currentText">
-        <string/>
-       </property>
+       <item>
+        <property name="text">
+         <string>Test</string>
+        </property>
+       </item>
       </widget>
      </widget>
     </widget>
@@ -7239,7 +7254,7 @@
      <x>0</x>
      <y>0</y>
      <width>1280</width>
-     <height>31</height>
+     <height>21</height>
     </rect>
    </property>
   </widget>
@@ -7272,6 +7287,139 @@
   <tabstop>btn_selectAllCriteria</tabstop>
   <tabstop>btn_deselectAllCriteria</tabstop>
   <tabstop>scrollArea</tabstop>
+  <tabstop>checkBox_revenue</tabstop>
+  <tabstop>doubleSpinBox_min_revenue</tabstop>
+  <tabstop>horizontalSlider_min_revenue</tabstop>
+  <tabstop>doubleSpinBox_max_revenue</tabstop>
+  <tabstop>horizontalSlider_max_revenue</tabstop>
+  <tabstop>doubleSpinBox_min_income</tabstop>
+  <tabstop>doubleSpinBox_max_income</tabstop>
+  <tabstop>doubleSpinBox_min_grossMargin</tabstop>
+  <tabstop>doubleSpinBox_max_grossMargin</tabstop>
+  <tabstop>checkBox_dividends</tabstop>
+  <tabstop>doubleSpinBox_min_dividends</tabstop>
+  <tabstop>horizontalSlider_min_dividends</tabstop>
+  <tabstop>doubleSpinBox_max_dividends</tabstop>
+  <tabstop>horizontalSlider_max_dividends</tabstop>
+  <tabstop>doubleSpinBox_min_dividendYield</tabstop>
+  <tabstop>doubleSpinBox_max_dividendYield</tabstop>
+  <tabstop>checkBox_eps</tabstop>
+  <tabstop>doubleSpinBox_min_eps</tabstop>
+  <tabstop>horizontalSlider_min_eps</tabstop>
+  <tabstop>doubleSpinBox_max_eps</tabstop>
+  <tabstop>horizontalSlider_max_eps</tabstop>
+  <tabstop>checkBox_priceEspRatio</tabstop>
+  <tabstop>doubleSpinBox_min_priceEspRatio</tabstop>
+  <tabstop>horizontalSlider_min_priceEspRatio</tabstop>
+  <tabstop>doubleSpinBox_max_priceEspRatio</tabstop>
+  <tabstop>horizontalSlider_max_priceEspRatio</tabstop>
+  <tabstop>checkBox_bvps</tabstop>
+  <tabstop>doubleSpinBox_min_bvps</tabstop>
+  <tabstop>horizontalSlider_min_bvps</tabstop>
+  <tabstop>doubleSpinBox_max_bvps</tabstop>
+  <tabstop>horizontalSlider_max_bvps</tabstop>
+  <tabstop>checkBox_priceBookRatio</tabstop>
+  <tabstop>doubleSpinBox_min_priceBookRatio</tabstop>
+  <tabstop>horizontalSlider_min_priceBookRatio</tabstop>
+  <tabstop>doubleSpinBox_max_priceBookRatio</tabstop>
+  <tabstop>horizontalSlider_max_priceBookRatio</tabstop>
+  <tabstop>checkBox_fcfps</tabstop>
+  <tabstop>doubleSpinBox_min_fcfps</tabstop>
+  <tabstop>horizontalSlider_min_fcfps</tabstop>
+  <tabstop>doubleSpinBox_max_fcfps</tabstop>
+  <tabstop>horizontalSlider_max_fcfps</tabstop>
+  <tabstop>checkBox_close</tabstop>
+  <tabstop>doubleSpinBox_min_close</tabstop>
+  <tabstop>horizontalSlider_min_close</tabstop>
+  <tabstop>doubleSpinBox_max_close</tabstop>
+  <tabstop>horizontalSlider_max_close</tabstop>
+  <tabstop>checkBox_52wk</tabstop>
+  <tabstop>doubleSpinBox_min_52wk</tabstop>
+  <tabstop>horizontalSlider_min_52wk</tabstop>
+  <tabstop>doubleSpinBox_max_52wk</tabstop>
+  <tabstop>horizontalSlider_max_52wk</tabstop>
+  <tabstop>tableWidget_stockScreener</tabstop>
+  <tabstop>comboBox_stockScreener_portfolio</tabstop>
+  <tabstop>btn_stockScreener_addPortfolio</tabstop>
+  <tabstop>btn_RefreshTableStockScreener</tabstop>
+  <tabstop>lineEdit_nb_company</tabstop>
+  <tabstop>lineEdit_noPortfolio</tabstop>
+  <tabstop>comboBox_portfolioManager_portfolio</tabstop>
+  <tabstop>btn_portfolio_ok</tabstop>
+  <tabstop>comboBox_portfolioManager_addCompany</tabstop>
+  <tabstop>btn_addCompany</tabstop>
+  <tabstop>tableWidget_portfolio</tabstop>
+  <tabstop>btn_portfolio_delete_company_selected</tabstop>
+  <tabstop>btn_selectAllCriteria_2</tabstop>
+  <tabstop>btn_deselectAllCriteria_2</tabstop>
+  <tabstop>scrollArea_2</tabstop>
+  <tabstop>checkBox_revenue_2</tabstop>
+  <tabstop>doubleSpinBox_min_revenue_2</tabstop>
+  <tabstop>horizontalSlider_min_revenue_2</tabstop>
+  <tabstop>doubleSpinBox_max_revenue_2</tabstop>
+  <tabstop>horizontalSlider_max_revenue_2</tabstop>
+  <tabstop>checkBox_income_2</tabstop>
+  <tabstop>doubleSpinBox_min_income_2</tabstop>
+  <tabstop>horizontalSlider_min_income_2</tabstop>
+  <tabstop>doubleSpinBox_max_income_2</tabstop>
+  <tabstop>horizontalSlider_max_income_2</tabstop>
+  <tabstop>checkBox_grossMargin_2</tabstop>
+  <tabstop>doubleSpinBox_min_grossMargin_2</tabstop>
+  <tabstop>horizontalSlider_min_grossMargin_2</tabstop>
+  <tabstop>doubleSpinBox_max_grossMargin_2</tabstop>
+  <tabstop>horizontalSlider_max_grossMargin_2</tabstop>
+  <tabstop>checkBox_dividends_2</tabstop>
+  <tabstop>doubleSpinBox_min_dividends_2</tabstop>
+  <tabstop>horizontalSlider_min_dividends_2</tabstop>
+  <tabstop>doubleSpinBox_max_dividends_2</tabstop>
+  <tabstop>horizontalSlider_max_dividends_2</tabstop>
+  <tabstop>checkBox_dividendYield_2</tabstop>
+  <tabstop>doubleSpinBox_min_dividendYield_2</tabstop>
+  <tabstop>horizontalSlider_min_dividendYield_2</tabstop>
+  <tabstop>doubleSpinBox_max_dividendYield_2</tabstop>
+  <tabstop>horizontalSlider_max_dividendYield_2</tabstop>
+  <tabstop>checkBox_eps_2</tabstop>
+  <tabstop>doubleSpinBox_min_eps_2</tabstop>
+  <tabstop>horizontalSlider_min_eps_2</tabstop>
+  <tabstop>doubleSpinBox_max_eps_2</tabstop>
+  <tabstop>horizontalSlider_max_eps_2</tabstop>
+  <tabstop>checkBox_priceEspRatio_2</tabstop>
+  <tabstop>doubleSpinBox_min_priceEspRatio_2</tabstop>
+  <tabstop>horizontalSlider_min_priceEspRatio_2</tabstop>
+  <tabstop>doubleSpinBox_max_priceEspRatio_2</tabstop>
+  <tabstop>horizontalSlider_max_priceEspRatio_2</tabstop>
+  <tabstop>checkBox_bvps_2</tabstop>
+  <tabstop>doubleSpinBox_min_bvps_2</tabstop>
+  <tabstop>horizontalSlider_min_bvps_2</tabstop>
+  <tabstop>doubleSpinBox_max_bvps_2</tabstop>
+  <tabstop>horizontalSlider_max_bvps_2</tabstop>
+  <tabstop>checkBox_priceBookRatio_2</tabstop>
+  <tabstop>doubleSpinBox_min_priceBookRatio_2</tabstop>
+  <tabstop>horizontalSlider_min_priceBookRatio_2</tabstop>
+  <tabstop>doubleSpinBox_max_priceBookRatio_2</tabstop>
+  <tabstop>horizontalSlider_max_priceBookRatio_2</tabstop>
+  <tabstop>checkBox_fcfps_2</tabstop>
+  <tabstop>doubleSpinBox_min_fcfps_2</tabstop>
+  <tabstop>horizontalSlider_min_fcfps_2</tabstop>
+  <tabstop>doubleSpinBox_max_fcfps_2</tabstop>
+  <tabstop>horizontalSlider_max_fcfps_2</tabstop>
+  <tabstop>checkBox_close_2</tabstop>
+  <tabstop>doubleSpinBox_min_close_2</tabstop>
+  <tabstop>horizontalSlider_min_close_2</tabstop>
+  <tabstop>doubleSpinBox_max_close_2</tabstop>
+  <tabstop>horizontalSlider_max_close_2</tabstop>
+  <tabstop>checkBox_52wk_2</tabstop>
+  <tabstop>doubleSpinBox_min_52wk_2</tabstop>
+  <tabstop>horizontalSlider_min_52wk_2</tabstop>
+  <tabstop>doubleSpinBox_max_52wk_2</tabstop>
+  <tabstop>horizontalSlider_max_52wk_2</tabstop>
+  <tabstop>btn_startSimulation</tabstop>
+  <tabstop>btn_showReport</tabstop>
+  <tabstop>lineEdit_valuePortfolio</tabstop>
+  <tabstop>dateEdit_simulatorFrom</tabstop>
+  <tabstop>dateEdit_simulatorTo</tabstop>
+  <tabstop>comboBox_typeSimulation</tabstop>
+  <tabstop>btn_setParamsSimulation</tabstop>
  </tabstops>
  <resources/>
  <connections/>

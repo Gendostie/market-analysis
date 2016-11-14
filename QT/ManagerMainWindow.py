@@ -44,9 +44,11 @@ class ManagerMainWindow(Ui_MainWindow):
             self.refresh_data_table_portfolio()
         self.create_combobox_company_portfolio_manager()
         # Simulator
-        # Set min max criteria Stock Screener
+        # Set min max criteria Simulator
         HelperFunctionQt.set_min_max_slider_layout(self.verticalLayout_left_2)
         HelperFunctionQt.set_min_max_slider_layout(self.verticalLayout_right_2)
+        # Set min max datetime Simulator
+        self.get_min_max_date_historic()
 
     def create_data_table_stock_screener(self):
         """
@@ -59,7 +61,7 @@ class ManagerMainWindow(Ui_MainWindow):
                              'BVPS', 'P/B Ratio', 'FCFPS', 'Close', '52wk (%)', 'Global Ranking']
 
         dict_company = ManagerCompany.get_historic_value_all_company()
-        dict_params = self.get_all_min_max(self.horizontalLayout)
+        dict_params = self.get_all_min_max_criteria(self.horizontalLayout)
 
         max_nb_company = len(dict_company)
         dict_company = HelperFunctionQt.reduce_table(dict_company, dict_params)
@@ -144,6 +146,9 @@ class ManagerMainWindow(Ui_MainWindow):
         self.btn_selectAllCriteria_2.clicked.connect(Slots.select_all_criteria_simulator)
         # btn deselect criteria Simulator
         self.btn_deselectAllCriteria_2.clicked.connect(Slots.deselect_all_criteria_simulator)
+        # connect min max datetime
+        self.dateEdit_simulatorFrom.dateTimeChanged.connect(self.dateEdit_simulatorTo.setMinimumDateTime)
+        self.dateEdit_simulatorTo.dateTimeChanged.connect(self.dateEdit_simulatorFrom.setMaximumDateTime)
 
     def create_combobox_portfolio(self, tab_widget_name, combobox_name):
         """
@@ -162,7 +167,7 @@ class ManagerMainWindow(Ui_MainWindow):
             cb.addItem(dict_portfolio.get('name'))
 
     @staticmethod
-    def get_all_min_max(horizontal_layout):
+    def get_all_min_max_criteria(horizontal_layout):
         """
         Get all min and max checked in layout horizontal criteria who content vertical layout left and right for
         tab Stock Screener or Portfolio Manager
@@ -179,6 +184,12 @@ class ManagerMainWindow(Ui_MainWindow):
         layout = HelperFunctionQt.get_widget_of_layout(horizontal_layout, QtGui.QLayout, 1)
         dict_min_max.update(HelperFunctionQt.get_min_max_layout_checked(layout))
         return dict_min_max
+
+    def get_min_max_date_historic(self):
+        min_datetime, max_datetime = ManagerCompany.get_minimum_maximum_value_date_historical()
+        self.dateEdit_simulatorFrom.setDateTimeRange(QtCore.QDateTime(min_datetime), QtCore.QDateTime(max_datetime))
+        self.dateEdit_simulatorTo.setDateTimeRange(QtCore.QDateTime(min_datetime), QtCore.QDateTime(max_datetime))
+        self.dateEdit_simulatorTo.setDateTime(QtCore.QDateTime(max_datetime))
 
     def create_combobox_company_portfolio_manager(self):
         list_company = ManagerCompany.get_snp500()
