@@ -2228,8 +2228,8 @@ class Ui_MainWindow(object):
         self.comboBox_typeSimulation.setGeometry(QtCore.QRect(808, 8, 230, 25))
         self.comboBox_typeSimulation.setMinimumSize(QtCore.QSize(230, 25))
         self.comboBox_typeSimulation.setMaximumSize(QtCore.QSize(240, 25))
+        self.comboBox_typeSimulation.setProperty("currentText", _fromUtf8(""))
         self.comboBox_typeSimulation.setObjectName(_fromUtf8("comboBox_typeSimulation"))
-        self.comboBox_typeSimulation.addItem(_fromUtf8(""))
         self.tab.addTab(self.tab_simulator, _fromUtf8(""))
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtGui.QMenuBar(MainWindow)
@@ -2243,7 +2243,7 @@ class Ui_MainWindow(object):
         MainWindow.setStatusBar(self.statusbar)
 
         self.retranslateUi(MainWindow)
-        self.tab.setCurrentIndex(0)
+        self.tab.setCurrentIndex(2)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
         MainWindow.setTabOrder(self.tab, self.checkBox_income)
         MainWindow.setTabOrder(self.checkBox_income, self.horizontalSlider_min_income)
@@ -2530,8 +2530,6 @@ class Ui_MainWindow(object):
         self.lineEdit_valuePortfolio.setText(_translate("MainWindow", "0", None))
         self.lineEdit_valuePortfolio.setPlaceholderText(_translate("MainWindow", "Value portfolio", None))
         self.label.setText(_translate("MainWindow", "Type simulation", None))
-        self.comboBox_typeSimulation.setProperty("currentText", _translate("MainWindow", "Test", None))
-        self.comboBox_typeSimulation.setItemText(0, _translate("MainWindow", "Test", None))
         self.tab.setTabText(self.tab.indexOf(self.tab_simulator), _translate("MainWindow", "Simulator", None))
 
 

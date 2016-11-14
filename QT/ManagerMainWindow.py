@@ -7,6 +7,9 @@ from Manager_DB import ManagerPortfolio, ManagerCompany
 from QT import HelperFunctionQt
 from QT.Singleton import Singleton
 
+dict_type_simulation = {'Technical Analysis': 'technical_analysis_windows', 'By Low Set High': 'by_low_set_high',
+                        'Global Ranking': 'global_ranking', '1$ For Each Company': ''}
+
 
 class ManagerMainWindow(Ui_MainWindow):
     def setup_size_fixed(self):
@@ -49,6 +52,8 @@ class ManagerMainWindow(Ui_MainWindow):
         HelperFunctionQt.set_min_max_slider_layout(self.verticalLayout_right_2)
         # Set min max datetime Simulator
         self.get_min_max_date_historic()
+        # Add items of combobox type_simulation who be in list_type_simulation
+        self.comboBox_typeSimulation.addItems(sorted(list(dict_type_simulation.keys())))
 
     def create_data_table_stock_screener(self):
         """
@@ -149,6 +154,12 @@ class ManagerMainWindow(Ui_MainWindow):
         # connect min max datetime
         self.dateEdit_simulatorFrom.dateTimeChanged.connect(self.dateEdit_simulatorTo.setMinimumDateTime)
         self.dateEdit_simulatorTo.dateTimeChanged.connect(self.dateEdit_simulatorFrom.setMaximumDateTime)
+        # btn for open pop-up to set params within type simulator selected
+        self.btn_setParamsSimulation.clicked.connect(Slots.open_windows_setting_params_simulation)
+        # btn for start simulation
+        self.btn_startSimulation.clicked.connect(Slots.start_simulation)
+        # btn for show report of simulation
+        self.btn_showReport.clicked.connect(Slots.show_report)
 
     def create_combobox_portfolio(self, tab_widget_name, combobox_name):
         """
@@ -432,6 +443,22 @@ class Slots:
         HelperFunctionQt.select_deselect_combobox_layout(ui.verticalLayout_left_2, QtCore.Qt.Unchecked)
         HelperFunctionQt.select_deselect_combobox_layout(ui.verticalLayout_right_2, QtCore.Qt.Unchecked)
 
+    # TODO: to completed
+    @staticmethod
+    def open_windows_setting_params_simulation():
+        print('Open pop-up to set params type simulation selected')
+        type_simulation_selected = ui.comboBox_typeSimulation.currentText()
+        print(type_simulation_selected)
+
+    # TODO: to completed
+    @staticmethod
+    def start_simulation():
+        print('Start simulation')
+
+    # TODO: to completed
+    @staticmethod
+    def show_report():
+        print('Show report simulation')
 
 if __name__ == "__main__":
     import sys

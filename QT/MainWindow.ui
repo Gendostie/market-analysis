@@ -42,7 +42,7 @@
      </size>
     </property>
     <property name="currentIndex">
-     <number>0</number>
+     <number>2</number>
     </property>
     <widget class="QWidget" name="tab_stockScreener">
      <attribute name="title">
@@ -7236,13 +7236,8 @@
         </size>
        </property>
        <property name="currentText" stdset="0">
-        <string>Test</string>
+        <string/>
        </property>
-       <item>
-        <property name="text">
-         <string>Test</string>
-        </property>
-       </item>
       </widget>
      </widget>
     </widget>
