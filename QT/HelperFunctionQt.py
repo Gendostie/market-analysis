@@ -382,7 +382,7 @@ def calculate_global_ranking(list_company, dict_params):
     # Sum ranking params of company
     for param in dict_params:
         cpt = 1
-        param_value_company = df_company[param].sort_values(ascending=False)
+        param_value_company = pd.to_numeric(df_company[param], errors='ignore').sort_values(ascending=False)
         for symbol in param_value_company.keys():
             dict_ranking_company[symbol] += cpt
             cpt += 1
