@@ -2215,7 +2215,6 @@ class Ui_MainWindow(object):
         self.comboBox_typeSimulation.setMinimumSize(QtCore.QSize(230, 30))
         self.comboBox_typeSimulation.setMaximumSize(QtCore.QSize(240, 30))
         self.comboBox_typeSimulation.setEditable(False)
-        self.comboBox_typeSimulation.setCurrentText(_fromUtf8(""))
         self.comboBox_typeSimulation.setObjectName(_fromUtf8("comboBox_typeSimulation"))
         self.doubleSpinBox_valuePortfolio = QtGui.QDoubleSpinBox(self.frame_2)
         self.doubleSpinBox_valuePortfolio.setGeometry(QtCore.QRect(124, 7, 130, 25))
@@ -2267,7 +2266,7 @@ class Ui_MainWindow(object):
         MainWindow.setStatusBar(self.statusbar)
 
         self.retranslateUi(MainWindow)
-        self.tab.setCurrentIndex(2)
+        self.tab.setCurrentIndex(0)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
         MainWindow.setTabOrder(self.tab, self.checkBox_income)
         MainWindow.setTabOrder(self.checkBox_income, self.horizontalSlider_min_income)
