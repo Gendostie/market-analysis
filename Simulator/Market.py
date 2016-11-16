@@ -17,7 +17,7 @@ class Market:
         self.end_date = end
 
         # Get the list of all business days
-        self.business_days = self.get_business_days()
+        self.business_days = self.__get_business_days()
 
         # Charge the data for the first day
         self.df_market = self.__load_all_data()
@@ -129,7 +129,7 @@ class Market:
 
         return pd.DataFrame.from_dict(list_results)
 
-    def get_business_days(self):
+    def __get_business_days(self):
         """Load a dictionary with all business days of the simulation.
 
         :return: A dictionary. {Key: Year ; Value: Dict{Key: Month ; Value: List[Business days]}}
