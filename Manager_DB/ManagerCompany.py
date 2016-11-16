@@ -375,7 +375,7 @@ def get_minimum_maximum_value_date_daily(db=None):
     query = """SELECT MIN(date_daily_value), MAX(date_daily_value) FROM daily_value"""
     return db.select_in_db(query)[0]
 
-print(get_minimum_maximum_value_date_daily())
+
 #######################################################################################################################
 #                                                                                                                     #
 #                                                                                                                     #
