@@ -285,7 +285,6 @@ class Slots:
         """
         table_widget = ui.tableWidget_stockScreener
 
-        # TODO: Check if OK to do that
         # When a click is made on a column's name, a sorting is done. We are changing the indicator in MainWindow
         # accordingly. The ValueTableItems that we are using use that indicator to adjust their comparison's algorithms.
         if table_widget.horizontalHeader().sortIndicatorOrder() == 0:
