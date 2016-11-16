@@ -158,7 +158,7 @@ class Market:
         Require the initialization of self.business_day with the function get_business_days().
 
         :param date: The date that we want to check.
-        :type date: datetime
+        :type date: datetime.datetime
         :return: True if it's a business day. False otherwise.
         :rtype: bool
         """
@@ -180,4 +180,3 @@ class Market:
             return True
         else:
             return False
-

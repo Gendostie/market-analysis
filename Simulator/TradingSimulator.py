@@ -1,6 +1,6 @@
 import configparser
 from DbConnection import DbConnection
-from market import Market
+from Market import Market
 
 
 def main_simulator(initial_value, transaction_cost, begin=None, end=None):
@@ -27,7 +27,7 @@ def main_simulator(initial_value, transaction_cost, begin=None, end=None):
         cpt = 0
         flag = market.next()
         while flag:
-            cpt +=1
+            cpt += 1
             if cpt == 100:
                 cpt = 0
                 print(market.get_current_date())
@@ -45,6 +45,7 @@ def get_max_trading_date(db):
     return db.select_in_db(query)[0][0]
 
 
+# TODO: ONLY FOR TESTING
 def get_min_trading_date(db):
     query = """SELECT MIN(date_daily_value) FROM daily_value;"""
     return db.select_in_db(query)[0][0]

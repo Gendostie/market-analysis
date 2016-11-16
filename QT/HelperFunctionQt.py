@@ -415,4 +415,3 @@ def get_min_max_layout_checked(layout):
             max_val = get_widget_of_layout(layout.itemAt(idx_layout), QtGui.QDoubleSpinBox, 1).text()
             dict_min_max[name_attr] = {'min': float(min_val.replace(',', '.')), 'max': float(max_val.replace(',', '.'))}
     return dict_min_max
-
