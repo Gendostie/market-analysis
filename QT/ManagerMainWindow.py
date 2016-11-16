@@ -3,6 +3,7 @@
 from PyQt4 import QtCore, QtGui
 
 from QT.MainWindow import Ui_MainWindow
+from QT.ManagerTest import ManagerTest
 from Manager_DB import ManagerPortfolio, ManagerCompany
 from QT import HelperFunctionQt
 from QT.Singleton import Singleton
@@ -449,6 +450,13 @@ class Slots:
         print('Open pop-up to set params type simulation selected')
         type_simulation_selected = ui.comboBox_typeSimulation.currentText()
         print(type_simulation_selected)
+        Dialog = QtGui.QDialog()
+        dl = ManagerTest()
+        dl.setupUi(Dialog)
+        # dl.buttonBox.accepted.connect(Slots.get_value_params)
+
+        if Dialog.exec():
+            print(dl.get_values())
 
     # TODO: to completed
     @staticmethod
@@ -459,6 +467,11 @@ class Slots:
     @staticmethod
     def show_report():
         print('Show report simulation')
+
+    # TODO: to completed
+    @staticmethod
+    def get_value_params():
+        print(0)
 
 if __name__ == "__main__":
     import sys
