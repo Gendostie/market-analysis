@@ -7020,7 +7020,7 @@
         </size>
        </property>
        <property name="text">
-        <string>Value portfolio</string>
+        <string>Value Portfolio</string>
        </property>
       </widget>
       <widget class="QDateEdit" name="dateEdit_simulatorFrom">
@@ -7139,7 +7139,7 @@
         </size>
        </property>
        <property name="text">
-        <string>Type simulation</string>
+        <string>Type Simulation</string>
        </property>
       </widget>
       <widget class="QComboBox" name="comboBox_typeSimulation">
@@ -7166,7 +7166,7 @@
        <property name="editable">
         <bool>false</bool>
        </property>
-       <property name="currentText" stdset="0">
+       <property name="currentText">
         <string/>
        </property>
       </widget>
@@ -7207,7 +7207,7 @@
         <double>99999999.989999994635582</double>
        </property>
        <property name="value">
-        <double>99999999.989999994635582</double>
+        <double>0.000000000000000</double>
        </property>
       </widget>
       <widget class="QLabel" name="label_2">
@@ -7232,27 +7232,27 @@
         </size>
        </property>
        <property name="text">
-        <string>Transaction fee</string>
+        <string>Transaction Fee</string>
        </property>
       </widget>
-      <widget class="QDoubleSpinBox" name="doubleSpinBox">
+      <widget class="QDoubleSpinBox" name="doubleSpinBox_transactioFee">
        <property name="geometry">
         <rect>
          <x>488</x>
          <y>7</y>
-         <width>90</width>
+         <width>80</width>
          <height>25</height>
         </rect>
        </property>
        <property name="minimumSize">
         <size>
-         <width>90</width>
+         <width>80</width>
          <height>25</height>
         </size>
        </property>
        <property name="maximumSize">
         <size>
-         <width>90</width>
+         <width>80</width>
          <height>25</height>
         </size>
        </property>
@@ -7263,14 +7263,46 @@
         <enum>QAbstractSpinBox::NoButtons</enum>
        </property>
        <property name="suffix">
-        <string> $</string>
+        <string/>
        </property>
        <property name="maximum">
-        <double>9999.989999999999782</double>
+        <double>999.990000000000009</double>
        </property>
        <property name="value">
-        <double>9999.989999999999782</double>
+        <double>0.000000000000000</double>
        </property>
+      </widget>
+      <widget class="QComboBox" name="comboBox_percentDollar">
+       <property name="geometry">
+        <rect>
+         <x>570</x>
+         <y>7</y>
+         <width>40</width>
+         <height>25</height>
+        </rect>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>40</width>
+         <height>25</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>40</width>
+         <height>25</height>
+        </size>
+       </property>
+       <item>
+        <property name="text">
+         <string>$</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>%</string>
+        </property>
+       </item>
       </widget>
      </widget>
      <widget class="QPushButton" name="btn_startSimulation">
@@ -7307,7 +7339,7 @@
      <x>0</x>
      <y>0</y>
      <width>1280</width>
-     <height>21</height>
+     <height>31</height>
     </rect>
    </property>
   </widget>

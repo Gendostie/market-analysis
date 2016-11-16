@@ -197,7 +197,7 @@ class ManagerMainWindow(Ui_MainWindow):
         return dict_min_max
 
     def get_min_max_date_historic(self):
-        min_datetime, max_datetime = ManagerCompany.get_minimum_maximum_value_date_historical()
+        min_datetime, max_datetime = ManagerCompany.get_minimum_maximum_value_date_daily()
         self.dateEdit_simulatorFrom.setDateTimeRange(QtCore.QDateTime(min_datetime), QtCore.QDateTime(max_datetime))
         self.dateEdit_simulatorTo.setDateTimeRange(QtCore.QDateTime(min_datetime), QtCore.QDateTime(max_datetime))
         self.dateEdit_simulatorTo.setDateTime(QtCore.QDateTime(max_datetime))

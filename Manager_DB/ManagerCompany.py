@@ -361,7 +361,7 @@ def get_maximum_value_calculation(name_calculation, db=None):
         return 0
 
 
-def get_minimum_maximum_value_date_historical(db=None):
+def get_minimum_maximum_value_date_daily(db=None):
     """
     Get datetime min and max in table historical of db
     :param db: if we have already connexion in other function who cal this function
@@ -371,16 +371,11 @@ def get_minimum_maximum_value_date_historical(db=None):
     """
     if not db or type(db) is not DbConnection:
         db = DbConnection(HOST, USER, PASSWORD, DATABASE)
-    result = ()
-    # min datetime
-    query = """SELECT MIN(date_historic_value) FROM historic_value"""
-    result += (db.select_in_db(query)[0][0],)
-    # max datetime
-    query = """SELECT MAX(date_historic_value) FROM historic_value"""
-    result += (db.select_in_db(query)[0][0],)
-    return result
 
+    query = """SELECT MIN(date_daily_value), MAX(date_daily_value) FROM daily_value"""
+    return db.select_in_db(query)[0]
 
+print(get_minimum_maximum_value_date_daily())
 #######################################################################################################################
 #                                                                                                                     #
 #                                                                                                                     #
