@@ -3,6 +3,7 @@ from datetime import timedelta
 
 
 class Market:
+    # TODO: To complete in the end
     """Class that encapsulate information about the market between two dates in the past.
 
     The class is initiated with a starting and ending date. It keeps the current date of the simulation.

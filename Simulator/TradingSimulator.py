@@ -1,9 +1,10 @@
 import configparser
 from DbConnection import DbConnection
 from Market import Market
+from Broker import Broker, flat_fee_commission, percent_commission
 
 
-def main_simulator(initial_value, transaction_cost, begin=None, end=None):
+def main_simulator(initial_liquidity, transaction_cost, begin=None, end=None):
         # Open a database connection for the queries
         config = configparser.ConfigParser()
         config.read('../config.ini')
@@ -17,9 +18,12 @@ def main_simulator(initial_value, transaction_cost, begin=None, end=None):
             begin = get_min_trading_date(db)
         if end is None:
             end = get_max_trading_date(db)
-        market = Market(begin, end, db)
 
         # TODO: ONLY FOR TESTING
+        broker = Broker(initial_liquidity, Market(begin, end, db),
+                        percent_commission(2), percent_commission(2.5))
+
+        """
         market.debug_print()
         print(market.get_price("ZTS"))
         print(market.sell("ZTS", 1))
@@ -36,6 +40,7 @@ def main_simulator(initial_value, transaction_cost, begin=None, end=None):
         print(market.get_price("ZTS"))
         print(market.sell("ZTS", 1))
         print(market.sell("ZTS", 100))
+        """
         # TODO: ONLY FOR TESTING
 
 
@@ -45,7 +50,6 @@ def get_max_trading_date(db):
     return db.select_in_db(query)[0][0]
 
 
-# TODO: ONLY FOR TESTING
 def get_min_trading_date(db):
     query = """SELECT MIN(date_daily_value) FROM daily_value;"""
     return db.select_in_db(query)[0][0]
