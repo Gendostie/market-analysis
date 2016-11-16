@@ -5,7 +5,10 @@ from PyQt4 import QtCore, QtGui
 from QT.MainWindow import Ui_MainWindow
 from Manager_DB import ManagerPortfolio, ManagerCompany
 from QT import HelperFunctionQt
-from QT.Singleton import singleton
+from QT.Singleton import Singleton
+
+dict_type_simulation = {'Technical Analysis': 'technical_analysis_windows', 'By Low Set High': 'by_low_set_high',
+                        'Global Ranking': 'global_ranking', '1$ For Each Company': ''}
 
 
 class ManagerMainWindow(Ui_MainWindow):
@@ -17,6 +20,9 @@ class ManagerMainWindow(Ui_MainWindow):
         # fixed size main window
         MainWindow.setMaximumSize(MainWindow.size())
         MainWindow.setMinimumSize(MainWindow.size())
+        # adjust size tab
+        self.tab.setMinimumSize(self.tab.size())
+        self.tab.setMaximumSize(self.tab.size())
         # adjust column of table widget
         self.tableWidget_stockScreener.horizontalHeader().setResizeMode(QtGui.QHeaderView.ResizeToContents)
         self.tableWidget_portfolio.horizontalHeader().setResizeMode(QtGui.QHeaderView.ResizeToContents)
@@ -26,9 +32,12 @@ class ManagerMainWindow(Ui_MainWindow):
         Setup for widget already in MainWindow.ui to modify
         :return: None
         """
-        self.set_min_max()
-        self.create_data_table_stock_screener()
         # Stock Screener
+        # Set min max criteria Stock Screener
+        HelperFunctionQt.set_min_max_slider_layout(self.verticalLayout_left)
+        HelperFunctionQt.set_min_max_slider_layout(self.verticalLayout_right)
+        self.create_data_table_stock_screener()
+        # Add placeholder to combobox portfolio Stock screener
         self.comboBox_stockScreener_portfolio.lineEdit().setPlaceholderText("Choose your portfolio name.")
         self.create_combobox_portfolio('tab_stockScreener', 'comboBox_stockScreener_portfolio')
         # Portfolio Manager
@@ -37,6 +46,14 @@ class ManagerMainWindow(Ui_MainWindow):
         if self.comboBox_portfolioManager_portfolio.count() > 0:
             self.refresh_data_table_portfolio()
         self.create_combobox_company_portfolio_manager()
+        # Simulator
+        # Set min max criteria Simulator
+        HelperFunctionQt.set_min_max_slider_layout(self.verticalLayout_left_2)
+        HelperFunctionQt.set_min_max_slider_layout(self.verticalLayout_right_2)
+        # Set min max datetime Simulator
+        self.get_min_max_date_historic()
+        # Add items of combobox type_simulation who be in list_type_simulation
+        self.comboBox_typeSimulation.addItems(sorted(list(dict_type_simulation.keys())))
 
     def create_data_table_stock_screener(self):
         """
@@ -46,20 +63,22 @@ class ManagerMainWindow(Ui_MainWindow):
         list_column_table = ['company_name', 'symbol', 'Revenue (Mil)', 'Net Income (Mil)',
                              'Gross Margin (%)', 'Dividends',
                              'Div. Yield (%)', 'EPS', 'P/E Ratio',
-                             'BVPS', 'P/B Ratio', 'FCFPS', 'Close', '52wk (%)']
+                             'BVPS', 'P/B Ratio', 'FCFPS', 'Close', '52wk (%)', 'Global Ranking']
 
-        list_cie = ManagerCompany.get_historic_value_all_company()
-        dict_params = ui.get_all_min_max()
+        dict_company = ManagerCompany.get_historic_value_all_company()
+        dict_params = self.get_all_min_max_criteria(self.horizontalLayout)
 
-        list_company = HelperFunctionQt.reduce_table(list_cie, dict_params)
-        print("Number of rows: {}".format(len(list_company)))
+        max_nb_company = len(dict_company)
+        dict_company = HelperFunctionQt.reduce_table(dict_company, dict_params)
+        dict_company = HelperFunctionQt.calculate_global_ranking(dict_company, dict_params)
+        self.lineEdit_nb_company.setText('%s/%s' % (str(len(dict_company)), str(max_nb_company)))
 
-        if self.tableWidget_stockScreener.rowCount() < len(list_company):
-            self.tableWidget_stockScreener.setRowCount(len(list_company))
+        if self.tableWidget_stockScreener.rowCount() < len(dict_company):
+            self.tableWidget_stockScreener.setRowCount(len(dict_company))
 
         sorting_enable = self.tableWidget_stockScreener.isSortingEnabled()
         self.tableWidget_stockScreener.setSortingEnabled(False)
-        for idx_row, company in enumerate(list_company):
+        for idx_row, company in enumerate(dict_company):
             for key in company.keys():
                 try:
                     idx_column = list_column_table.index(key)
@@ -127,6 +146,21 @@ class ManagerMainWindow(Ui_MainWindow):
         # delete companies selected of portfolio current
         self.btn_portfolio_delete_company_selected.clicked.connect(Slots.deleted_company_selected_table_portfolio)
 
+        # Simulator
+        # btn select criteria Simulator
+        self.btn_selectAllCriteria_2.clicked.connect(Slots.select_all_criteria_simulator)
+        # btn deselect criteria Simulator
+        self.btn_deselectAllCriteria_2.clicked.connect(Slots.deselect_all_criteria_simulator)
+        # connect min max datetime
+        self.dateEdit_simulatorFrom.dateTimeChanged.connect(self.dateEdit_simulatorTo.setMinimumDateTime)
+        self.dateEdit_simulatorTo.dateTimeChanged.connect(self.dateEdit_simulatorFrom.setMaximumDateTime)
+        # btn for open pop-up to set params within type simulator selected
+        self.btn_setParamsSimulation.clicked.connect(Slots.open_windows_setting_params_simulation)
+        # btn for start simulation
+        self.btn_startSimulation.clicked.connect(Slots.start_simulation)
+        # btn for show report of simulation
+        self.btn_showReport.clicked.connect(Slots.show_report)
+
     def create_combobox_portfolio(self, tab_widget_name, combobox_name):
         """
         Add portfolio name of DB in combo box chosen
@@ -143,31 +177,30 @@ class ManagerMainWindow(Ui_MainWindow):
         for dict_portfolio in list_portfolio:
             cb.addItem(dict_portfolio.get('name'))
 
-    def set_min_max(self):
-        # TODO : Add comment
-        HelperFunctionQt.set_min_max_slider_layout(self.verticalLayout_left)
-        HelperFunctionQt.set_min_max_slider_layout(self.verticalLayout_right)
-
-    def get_all_min_max(self):
-        # TODO : Add comment
+    @staticmethod
+    def get_all_min_max_criteria(horizontal_layout):
+        """
+        Get all min and max checked in layout horizontal criteria who content vertical layout left and right for
+        tab Stock Screener or Portfolio Manager
+        :param horizontal_layout: layout horizontal criteria who content vertical layout left and right
+        :type horizontal_layout: QtGui.QBoxLayout
+        :return: dict of criteria checked
+        :rtype: dict{dict}
+        """
         dict_min_max = {}
-        layout_left = self.verticalLayout_left
-        for idx_layout in range(layout_left.count()):
-            if HelperFunctionQt.get_widget_of_layout(layout_left.itemAt(idx_layout), QtGui.QCheckBox).isChecked():
-                name_attr = HelperFunctionQt.get_widget_of_layout(layout_left.itemAt(idx_layout), QtGui.QCheckBox).text()
-                min_val = HelperFunctionQt.get_widget_of_layout(layout_left.itemAt(idx_layout), QtGui.QDoubleSpinBox).text()
-                max_val = HelperFunctionQt.get_widget_of_layout(layout_left.itemAt(idx_layout), QtGui.QDoubleSpinBox, 1).text()
-                dict_min_max[name_attr] = {'min': float(min_val.replace(',', '.')), 'max': float(max_val.replace(',', '.'))}
-
-        layout_right = self.verticalLayout_right
-        for idx_layout in range(layout_right.count()):
-            if HelperFunctionQt.get_widget_of_layout(layout_right.itemAt(idx_layout), QtGui.QCheckBox).isChecked():
-                name_attr = HelperFunctionQt.get_widget_of_layout(layout_right.itemAt(idx_layout), QtGui.QCheckBox).text()
-                min_val = HelperFunctionQt.get_widget_of_layout(layout_right.itemAt(idx_layout), QtGui.QDoubleSpinBox).text()
-                max_val = HelperFunctionQt.get_widget_of_layout(layout_right.itemAt(idx_layout), QtGui.QDoubleSpinBox, 1).text()
-                dict_min_max[name_attr] = {'min': float(min_val.replace(',', '.')), 'max': float(max_val.replace(',', '.'))}
-
+        # layout left
+        layout = HelperFunctionQt.get_widget_of_layout(horizontal_layout, QtGui.QLayout)
+        dict_min_max.update(HelperFunctionQt.get_min_max_layout_checked(layout))
+        # layout right
+        layout = HelperFunctionQt.get_widget_of_layout(horizontal_layout, QtGui.QLayout, 1)
+        dict_min_max.update(HelperFunctionQt.get_min_max_layout_checked(layout))
         return dict_min_max
+
+    def get_min_max_date_historic(self):
+        min_datetime, max_datetime = ManagerCompany.get_minimum_maximum_value_date_daily()
+        self.dateEdit_simulatorFrom.setDateTimeRange(QtCore.QDateTime(min_datetime), QtCore.QDateTime(max_datetime))
+        self.dateEdit_simulatorTo.setDateTimeRange(QtCore.QDateTime(min_datetime), QtCore.QDateTime(max_datetime))
+        self.dateEdit_simulatorTo.setDateTime(QtCore.QDateTime(max_datetime))
 
     def create_combobox_company_portfolio_manager(self):
         list_company = ManagerCompany.get_snp500()
@@ -255,9 +288,9 @@ class Slots:
         # When a click is made on a column's name, a sorting is done. We are changing the indicator in MainWindow
         # accordingly. The ValueTableItems that we are using use that indicator to adjust their comparison's algorithms.
         if table_widget.horizontalHeader().sortIndicatorOrder() == 0:
-            singleton.set_order(singleton(), True)
+            Singleton.set_order(Singleton(), True)
         else:
-            singleton.set_order(singleton(), False)
+            Singleton.set_order(Singleton(), False)
 
         if column == table_widget.columnCount() - 1:
             HelperFunctionQt.sorted_column_checkbox_table_widget(table_widget)
@@ -391,6 +424,40 @@ class Slots:
         ui.tableWidget_stockScreener.setRowCount(0)
         ui.create_data_table_stock_screener()
 
+    @staticmethod
+    def select_all_criteria_simulator():
+        """
+        Select all criteria of stock screener
+        :return: None
+        """
+        HelperFunctionQt.select_deselect_combobox_layout(ui.verticalLayout_left_2, QtCore.Qt.Checked)
+        HelperFunctionQt.select_deselect_combobox_layout(ui.verticalLayout_right_2, QtCore.Qt.Checked)
+
+    @staticmethod
+    def deselect_all_criteria_simulator():
+        """
+        Deselect all criteria of stock screener
+        :return: None
+        """
+        HelperFunctionQt.select_deselect_combobox_layout(ui.verticalLayout_left_2, QtCore.Qt.Unchecked)
+        HelperFunctionQt.select_deselect_combobox_layout(ui.verticalLayout_right_2, QtCore.Qt.Unchecked)
+
+    # TODO: to completed
+    @staticmethod
+    def open_windows_setting_params_simulation():
+        print('Open pop-up to set params type simulation selected')
+        type_simulation_selected = ui.comboBox_typeSimulation.currentText()
+        print(type_simulation_selected)
+
+    # TODO: to completed
+    @staticmethod
+    def start_simulation():
+        print('Start simulation')
+
+    # TODO: to completed
+    @staticmethod
+    def show_report():
+        print('Show report simulation')
 
 if __name__ == "__main__":
     import sys

@@ -1,12 +1,14 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
+import pandas as pd
 from PyQt4 import QtCore, QtGui
+import configparser
 
 from MainWindow import _translate
 from Manager_DB import ManagerPortfolio, ManagerCompany
 from Manager_DB.DbConnection import DbConnection
 from QT import ValueTableItem
-import configparser
+from Singleton import divide
 
 
 def get_row_table_widget(table_widget, idx_row):
@@ -248,11 +250,14 @@ def create_new_cell_item_table_widget(table_widget, idx_row, idx_column, value):
     :return: None
     """
     # create new row
-    cell = ValueTableItem.value_tableitem()
+    cell = ValueTableItem.ValueTableItem()
     # we don't want user can change value of cell in table QtCore.Qt.ItemIsEditable
     cell.setFlags(QtCore.Qt.ItemIsUserCheckable | QtCore.Qt.ItemIsEnabled)
 
     value = value if value is not None else ""
+    if idx_column > 1:
+        cell.setTextAlignment(QtCore.Qt.AlignRight + QtCore.Qt.AlignVCenter)
+
     cell.setText(_translate("MainWindow", str(value), None))
     table_widget.setItem(idx_row, idx_column, cell)
 
@@ -312,14 +317,16 @@ def sorted_column_checkbox_table_widget(table_widget):
 
 def delete_companies_to_portfolio_db(portfolio_id, list_company):
     """
-
-    :param portfolio_id:
-    :param list_company:
-    :return:
+    Delete companies checked in table portfolio for deleted of bd for a portfolio_id specific
+    :param portfolio_id: id of portfolio
+    :type portfolio_id: int
+    :param list_company: list of companies checked to deleted
+    :type list_company: list[str]
+    :return: None
     """
     # delete companies to portfolio in db
-    nb_company_added = ManagerPortfolio.delete_companies_to_portfolio(portfolio_id, list_company)
-    print("Nb company added: %s" % nb_company_added)
+    nb_company_deleted = ManagerPortfolio.delete_companies_to_portfolio(portfolio_id, list_company)
+    print("Nb company deleted: %s" % nb_company_deleted)
 
 
 def reduce_table(list_cie, dict_param):
@@ -345,3 +352,67 @@ def reduce_table(list_cie, dict_param):
             new_list_company.append(cie)
 
     return new_list_company
+
+
+def calculate_global_ranking(list_company, dict_params):
+    """
+    Calculate global ranking for company
+    :param list_company: list value for all company s&p500
+    :type list_company: list[dict]
+    :param dict_params: list criteria selected
+    :type dict_params: dict[dict]
+    :return: list value for all company s&p500 with adding global ranking
+    :rtype: list[dict]
+    """
+    # Check if we have company
+    if len(list_company) > 0:
+        df_company = pd.DataFrame.from_dict(list_company).set_index(['symbol'])
+    else:
+        return list_company
+
+    # init dict ranking
+    dict_ranking_company = {}
+    for symbol in df_company.axes[0]:
+        dict_ranking_company[symbol] = 0
+
+    # Delete param Close if exists
+    if dict_params.get('Close'):
+        dict_params.pop('Close')
+
+    # Sum ranking params of company
+    for param in dict_params:
+        cpt = 1
+        param_value_company = pd.to_numeric(df_company[param], errors='ignore').sort_values(ascending=False)
+        for symbol in param_value_company.keys():
+            dict_ranking_company[symbol] += cpt
+            cpt += 1
+
+    # Means of sum ranking and put in list_ci
+    for company in list_company:
+        global_ranking = 0
+        if len(dict_params) != 0:
+            global_ranking = divide(dict_ranking_company[company['symbol']], len(dict_params))
+        if 0 <= float(global_ranking) <= len(list_company):
+            company['Global Ranking'] = global_ranking
+        else:
+            print('Global ranking out range: %s, max: %s' % (global_ranking, len(list_company)))
+    return list_company
+
+
+def get_min_max_layout_checked(layout):
+    """
+    Get min and max checked in layout left or right
+    :param layout: layout left or right
+    :type layout: QtGui.QBoxLayout
+    :return: dict of min max of layout
+    :rtype: dict
+    """
+    dict_min_max = {}
+    for idx_layout in range(layout.count()):
+        if get_widget_of_layout(layout.itemAt(idx_layout), QtGui.QCheckBox).isChecked():
+            name_attr = get_widget_of_layout(layout.itemAt(idx_layout), QtGui.QCheckBox).text()
+            min_val = get_widget_of_layout(layout.itemAt(idx_layout), QtGui.QDoubleSpinBox).text()
+            max_val = get_widget_of_layout(layout.itemAt(idx_layout), QtGui.QDoubleSpinBox, 1).text()
+            dict_min_max[name_attr] = {'min': float(min_val.replace(',', '.')), 'max': float(max_val.replace(',', '.'))}
+    return dict_min_max
+
