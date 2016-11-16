@@ -1,17 +1,21 @@
-class singleton:
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+
+
+class Singleton:
     _instance = None
 
-    class order_manager:
+    class OrderManager:
         def __init__(self):
             self.is_descending = False
 
     def __init__(self):
-        self._instance = self.order_manager()
+        self._instance = self.OrderManager()
 
     def __new__(cls):
-        if not singleton._instance:
-            singleton._instance = cls.order_manager()
-        return singleton._instance
+        if not Singleton._instance:
+            Singleton._instance = cls.OrderManager()
+        return Singleton._instance
 
     def get_order(self):
         return self.is_descending
@@ -26,3 +30,4 @@ def divide(num, denom, mult=1):
         return None
     else:
         return "{0:.2f}".format(num/denom*mult)
+
