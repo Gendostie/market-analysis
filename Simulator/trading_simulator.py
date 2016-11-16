@@ -1,5 +1,4 @@
 import configparser
-from datetime import datetime
 from DbConnection import DbConnection
 from Simulator.market import Market
 
@@ -42,14 +41,12 @@ def main_simulator(initial_value, transaction_cost, begin=None, end=None):
 
 def get_max_trading_date(db):
     query = """SELECT MAX(date_daily_value) FROM daily_value;"""
-    date = db.select_in_db(query)[0][0]
-    return datetime(date.year, date.month, date.day)
+    return db.select_in_db(query)[0][0]
 
 
 def get_min_trading_date(db):
     query = """SELECT MIN(date_daily_value) FROM daily_value;"""
-    date = db.select_in_db(query)[0][0]
-    return datetime(date.year, date.month, date.day)
+    return db.select_in_db(query)[0][0]
 
 if __name__ == "__main__":
     main_simulator(1000, 20)
