@@ -2240,7 +2240,7 @@ class Ui_MainWindow(object):
         self.doubleSpinBox_transactioFee.setButtonSymbols(QtGui.QAbstractSpinBox.NoButtons)
         self.doubleSpinBox_transactioFee.setSuffix(_fromUtf8(""))
         self.doubleSpinBox_transactioFee.setMaximum(999.99)
-        self.doubleSpinBox_transactioFee.setProperty("value", 999.99)
+        self.doubleSpinBox_transactioFee.setProperty("value", 0.0)
         self.doubleSpinBox_transactioFee.setObjectName(_fromUtf8("doubleSpinBox_transactioFee"))
         self.comboBox_percentDollar = QtGui.QComboBox(self.frame_2)
         self.comboBox_percentDollar.setGeometry(QtCore.QRect(570, 7, 40, 25))
