@@ -42,7 +42,7 @@
      </size>
     </property>
     <property name="currentIndex">
-     <number>2</number>
+     <number>0</number>
     </property>
     <widget class="QWidget" name="tab_stockScreener">
      <attribute name="title">
@@ -7165,9 +7165,6 @@
        </property>
        <property name="editable">
         <bool>false</bool>
-       </property>
-       <property name="currentText">
-        <string/>
        </property>
       </widget>
       <widget class="QDoubleSpinBox" name="doubleSpinBox_valuePortfolio">
