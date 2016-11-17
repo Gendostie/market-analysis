@@ -63,7 +63,7 @@ class ManagerMainWindow(Ui_MainWindow):
         list_column_table = ['company_name', 'symbol', 'Revenue (Mil)', 'Net Income (Mil)',
                              'Gross Margin (%)', 'Dividends',
                              'Div. Yield (%)', 'EPS', 'P/E Ratio',
-                             'BVPS', 'P/B Ratio', 'FCFPS', 'Close', '52wk (%)', 'Global Ranking']
+                             'BVPS', 'P/B Ratio', 'FCFPS', 'Adj. Close', '52wk (%)', 'Global Ranking']
 
         dict_company = ManagerCompany.get_historic_value_all_company()
         dict_params = self.get_all_min_max_criteria(self.horizontalLayout)

@@ -189,7 +189,7 @@ def set_min_max_slider_layout(layout):
                  'EPS': "earning_per_share_usd",
                  'BVPS': "book_value_per_share_usd",
                  'FCFPS': "free_cash_flow_per_share_usd",
-                 'Close': "close_val",
+                 'Adj. Close': "close_val",
                  'Div. Yield (%)': "dividend_yield",
                  'P/E Ratio': "p_e_ratio",
                  'P/B Ratio': "p_b_ratio",
@@ -201,7 +201,7 @@ def set_min_max_slider_layout(layout):
         if name_attr in list_histo:
             min_val = ManagerCompany.get_minimum_value_historical(dict_name[name_attr], db)
             max_val = ManagerCompany.get_maximum_value_historical(dict_name[name_attr], db)
-        elif name_attr == 'Close':
+        elif name_attr == 'Adj. Close':
             min_val = ManagerCompany.get_minimum_value_daily(dict_name[name_attr], db)
             max_val = ManagerCompany.get_maximum_value_daily(dict_name[name_attr], db)
         elif name_attr in list_calc:
@@ -376,8 +376,8 @@ def calculate_global_ranking(list_company, dict_params):
         dict_ranking_company[symbol] = 0
 
     # Delete param Close if exists
-    if dict_params.get('Close'):
-        dict_params.pop('Close')
+    if dict_params.get('Adj. Close'):
+        dict_params.pop('Adj. Close')
 
     # Sum ranking params of company
     for param in dict_params:
