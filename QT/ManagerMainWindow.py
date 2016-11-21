@@ -64,7 +64,7 @@ class ManagerMainWindow(Ui_MainWindow):
         list_column_table = ['company_name', 'symbol', 'Revenue (Mil)', 'Net Income (Mil)',
                              'Gross Margin (%)', 'Dividends',
                              'Div. Yield (%)', 'EPS', 'P/E Ratio',
-                             'BVPS', 'P/B Ratio', 'FCFPS', 'Close', '52wk (%)', 'Global Ranking']
+                             'BVPS', 'P/B Ratio', 'FCFPS', 'Adj. Close', '52wk (%)', 'Global Ranking']
 
         dict_company = ManagerCompany.get_historic_value_all_company()
         dict_params = self.get_all_min_max_criteria(self.horizontalLayout)
@@ -198,7 +198,7 @@ class ManagerMainWindow(Ui_MainWindow):
         return dict_min_max
 
     def get_min_max_date_historic(self):
-        min_datetime, max_datetime = ManagerCompany.get_minimum_maximum_value_date_historical()
+        min_datetime, max_datetime = ManagerCompany.get_minimum_maximum_value_date_daily()
         self.dateEdit_simulatorFrom.setDateTimeRange(QtCore.QDateTime(min_datetime), QtCore.QDateTime(max_datetime))
         self.dateEdit_simulatorTo.setDateTimeRange(QtCore.QDateTime(min_datetime), QtCore.QDateTime(max_datetime))
         self.dateEdit_simulatorTo.setDateTime(QtCore.QDateTime(max_datetime))
@@ -286,7 +286,6 @@ class Slots:
         """
         table_widget = ui.tableWidget_stockScreener
 
-        # TODO: Check if OK to do that
         # When a click is made on a column's name, a sorting is done. We are changing the indicator in MainWindow
         # accordingly. The ValueTableItems that we are using use that indicator to adjust their comparison's algorithms.
         if table_widget.horizontalHeader().sortIndicatorOrder() == 0:

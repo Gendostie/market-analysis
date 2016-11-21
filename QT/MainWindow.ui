@@ -42,7 +42,7 @@
      </size>
     </property>
     <property name="currentIndex">
-     <number>2</number>
+     <number>0</number>
     </property>
     <widget class="QWidget" name="tab_stockScreener">
      <attribute name="title">
@@ -2560,7 +2560,7 @@
             </layout>
            </item>
            <item>
-            <layout class="QHBoxLayout" name="horizontalLayout_close">
+            <layout class="QHBoxLayout" name="horizontalLayout_adjustedClose">
              <property name="spacing">
               <number>0</number>
              </property>
@@ -2574,7 +2574,7 @@
               <number>2</number>
              </property>
              <item>
-              <widget class="QCheckBox" name="checkBox_close">
+              <widget class="QCheckBox" name="checkBox_adjustedClose">
                <property name="minimumSize">
                 <size>
                  <width>102</width>
@@ -2588,12 +2588,12 @@
                 </size>
                </property>
                <property name="text">
-                <string>Close</string>
+                <string>Adj. Close</string>
                </property>
               </widget>
              </item>
              <item>
-              <spacer name="horizontalSpacer_close1">
+              <spacer name="horizontalSpacer_adjustedClose1">
                <property name="orientation">
                 <enum>Qt::Horizontal</enum>
                </property>
@@ -2609,7 +2609,7 @@
               </spacer>
              </item>
              <item>
-              <widget class="QLabel" name="label_min_close">
+              <widget class="QLabel" name="label_min_adjustedClose">
                <property name="minimumSize">
                 <size>
                  <width>25</width>
@@ -2631,7 +2631,7 @@
               </widget>
              </item>
              <item>
-              <widget class="QDoubleSpinBox" name="doubleSpinBox_min_close">
+              <widget class="QDoubleSpinBox" name="doubleSpinBox_min_adjustedClose">
                <property name="sizePolicy">
                 <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
                  <horstretch>0</horstretch>
@@ -2668,7 +2668,7 @@
               </widget>
              </item>
              <item>
-              <widget class="QSlider" name="horizontalSlider_min_close">
+              <widget class="QSlider" name="horizontalSlider_min_adjustedClose">
                <property name="minimumSize">
                 <size>
                  <width>60</width>
@@ -2693,7 +2693,7 @@
               </widget>
              </item>
              <item>
-              <spacer name="horizontalSpacer_close2">
+              <spacer name="horizontalSpacer_adjustedClose2">
                <property name="orientation">
                 <enum>Qt::Horizontal</enum>
                </property>
@@ -2709,7 +2709,7 @@
               </spacer>
              </item>
              <item>
-              <widget class="QLabel" name="label_max_close">
+              <widget class="QLabel" name="label_max_adjustedClose">
                <property name="minimumSize">
                 <size>
                  <width>30</width>
@@ -2731,7 +2731,7 @@
               </widget>
              </item>
              <item>
-              <widget class="QDoubleSpinBox" name="doubleSpinBox_max_close">
+              <widget class="QDoubleSpinBox" name="doubleSpinBox_max_adjustedClose">
                <property name="sizePolicy">
                 <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
                  <horstretch>0</horstretch>
@@ -2765,7 +2765,7 @@
               </widget>
              </item>
              <item>
-              <widget class="QSlider" name="horizontalSlider_max_close">
+              <widget class="QSlider" name="horizontalSlider_max_adjustedClose">
                <property name="minimumSize">
                 <size>
                  <width>60</width>
@@ -3157,7 +3157,7 @@
       </column>
       <column>
        <property name="text">
-        <string>Close</string>
+        <string>Adj. Close</string>
        </property>
       </column>
       <column>
@@ -6417,7 +6417,7 @@
             </layout>
            </item>
            <item>
-            <layout class="QHBoxLayout" name="horizontalLayout_close_2">
+            <layout class="QHBoxLayout" name="horizontalLayout_adjustedClose2">
              <property name="spacing">
               <number>0</number>
              </property>
@@ -6431,7 +6431,7 @@
               <number>2</number>
              </property>
              <item>
-              <widget class="QCheckBox" name="checkBox_close_2">
+              <widget class="QCheckBox" name="checkBox_adjustedClose_2">
                <property name="minimumSize">
                 <size>
                  <width>102</width>
@@ -6445,12 +6445,12 @@
                 </size>
                </property>
                <property name="text">
-                <string>Close</string>
+                <string>Adj. Close</string>
                </property>
               </widget>
              </item>
              <item>
-              <spacer name="horizontalSpacer_close1_2">
+              <spacer name="horizontalSpacer_adjustedClose1_2">
                <property name="orientation">
                 <enum>Qt::Horizontal</enum>
                </property>
@@ -6466,7 +6466,7 @@
               </spacer>
              </item>
              <item>
-              <widget class="QLabel" name="label_min_close_2">
+              <widget class="QLabel" name="label_min_adjustedClose2">
                <property name="minimumSize">
                 <size>
                  <width>25</width>
@@ -6488,7 +6488,7 @@
               </widget>
              </item>
              <item>
-              <widget class="QDoubleSpinBox" name="doubleSpinBox_min_close_2">
+              <widget class="QDoubleSpinBox" name="doubleSpinBox_min_adjustedClose2">
                <property name="sizePolicy">
                 <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
                  <horstretch>0</horstretch>
@@ -6525,7 +6525,7 @@
               </widget>
              </item>
              <item>
-              <widget class="QSlider" name="horizontalSlider_min_close_2">
+              <widget class="QSlider" name="horizontalSlider_min_adjustedClose2">
                <property name="minimumSize">
                 <size>
                  <width>60</width>
@@ -6550,7 +6550,7 @@
               </widget>
              </item>
              <item>
-              <spacer name="horizontalSpacer_close2_2">
+              <spacer name="horizontalSpacer_adjustedClose2_2">
                <property name="orientation">
                 <enum>Qt::Horizontal</enum>
                </property>
@@ -6566,7 +6566,7 @@
               </spacer>
              </item>
              <item>
-              <widget class="QLabel" name="label_max_close_2">
+              <widget class="QLabel" name="label_max_adjustedClose2">
                <property name="minimumSize">
                 <size>
                  <width>30</width>
@@ -6588,7 +6588,7 @@
               </widget>
              </item>
              <item>
-              <widget class="QDoubleSpinBox" name="doubleSpinBox_max_close_2">
+              <widget class="QDoubleSpinBox" name="doubleSpinBox_max_adjustedClose2">
                <property name="sizePolicy">
                 <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
                  <horstretch>0</horstretch>
@@ -6622,7 +6622,7 @@
               </widget>
              </item>
              <item>
-              <widget class="QSlider" name="horizontalSlider_max_close_2">
+              <widget class="QSlider" name="horizontalSlider_max_adjustedClose2">
                <property name="minimumSize">
                 <size>
                  <width>60</width>
@@ -7020,7 +7020,7 @@
         </size>
        </property>
        <property name="text">
-        <string>Value portfolio</string>
+        <string>Value Portfolio</string>
        </property>
       </widget>
       <widget class="QDateEdit" name="dateEdit_simulatorFrom">
@@ -7139,7 +7139,7 @@
         </size>
        </property>
        <property name="text">
-        <string>Type simulation</string>
+        <string>Type Simulation</string>
        </property>
       </widget>
       <widget class="QComboBox" name="comboBox_typeSimulation">
@@ -7165,9 +7165,6 @@
        </property>
        <property name="editable">
         <bool>false</bool>
-       </property>
-       <property name="currentText" stdset="0">
-        <string/>
        </property>
       </widget>
       <widget class="QDoubleSpinBox" name="doubleSpinBox_valuePortfolio">
@@ -7207,7 +7204,7 @@
         <double>99999999.989999994635582</double>
        </property>
        <property name="value">
-        <double>99999999.989999994635582</double>
+        <double>0.000000000000000</double>
        </property>
       </widget>
       <widget class="QLabel" name="label_2">
@@ -7232,27 +7229,27 @@
         </size>
        </property>
        <property name="text">
-        <string>Transaction fee</string>
+        <string>Transaction Fee</string>
        </property>
       </widget>
-      <widget class="QDoubleSpinBox" name="doubleSpinBox">
+      <widget class="QDoubleSpinBox" name="doubleSpinBox_transactioFee">
        <property name="geometry">
         <rect>
          <x>488</x>
          <y>7</y>
-         <width>90</width>
+         <width>80</width>
          <height>25</height>
         </rect>
        </property>
        <property name="minimumSize">
         <size>
-         <width>90</width>
+         <width>80</width>
          <height>25</height>
         </size>
        </property>
        <property name="maximumSize">
         <size>
-         <width>90</width>
+         <width>80</width>
          <height>25</height>
         </size>
        </property>
@@ -7263,14 +7260,46 @@
         <enum>QAbstractSpinBox::NoButtons</enum>
        </property>
        <property name="suffix">
-        <string> $</string>
+        <string/>
        </property>
        <property name="maximum">
-        <double>9999.989999999999782</double>
+        <double>999.990000000000009</double>
        </property>
        <property name="value">
-        <double>9999.989999999999782</double>
+        <double>0.000000000000000</double>
        </property>
+      </widget>
+      <widget class="QComboBox" name="comboBox_percentDollar">
+       <property name="geometry">
+        <rect>
+         <x>570</x>
+         <y>7</y>
+         <width>40</width>
+         <height>25</height>
+        </rect>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>40</width>
+         <height>25</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>40</width>
+         <height>25</height>
+        </size>
+       </property>
+       <item>
+        <property name="text">
+         <string>$</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>%</string>
+        </property>
+       </item>
       </widget>
      </widget>
      <widget class="QPushButton" name="btn_startSimulation">
@@ -7307,7 +7336,7 @@
      <x>0</x>
      <y>0</y>
      <width>1280</width>
-     <height>21</height>
+     <height>31</height>
     </rect>
    </property>
   </widget>
@@ -7381,11 +7410,11 @@
   <tabstop>horizontalSlider_min_fcfps</tabstop>
   <tabstop>doubleSpinBox_max_fcfps</tabstop>
   <tabstop>horizontalSlider_max_fcfps</tabstop>
-  <tabstop>checkBox_close</tabstop>
-  <tabstop>doubleSpinBox_min_close</tabstop>
-  <tabstop>horizontalSlider_min_close</tabstop>
-  <tabstop>doubleSpinBox_max_close</tabstop>
-  <tabstop>horizontalSlider_max_close</tabstop>
+  <tabstop>checkBox_adjustedClose</tabstop>
+  <tabstop>doubleSpinBox_min_adjustedClose</tabstop>
+  <tabstop>horizontalSlider_min_adjustedClose</tabstop>
+  <tabstop>doubleSpinBox_max_adjustedClose</tabstop>
+  <tabstop>horizontalSlider_max_adjustedClose</tabstop>
   <tabstop>checkBox_52wk</tabstop>
   <tabstop>doubleSpinBox_min_52wk</tabstop>
   <tabstop>horizontalSlider_min_52wk</tabstop>
@@ -7456,11 +7485,11 @@
   <tabstop>horizontalSlider_min_fcfps_2</tabstop>
   <tabstop>doubleSpinBox_max_fcfps_2</tabstop>
   <tabstop>horizontalSlider_max_fcfps_2</tabstop>
-  <tabstop>checkBox_close_2</tabstop>
-  <tabstop>doubleSpinBox_min_close_2</tabstop>
-  <tabstop>horizontalSlider_min_close_2</tabstop>
-  <tabstop>doubleSpinBox_max_close_2</tabstop>
-  <tabstop>horizontalSlider_max_close_2</tabstop>
+  <tabstop>checkBox_adjustedClose_2</tabstop>
+  <tabstop>doubleSpinBox_min_adjustedClose2</tabstop>
+  <tabstop>horizontalSlider_min_adjustedClose2</tabstop>
+  <tabstop>doubleSpinBox_max_adjustedClose2</tabstop>
+  <tabstop>horizontalSlider_max_adjustedClose2</tabstop>
   <tabstop>checkBox_52wk_2</tabstop>
   <tabstop>doubleSpinBox_min_52wk_2</tabstop>
   <tabstop>horizontalSlider_min_52wk_2</tabstop>

@@ -120,7 +120,7 @@ def get_historic_value_all_company(db=None):
     if not db or type(db) is not DbConnection:
         db = DbConnection(HOST, USER, PASSWORD, DATABASE)
 
-    query = """SELECT c.name, c.symbol, d.date_daily_value, d.close_val, date_historic_value, revenu_usd_mil,
+    query = """SELECT c.name, c.symbol, d.date_daily_value, d.adj_close, date_historic_value, revenu_usd_mil,
                 gross_margin_pct, net_income_usd_mil, earning_per_share_usd, dividends_usd, book_value_per_share_usd,
                 free_cash_flow_per_share_usd
                 FROM company c LEFT JOIN historic_value hv ON c.symbol = hv.id_symbol
@@ -133,7 +133,7 @@ def get_historic_value_all_company(db=None):
                                                                WHERE id_symbol = c.symbol);"""
     res = db.select_in_db(query)
     return_value = []
-    for company_name, symbol, date_daily_value, close_val, \
+    for company_name, symbol, date_daily_value, adj_close, \
         datetime_value, revenue, gross_margin, income, earning, dividends, book_value, cash_flow in res:
         # TODO: Add comment
         result_52wk = ()
@@ -141,7 +141,7 @@ def get_historic_value_all_company(db=None):
         while len(result_52wk) == 0:
             new_date = date_daily_value.replace(year=date_daily_value.year - 1) + timedelta(days=addedDays)
 
-            query_2 = """SELECT close_val
+            query_2 = """SELECT adj_close
                          FROM daily_value
                          WHERE date_daily_value = "{}"
                                AND id_symbol = "{}";""".format(new_date, symbol)
@@ -164,11 +164,11 @@ def get_historic_value_all_company(db=None):
                              'BVPS': book_value,
                              'FCFPS': cash_flow,
                              'datetime_daily_value': date_daily_value,
-                             'Close': close_val,
-                             'Div. Yield (%)': divide(dividends, close_val, 100),
-                             'P/E Ratio': divide(close_val, earning),
-                             'P/B Ratio': divide(close_val, book_value),
-                             '52wk (%)': divide(close_val - last_year_close, last_year_close, 100)})
+                             'Adj. Close': adj_close,
+                             'Div. Yield (%)': divide(dividends, adj_close, 100),
+                             'P/E Ratio': divide(adj_close, earning),
+                             'P/B Ratio': divide(adj_close, book_value),
+                             '52wk (%)': divide(adj_close - last_year_close, last_year_close, 100)})
     return return_value
 
 
@@ -229,7 +229,7 @@ def get_minimum_value_calculation(name_calculation, db=None):
     if not db or type(db) is not DbConnection:
         db = DbConnection(HOST, USER, PASSWORD, DATABASE)
     if name_calculation == "dividend_yield":
-        query = """SELECT MIN(hv.dividends_usd / dv.close_val) * 100
+        query = """SELECT MIN(hv.dividends_usd / dv.adj_close) * 100
                    FROM company c LEFT JOIN historic_value hv ON c.symbol = hv.id_symbol
                                   LEFT JOIN daily_value dv ON c.symbol = dv.id_symbol
                     WHERE c.is_in_snp500 AND hv.date_historic_value = (SELECT max(date_historic_value)
@@ -240,7 +240,7 @@ def get_minimum_value_calculation(name_calculation, db=None):
                                                                     WHERE id_symbol = c.symbol);"""
         return math.floor(db.select_in_db(query)[0][0])
     elif name_calculation == "p_e_ratio":
-        query = """SELECT MIN(dv.close_val / hv.earning_per_share_usd)
+        query = """SELECT MIN(dv.adj_close / hv.earning_per_share_usd)
                    FROM company c LEFT JOIN historic_value hv ON c.symbol = hv.id_symbol
                                   LEFT JOIN daily_value dv ON c.symbol = dv.id_symbol
                     WHERE c.is_in_snp500 AND hv.date_historic_value = (SELECT max(date_historic_value)
@@ -251,7 +251,7 @@ def get_minimum_value_calculation(name_calculation, db=None):
                                                                     WHERE id_symbol = c.symbol);"""
         return math.floor(db.select_in_db(query)[0][0])
     elif name_calculation == "p_b_ratio":
-        query = """SELECT MIN(dv.close_val / hv.book_value_per_share_usd)
+        query = """SELECT MIN(dv.adj_close / hv.book_value_per_share_usd)
                    FROM company c LEFT JOIN historic_value hv ON c.symbol = hv.id_symbol
                                   LEFT JOIN daily_value dv ON c.symbol = dv.id_symbol
                     WHERE c.is_in_snp500 AND hv.date_historic_value = (SELECT max(date_historic_value)
@@ -263,7 +263,7 @@ def get_minimum_value_calculation(name_calculation, db=None):
         return math.floor(db.select_in_db(query)[0][0])
     elif name_calculation == "52wk":
         min_val = float("inf")
-        query_now = """SELECT close_val, date_daily_value, c.symbol
+        query_now = """SELECT adj_close, date_daily_value, c.symbol
                        FROM company c LEFT JOIN daily_value dv ON c.symbol = dv.id_symbol
                        WHERE date_daily_value = (SELECT MAX(date_daily_value)
                                                  FROM daily_value
@@ -276,7 +276,7 @@ def get_minimum_value_calculation(name_calculation, db=None):
             while len(result_52wk) == 0:
                 new_date = date.replace(year=date.year - 1) + timedelta(days=addedDays)
 
-                query_2 = """SELECT close_val
+                query_2 = """SELECT adj_close
                              FROM daily_value
                              WHERE date_daily_value = "{}"
                                    AND id_symbol = "{}";""".format(new_date, symbol)
@@ -297,7 +297,7 @@ def get_maximum_value_calculation(name_calculation, db=None):
     if not db or type(db) is not DbConnection:
         db = DbConnection(HOST, USER, PASSWORD, DATABASE)
     if name_calculation == "dividend_yield":
-        query = """SELECT MAX(hv.dividends_usd / dv.close_val) * 100
+        query = """SELECT MAX(hv.dividends_usd / dv.adj_close) * 100
                    FROM company c LEFT JOIN historic_value hv ON c.symbol = hv.id_symbol
                                   LEFT JOIN daily_value dv ON c.symbol = dv.id_symbol
                     WHERE c.is_in_snp500 AND hv.date_historic_value = (SELECT max(date_historic_value)
@@ -308,7 +308,7 @@ def get_maximum_value_calculation(name_calculation, db=None):
                                                                     WHERE id_symbol = c.symbol);"""
         return math.ceil(db.select_in_db(query)[0][0])
     elif name_calculation == "p_e_ratio":
-        query = """SELECT MAX(dv.close_val / hv.earning_per_share_usd)
+        query = """SELECT MAX(dv.adj_close / hv.earning_per_share_usd)
                    FROM company c LEFT JOIN historic_value hv ON c.symbol = hv.id_symbol
                                   LEFT JOIN daily_value dv ON c.symbol = dv.id_symbol
                     WHERE c.is_in_snp500 AND hv.date_historic_value = (SELECT max(date_historic_value)
@@ -319,7 +319,7 @@ def get_maximum_value_calculation(name_calculation, db=None):
                                                                     WHERE id_symbol = c.symbol);"""
         return math.ceil(db.select_in_db(query)[0][0])
     elif name_calculation == "p_b_ratio":
-        query = """SELECT MAX(dv.close_val / hv.book_value_per_share_usd)
+        query = """SELECT MAX(dv.adj_close / hv.book_value_per_share_usd)
                    FROM company c LEFT JOIN historic_value hv ON c.symbol = hv.id_symbol
                                   LEFT JOIN daily_value dv ON c.symbol = dv.id_symbol
                     WHERE c.is_in_snp500 AND hv.date_historic_value = (SELECT max(date_historic_value)
@@ -331,7 +331,7 @@ def get_maximum_value_calculation(name_calculation, db=None):
         return math.ceil(db.select_in_db(query)[0][0])
     elif name_calculation == "52wk":
         max_val = float("-inf")
-        query_now = """SELECT close_val, date_daily_value, c.symbol
+        query_now = """SELECT adj_close, date_daily_value, c.symbol
                        FROM company c LEFT JOIN daily_value dv ON c.symbol = dv.id_symbol
                        WHERE date_daily_value = (SELECT MAX(date_daily_value)
                                                  FROM daily_value
@@ -344,7 +344,7 @@ def get_maximum_value_calculation(name_calculation, db=None):
             while len(result_52wk) == 0:
                 new_date = date.replace(year=date.year - 1) + timedelta(days=addedDays)
 
-                query_2 = """SELECT close_val
+                query_2 = """SELECT adj_close
                              FROM daily_value
                              WHERE date_daily_value = "{}"
                                    AND id_symbol = "{}";""".format(new_date, symbol)
@@ -361,7 +361,7 @@ def get_maximum_value_calculation(name_calculation, db=None):
         return 0
 
 
-def get_minimum_maximum_value_date_historical(db=None):
+def get_minimum_maximum_value_date_daily(db=None):
     """
     Get datetime min and max in table historical of db
     :param db: if we have already connexion in other function who cal this function
@@ -371,14 +371,9 @@ def get_minimum_maximum_value_date_historical(db=None):
     """
     if not db or type(db) is not DbConnection:
         db = DbConnection(HOST, USER, PASSWORD, DATABASE)
-    result = ()
-    # min datetime
-    query = """SELECT MIN(date_historic_value) FROM historic_value"""
-    result += (db.select_in_db(query)[0][0],)
-    # max datetime
-    query = """SELECT MAX(date_historic_value) FROM historic_value"""
-    result += (db.select_in_db(query)[0][0],)
-    return result
+
+    query = """SELECT MIN(date_daily_value), MAX(date_daily_value) FROM daily_value"""
+    return db.select_in_db(query)[0]
 
 
 #######################################################################################################################
