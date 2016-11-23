@@ -189,7 +189,7 @@ def set_min_max_slider_layout(layout):
                  'EPS': "earning_per_share_usd",
                  'BVPS': "book_value_per_share_usd",
                  'FCFPS': "free_cash_flow_per_share_usd",
-                 'Close': "close_val",
+                 'Adj. Close': "close_val",
                  'Div. Yield (%)': "dividend_yield",
                  'P/E Ratio': "p_e_ratio",
                  'P/B Ratio': "p_b_ratio",
@@ -201,7 +201,7 @@ def set_min_max_slider_layout(layout):
         if name_attr in list_histo:
             min_val = ManagerCompany.get_minimum_value_historical(dict_name[name_attr], db)
             max_val = ManagerCompany.get_maximum_value_historical(dict_name[name_attr], db)
-        elif name_attr == 'Close':
+        elif name_attr == 'Adj. Close':
             min_val = ManagerCompany.get_minimum_value_daily(dict_name[name_attr], db)
             max_val = ManagerCompany.get_maximum_value_daily(dict_name[name_attr], db)
         elif name_attr in list_calc:
@@ -376,8 +376,8 @@ def calculate_global_ranking(list_company, dict_params):
         dict_ranking_company[symbol] = 0
 
     # Delete param Close if exists
-    if dict_params.get('Close'):
-        dict_params.pop('Close')
+    if dict_params.get('Adj. Close'):
+        dict_params.pop('Adj. Close')
 
     # Sum ranking params of company
     for param in dict_params:
@@ -415,3 +415,27 @@ def get_min_max_layout_checked(layout):
             max_val = get_widget_of_layout(layout.itemAt(idx_layout), QtGui.QDoubleSpinBox, 1).text()
             dict_min_max[name_attr] = {'min': float(min_val.replace(',', '.')), 'max': float(max_val.replace(',', '.'))}
     return dict_min_max
+
+
+def get_params_simulation(parent_object):
+    """
+    Get params of simulation with a specific QWidget containing param. ex: QLayout, QFrame
+    :param parent_object: Object contains children object who contains value
+    :rtype parent_object: QtGui.QFrame | QtGui.QLayout
+    :return: dictionary containing names of the values and their values
+    :rtype: dict
+    """
+    return_res = {}
+    for child in parent_object.children():
+        # skip label of spinbox or line edit
+        if isinstance(child, (QtGui.QDialogButtonBox, QtGui.QLabel, QtGui.QPushButton)):
+            continue
+        elif isinstance(child, QtGui.QComboBox):
+            obj_text = child.currentText()
+        elif isinstance(child, (QtGui.QDoubleSpinBox, QtGui.QSpinBox)):
+            obj_text = child.value()
+        else:
+            obj_text = child.text()
+        name_obj = child.objectName()  # get name of value
+        return_res[name_obj[name_obj.rfind('_') + 1:]] = obj_text
+    return return_res

@@ -3,12 +3,15 @@
 from PyQt4 import QtCore, QtGui
 
 from QT.MainWindow import Ui_MainWindow
+from QT.DialogPopUp import Ui_Dialog
 from Manager_DB import ManagerPortfolio, ManagerCompany
 from QT import HelperFunctionQt
 from QT.Singleton import Singleton
 
 dict_type_simulation = {'Technical Analysis': 'technical_analysis_windows', 'By Low Set High': 'by_low_set_high',
-                        'Global Ranking': 'global_ranking', '1$ For Each Company': ''}
+                        'Global Ranking': 'global_ranking', '1 Stock For Each Company': ''}
+dict_params_value_sim = {}  # get last value of params of type simulation until no change type simulation
+market_object = None
 
 
 class ManagerMainWindow(Ui_MainWindow):
@@ -54,6 +57,9 @@ class ManagerMainWindow(Ui_MainWindow):
         self.get_min_max_date_historic()
         # Add items of combobox type_simulation who be in list_type_simulation
         self.comboBox_typeSimulation.addItems(sorted(list(dict_type_simulation.keys())))
+        # Set display format date, bu in Linux
+        self.dateEdit_simulatorFrom.setDisplayFormat('yyyy-MM-dd')
+        self.dateEdit_simulatorTo.setDisplayFormat('yyyy-MM-dd')
 
     def create_data_table_stock_screener(self):
         """
@@ -63,7 +69,7 @@ class ManagerMainWindow(Ui_MainWindow):
         list_column_table = ['company_name', 'symbol', 'Revenue (Mil)', 'Net Income (Mil)',
                              'Gross Margin (%)', 'Dividends',
                              'Div. Yield (%)', 'EPS', 'P/E Ratio',
-                             'BVPS', 'P/B Ratio', 'FCFPS', 'Close', '52wk (%)', 'Global Ranking']
+                             'BVPS', 'P/B Ratio', 'FCFPS', 'Adj. Close', '52wk (%)', 'Global Ranking']
 
         dict_company = ManagerCompany.get_historic_value_all_company()
         dict_params = self.get_all_min_max_criteria(self.horizontalLayout)
@@ -105,6 +111,17 @@ class ManagerMainWindow(Ui_MainWindow):
         # refresh combobox portfolio when we change tab widget, because we could be adding new portfolio
         self.tab.currentChanged.connect(Slots.refresh_combobox_portfolio_tab_widget)
         # Stock Screener
+        self.connection_interface_stock_screener()
+        # Portfolio Manager
+        self.connection_interface_portfolio_manager()
+        # Simulator
+        self.connection_interface_simulation()
+
+    def connection_interface_stock_screener(self):
+        """
+        Connection signal-slot in interface Stock Screener
+        :return: None
+        """
         # sort column checkbox of table stock screener
         self.tableWidget_stockScreener.horizontalHeader().sectionClicked \
             .connect(Slots.sort_column_checkbox_table_widget_stock_screener)
@@ -131,7 +148,11 @@ class ManagerMainWindow(Ui_MainWindow):
         # Refresh table and global ranking depending on criteria selected
         self.btn_RefreshTableStockScreener.clicked.connect(Slots.refresh_table_stock_screener)
 
-        # Portfolio Manager
+    def connection_interface_portfolio_manager(self):
+        """
+        Connection signal-slot in interface Portfolio Manager
+        :return: None
+        """
         # connection btn Add to portfolio of Portfolio Manager
         self.btn_portfolio_ok.clicked.connect(self.refresh_data_table_portfolio)
         # connection combo box line edit to portfolio of Portfolio Manager to same fct of btn Add to portfolio
@@ -146,7 +167,11 @@ class ManagerMainWindow(Ui_MainWindow):
         # delete companies selected of portfolio current
         self.btn_portfolio_delete_company_selected.clicked.connect(Slots.deleted_company_selected_table_portfolio)
 
-        # Simulator
+    def connection_interface_simulation(self):
+        """
+        Connection signal-slot in interface Simulation
+        :return: None
+        """
         # btn select criteria Simulator
         self.btn_selectAllCriteria_2.clicked.connect(Slots.select_all_criteria_simulator)
         # btn deselect criteria Simulator
@@ -160,6 +185,8 @@ class ManagerMainWindow(Ui_MainWindow):
         self.btn_startSimulation.clicked.connect(Slots.start_simulation)
         # btn for show report of simulation
         self.btn_showReport.clicked.connect(Slots.show_report)
+        # clear old params of type simulation
+        self.comboBox_typeSimulation.currentIndexChanged.connect(dict_params_value_sim.clear)
 
     def create_combobox_portfolio(self, tab_widget_name, combobox_name):
         """
@@ -442,22 +469,59 @@ class Slots:
         HelperFunctionQt.select_deselect_combobox_layout(ui.verticalLayout_left_2, QtCore.Qt.Unchecked)
         HelperFunctionQt.select_deselect_combobox_layout(ui.verticalLayout_right_2, QtCore.Qt.Unchecked)
 
-    # TODO: to completed
     @staticmethod
     def open_windows_setting_params_simulation():
-        print('Open pop-up to set params type simulation selected')
+        """
+        Open pop-up of dialog Qt to set params specific to type simulation selected. The value of params is
+        keeping in dict_params_value_sim, dict global
+        :return: None
+        """
         type_simulation_selected = ui.comboBox_typeSimulation.currentText()
         print(type_simulation_selected)
+        # TODO: open dynamically a pop-up for a specific type simulation
+        Dialog = QtGui.QDialog()
+        dl = Ui_Dialog()
+        dl.setupUi(Dialog)
+        # Set pop-up params of type simulation if reopen pop-up with same type simulation
+        if len(dict_params_value_sim) > 0:
+            for child in Dialog.children():
+                name_obj = child.objectName()
+                if isinstance(child, QtGui.QDialogButtonBox) or isinstance(child, QtGui.QLabel):
+                    continue
+                elif dict_params_value_sim.get(name_obj[name_obj.rfind('_') + 1:]) is not None:
+                    if isinstance(child, QtGui.QComboBox):
+                        idx_cb = child.findText(dict_params_value_sim.get(name_obj[name_obj.rfind('_') + 1:]))
+                        child.setCurrentIndex(idx_cb)
+                    elif isinstance(child, (QtGui.QDoubleSpinBox, QtGui.QSpinBox)):
+                        child.setValue(dict_params_value_sim.get(name_obj[name_obj.rfind('_') + 1:]))
+                    else:
+                        child.setEditText(dict_params_value_sim.get(name_obj[name_obj.rfind('_') + 1:]))
+
+        if Dialog.exec():
+            dict_params_value_sim.update(HelperFunctionQt.get_params_simulation(Dialog))
+            print(dict_params_value_sim)
 
     # TODO: to completed
     @staticmethod
     def start_simulation():
         print('Start simulation')
+        dict_params_simulation = HelperFunctionQt.get_params_simulation(ui.frame_simulation)
+        dict_params_simulation.update(dict_params_value_sim)
+        print(dict_params_simulation)
+        dict_min_max = {}
+        dict_min_max.update(HelperFunctionQt.get_min_max_layout_checked(ui.verticalLayout_left_2))
+        dict_min_max.update(HelperFunctionQt.get_min_max_layout_checked(ui.verticalLayout_right_2))
+        print(dict_min_max)
 
     # TODO: to completed
     @staticmethod
     def show_report():
         print('Show report simulation')
+
+    # TODO: to completed
+    @staticmethod
+    def get_value_params():
+        print(0)
 
 if __name__ == "__main__":
     import sys
