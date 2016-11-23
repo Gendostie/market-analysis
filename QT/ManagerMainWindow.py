@@ -107,6 +107,17 @@ class ManagerMainWindow(Ui_MainWindow):
         # refresh combobox portfolio when we change tab widget, because we could be adding new portfolio
         self.tab.currentChanged.connect(Slots.refresh_combobox_portfolio_tab_widget)
         # Stock Screener
+        self.connection_interface_stock_screener()
+        # Portfolio Manager
+        self.connection_interface_portfolio_manager()
+        # Simulator
+        self.connection_interface_simulation()
+
+    def connection_interface_stock_screener(self):
+        """
+        Connection signal-slot in interface Stock Screener
+        :return: None
+        """
         # sort column checkbox of table stock screener
         self.tableWidget_stockScreener.horizontalHeader().sectionClicked \
             .connect(Slots.sort_column_checkbox_table_widget_stock_screener)
@@ -133,7 +144,11 @@ class ManagerMainWindow(Ui_MainWindow):
         # Refresh table and global ranking depending on criteria selected
         self.btn_RefreshTableStockScreener.clicked.connect(Slots.refresh_table_stock_screener)
 
-        # Portfolio Manager
+    def connection_interface_portfolio_manager(self):
+        """
+        Connection signal-slot in interface Portfolio Manager
+        :return: None
+        """
         # connection btn Add to portfolio of Portfolio Manager
         self.btn_portfolio_ok.clicked.connect(self.refresh_data_table_portfolio)
         # connection combo box line edit to portfolio of Portfolio Manager to same fct of btn Add to portfolio
@@ -148,7 +163,11 @@ class ManagerMainWindow(Ui_MainWindow):
         # delete companies selected of portfolio current
         self.btn_portfolio_delete_company_selected.clicked.connect(Slots.deleted_company_selected_table_portfolio)
 
-        # Simulator
+    def connection_interface_simulation(self):
+        """
+        Connection signal-slot in interface Simulation
+        :return: None
+        """
         # btn select criteria Simulator
         self.btn_selectAllCriteria_2.clicked.connect(Slots.select_all_criteria_simulator)
         # btn deselect criteria Simulator
@@ -449,9 +468,10 @@ class Slots:
     @staticmethod
     def open_windows_setting_params_simulation():
         """
-                Open pop-up of dialog Qt to set params specific to type simulation selected
-                :return: None
-                """
+        Open pop-up of dialog Qt to set params specific to type simulation selected. The value of params is
+        keeping in dict_params_value_sim, dict global
+        :return: None
+        """
         type_simulation_selected = ui.comboBox_typeSimulation.currentText()
         print(type_simulation_selected)
         # TODO: open dynamically a pop-up for a specific type simulation
@@ -474,24 +494,16 @@ class Slots:
                         child.setEditText(dict_params_value_sim.get(name_obj[name_obj.rfind('_') + 1:]))
 
         if Dialog.exec():
-            for child in Dialog.children():
-                # skip label of spinbox or line edit
-                if isinstance(child, QtGui.QDialogButtonBox) or isinstance(child, QtGui.QLabel):
-                    continue
-                elif isinstance(child, QtGui.QComboBox):
-                    obj_text = child.currentText()
-                elif isinstance(child, (QtGui.QDoubleSpinBox, QtGui.QSpinBox)):
-                    obj_text = child.value()
-                else:
-                    obj_text = child.text()
-                name_obj = child.objectName()  # get name of value
-                dict_params_value_sim[name_obj[name_obj.rfind('_') + 1:]] = obj_text
+            dict_params_value_sim.update(HelperFunctionQt.get_params_simulation(Dialog))
             print(dict_params_value_sim)
 
     # TODO: to completed
     @staticmethod
     def start_simulation():
         print('Start simulation')
+        dict_params_simulation = HelperFunctionQt.get_params_simulation(ui.frame_simulation)
+        dict_params_simulation.update(dict_params_value_sim)
+        print(dict_params_simulation)
 
     # TODO: to completed
     @staticmethod

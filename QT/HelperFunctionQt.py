@@ -415,3 +415,26 @@ def get_min_max_layout_checked(layout):
             max_val = get_widget_of_layout(layout.itemAt(idx_layout), QtGui.QDoubleSpinBox, 1).text()
             dict_min_max[name_attr] = {'min': float(min_val.replace(',', '.')), 'max': float(max_val.replace(',', '.'))}
     return dict_min_max
+
+
+def get_params_simulation(parent_object):
+    """
+
+    :param parent_object:
+    :return:
+    :rtype: dict
+    """
+    return_res = {}
+    for child in parent_object.children():
+        # skip label of spinbox or line edit
+        if isinstance(child, (QtGui.QDialogButtonBox, QtGui.QLabel, QtGui.QPushButton)):
+            continue
+        elif isinstance(child, QtGui.QComboBox):
+            obj_text = child.currentText()
+        elif isinstance(child, (QtGui.QDoubleSpinBox, QtGui.QSpinBox)):
+            obj_text = child.value()
+        else:
+            obj_text = child.text()
+        name_obj = child.objectName()  # get name of value
+        return_res[name_obj[name_obj.rfind('_') + 1:]] = obj_text
+    return return_res

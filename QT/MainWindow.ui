@@ -3974,7 +3974,7 @@
          <rect>
           <x>-3</x>
           <y>0</y>
-          <width>1074</width>
+          <width>1435</width>
           <height>251</height>
          </rect>
         </property>
@@ -6950,7 +6950,7 @@
        </property>
       </widget>
      </widget>
-     <widget class="QFrame" name="frame_2">
+     <widget class="QFrame" name="frame_simulation">
       <property name="geometry">
        <rect>
         <x>5</x>
@@ -7273,7 +7273,7 @@
         <double>0.000000000000000</double>
        </property>
       </widget>
-      <widget class="QComboBox" name="comboBox_percentDollar">
+      <widget class="QComboBox" name="comboBox_transactioFeePctDollar">
        <property name="geometry">
         <rect>
          <x>570</x>
@@ -7340,7 +7340,7 @@
      <x>0</x>
      <y>0</y>
      <width>1280</width>
-     <height>31</height>
+     <height>21</height>
     </rect>
    </property>
   </widget>
