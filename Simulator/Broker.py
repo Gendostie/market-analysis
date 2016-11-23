@@ -1,5 +1,4 @@
 from enum import Enum
-from Market import Market
 
 #########################################################################################################
 #                                           Commission
@@ -110,14 +109,16 @@ class _Portfolio:
             else:
                 self.portfolio[symbol] = nb_stocks
 
-    def remove_stocks(self, symbol, nb_stocks):
-        # TODO: Gérer quand nb_stock > nb dans portfolio
-        if nb_stocks > 0:
-            if symbol in self.portfolio:
-                if nb_stocks < self.portfolio[symbol]:
-                    self.portfolio[symbol] -= nb_stocks
-                elif nb_stocks == self.portfolio[symbol]:
-                    self.portfolio.pop(symbol)
+    def remove_cie(self, symbol):
+        # TODO : Comment
+        self.portfolio.pop(symbol)
+
+    def get_stocks(self, symbol):
+        # TODO : Comment
+        if symbol in self.portfolio:
+            return self.portfolio[symbol]
+        else:
+            return 0
 
     def get_companies(self):
         """Return a list of the symbol of each company in the portfolio.
@@ -146,13 +147,23 @@ class _Portfolio:
 
 
 #########################################################################################################
+#                                           TEST
+#########################################################################################################
+
+def perform(lst, market, filters):
+    for f in filters:
+        lst = f(lst, market)
+    return lst
+
+
+#########################################################################################################
 #                                           Broker
 #########################################################################################################
 class Broker:
     def __init__(self, initial_liquidity,
                  market,
                  sell_commission=_Commission(_TypeCommission.none),
-                 buy_commission=_Commission(_TypeCommission.none),):
+                 buy_commission=_Commission(_TypeCommission.none)):
         self._market = market
 
         self._liquidity = initial_liquidity
@@ -161,28 +172,82 @@ class Broker:
         self._sell_commission = sell_commission
         self._buy_commission = buy_commission
 
+        self._sell_filters = []
+        self._buy_filters = []
+
+    def add_sell_filters(self, *filters):
+        """Add one or many filters to reduce the list of companies in our portfolio.
+
+        Functions are regrouped in "Filters.py". They must take as parameters a list of strings and an
+        object "Market". The list contains all symbols of the companies in our portfolio that will be sold.
+        The "Market" is an instance of the class "Market".
+
+        The function must return the same type of list as the one in the parameters. It should be reduced
+        to remove all companies in our portfolio that we want to keep because they satisfy a specific
+        criterion (or many criteria).
+
+        :param filters: One or many functions that take as parameters a list of strings and an object "Market"
+        :return: Nothing
+        """
+        for f in filters:
+            self._sell_filters.append(f)
+
+    def add_buy_filters(self, *filters):
+        """Add one or many filters to reduce the list of companies where we should invest.
+
+        Functions are regrouped in "Filters.py". They must take as parameters a list of strings and an
+        object "Market". The list contains all symbols of the companies where we can invest for that day.
+        The "Market" is an instance of the class "Market".
+
+        The function must return the same type of list as the one in the parameters. It should be reduced
+        to remove all companies where we don't want to invest because they don't satisfy a specific
+        criterion (or many criteria).
+
+        :param filters: One or many functions that take as parameters a list of strings and an object "Market"
+        :return: Nothing
+        """
+        for f in filters:
+            self._buy_filters.append(f)
+
+    def _sell(self):
+        # Get the list of all companies that we can sell
+        lst = self._portfolio.get_companies()
+
+        # Filter the list to only keep the companies that should be sold
+        for f in self._sell_filters:
+            lst = f(lst, self._market)
+
+        # For all companies that we should sell, sell 'em.
+        for symbol in lst:
+            # Get how much you get for selling all the stocks in the market
+            gain = self._market.sell(symbol, self._portfolio.get_stocks(symbol))
+
+            # Remove the stocks in our portfolio
+            # TODO: If gain == 0, what to do?
+            self._portfolio.remove_cie(symbol)
+
+            # Calculate its commission
+
+            # Adjust the liquidity available
+
+    def run_simulation(self):
+        # As long as there is a new business day in our simulation;
+
+        # Sell companies in our portfolio that satisfy our criteria for selling;
+
+        # Buy companies trading this day that satisfy our criteria for buying;
+
+        # Adjust the value of our assets for the day.
+
+
+
         # TODO: ONLY FOR TESTING
-        print(self._sell_commission.calculate(1000))
-        print(self._buy_commission.calculate(1000))
-        print(self._portfolio.get_companies())
-        print(self._portfolio.get_value(market))
-
-        self._portfolio.add_stocks("A", 100)
-        self._portfolio.add_stocks("GOOGL", 200)
-        self._portfolio.add_stocks("GE", 1000)
-        self._portfolio.add_stocks("ZTS", 10)
-        self._portfolio.remove_stocks("ABC", 100)
-        self._portfolio.remove_stocks("ZTS", 100)
-        self._portfolio.remove_stocks("GOOGL", 100)
-        self._portfolio.remove_stocks("A", 100)
-        print(self._portfolio.get_companies())
-        print(self._portfolio.get_value(market))
-        market.next()
-        print(self._portfolio.get_value(market))
-        market.next()
-        print(self._portfolio.get_value(market))
-
-        self._portfolio.print_portfolio()
+        lst = self._market.get_trading_stocks()
+        print(lst)
+        lst = perform(lst, self._market, self._sell_filters)
+        print(lst)
+        self._market.next()
+        lst = self._market.get_trading_stocks()
+        lst = perform(lst, self._market, self._sell_filters)
+        print(lst)
         # TODO: ONLY FOR TESTING
-
-

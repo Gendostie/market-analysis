@@ -2,6 +2,7 @@ import configparser
 from DbConnection import DbConnection
 from Market import Market
 from Broker import Broker, flat_fee_commission, percent_commission
+import Filters
 
 
 def main_simulator(initial_liquidity, transaction_cost, begin=None, end=None):
@@ -22,6 +23,8 @@ def main_simulator(initial_liquidity, transaction_cost, begin=None, end=None):
         # TODO: ONLY FOR TESTING
         broker = Broker(initial_liquidity, Market(begin, end, db),
                         percent_commission(2), percent_commission(2.5))
+        broker.add_sell_filters(Filters.filter1, Filters.filter2, Filters.filter3)
+        broker.run_simulation()
 
         """
         market.debug_print()
