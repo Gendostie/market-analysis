@@ -3,13 +3,14 @@
 from PyQt4 import QtCore, QtGui
 
 from QT.MainWindow import Ui_MainWindow
-from QT.ManagerTest import ManagerTest
+from QT.DialogPopUp import Ui_Dialog
 from Manager_DB import ManagerPortfolio, ManagerCompany
 from QT import HelperFunctionQt
 from QT.Singleton import Singleton
 
 dict_type_simulation = {'Technical Analysis': 'technical_analysis_windows', 'By Low Set High': 'by_low_set_high',
                         'Global Ranking': 'global_ranking', '1$ For Each Company': ''}
+dict_params_value_sim = {}  # get last value of params of type simulation until no change type simulation
 
 
 class ManagerMainWindow(Ui_MainWindow):
@@ -161,6 +162,8 @@ class ManagerMainWindow(Ui_MainWindow):
         self.btn_startSimulation.clicked.connect(Slots.start_simulation)
         # btn for show report of simulation
         self.btn_showReport.clicked.connect(Slots.show_report)
+        # clear old params of type simulation
+        self.comboBox_typeSimulation.currentIndexChanged.connect(dict_params_value_sim.clear)
 
     def create_combobox_portfolio(self, tab_widget_name, combobox_name):
         """
@@ -443,19 +446,47 @@ class Slots:
         HelperFunctionQt.select_deselect_combobox_layout(ui.verticalLayout_left_2, QtCore.Qt.Unchecked)
         HelperFunctionQt.select_deselect_combobox_layout(ui.verticalLayout_right_2, QtCore.Qt.Unchecked)
 
-    # TODO: to completed
     @staticmethod
     def open_windows_setting_params_simulation():
-        print('Open pop-up to set params type simulation selected')
+        """
+                Open pop-up of dialog Qt to set params specific to type simulation selected
+                :return: None
+                """
         type_simulation_selected = ui.comboBox_typeSimulation.currentText()
         print(type_simulation_selected)
+        # TODO: open dynamically a pop-up for a specific type simulation
         Dialog = QtGui.QDialog()
-        dl = ManagerTest()
+        dl = Ui_Dialog()
         dl.setupUi(Dialog)
-        # dl.buttonBox.accepted.connect(Slots.get_value_params)
+        # Set pop-up params of type simulation if reopen pop-up with same type simulation
+        if len(dict_params_value_sim) > 0:
+            for child in Dialog.children():
+                name_obj = child.objectName()
+                if isinstance(child, QtGui.QDialogButtonBox) or isinstance(child, QtGui.QLabel):
+                    continue
+                elif dict_params_value_sim.get(name_obj[name_obj.rfind('_') + 1:]) is not None:
+                    if isinstance(child, QtGui.QComboBox):
+                        idx_cb = child.findText(dict_params_value_sim.get(name_obj[name_obj.rfind('_') + 1:]))
+                        child.setCurrentIndex(idx_cb)
+                    elif isinstance(child, (QtGui.QDoubleSpinBox, QtGui.QSpinBox)):
+                        child.setValue(dict_params_value_sim.get(name_obj[name_obj.rfind('_') + 1:]))
+                    else:
+                        child.setEditText(dict_params_value_sim.get(name_obj[name_obj.rfind('_') + 1:]))
 
         if Dialog.exec():
-            print(dl.get_values())
+            for child in Dialog.children():
+                # skip label of spinbox or line edit
+                if isinstance(child, QtGui.QDialogButtonBox) or isinstance(child, QtGui.QLabel):
+                    continue
+                elif isinstance(child, QtGui.QComboBox):
+                    obj_text = child.currentText()
+                elif isinstance(child, (QtGui.QDoubleSpinBox, QtGui.QSpinBox)):
+                    obj_text = child.value()
+                else:
+                    obj_text = child.text()
+                name_obj = child.objectName()  # get name of value
+                dict_params_value_sim[name_obj[name_obj.rfind('_') + 1:]] = obj_text
+            print(dict_params_value_sim)
 
     # TODO: to completed
     @staticmethod

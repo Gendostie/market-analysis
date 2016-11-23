@@ -1,0 +1,1 @@
+pyuic4 -x DialogPopUp.ui -o DialogPopUp.py

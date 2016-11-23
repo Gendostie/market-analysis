@@ -27,6 +27,9 @@ class Ui_MainWindow(object):
         MainWindow.setObjectName(_fromUtf8("MainWindow"))
         MainWindow.resize(1280, 800)
         MainWindow.setMaximumSize(QtCore.QSize(1280, 800))
+        icon = QtGui.QIcon()
+        icon.addPixmap(QtGui.QPixmap(_fromUtf8("logo projet.jpg")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        MainWindow.setWindowIcon(icon)
         self.centralwidget = QtGui.QWidget(MainWindow)
         self.centralwidget.setObjectName(_fromUtf8("centralwidget"))
         self.tab = QtGui.QTabWidget(self.centralwidget)
@@ -2266,7 +2269,7 @@ class Ui_MainWindow(object):
         MainWindow.setStatusBar(self.statusbar)
 
         self.retranslateUi(MainWindow)
-        self.tab.setCurrentIndex(0)
+        self.tab.setCurrentIndex(2)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
         MainWindow.setTabOrder(self.tab, self.checkBox_income)
         MainWindow.setTabOrder(self.checkBox_income, self.horizontalSlider_min_income)
@@ -2409,7 +2412,7 @@ class Ui_MainWindow(object):
         MainWindow.setTabOrder(self.horizontalSlider_max_52wk_2, self.btn_showReport)
 
     def retranslateUi(self, MainWindow):
-        MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow", None))
+        MainWindow.setWindowTitle(_translate("MainWindow", "Market analysis", None))
         self.checkBox_revenue.setText(_translate("MainWindow", "Revenue (Mil)", None))
         self.label_min_revenue.setText(_translate("MainWindow", "Min", None))
         self.label_max_revenue.setText(_translate("MainWindow", "Max", None))
