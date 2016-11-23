@@ -57,6 +57,9 @@ class ManagerMainWindow(Ui_MainWindow):
         self.get_min_max_date_historic()
         # Add items of combobox type_simulation who be in list_type_simulation
         self.comboBox_typeSimulation.addItems(sorted(list(dict_type_simulation.keys())))
+        # Set display format date, bu in Linux
+        self.dateEdit_simulatorFrom.setDisplayFormat('yyyy-MM-dd')
+        self.dateEdit_simulatorTo.setDisplayFormat('yyyy-MM-dd')
 
     def create_data_table_stock_screener(self):
         """

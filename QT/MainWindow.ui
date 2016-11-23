@@ -4129,6 +4129,9 @@
        <property name="maximum">
         <double>99999999.989999994635582</double>
        </property>
+       <property name="singleStep">
+        <double>100.000000000000000</double>
+       </property>
        <property name="value">
         <double>0.000000000000000</double>
        </property>
@@ -4190,6 +4193,9 @@
        </property>
        <property name="maximum">
         <double>999.990000000000009</double>
+       </property>
+       <property name="singleStep">
+        <double>0.250000000000000</double>
        </property>
        <property name="value">
         <double>0.000000000000000</double>
