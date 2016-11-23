@@ -72,7 +72,7 @@ class Market:
         """
         if symbol in self.get_trading_stocks():
             price = self.df_market.loc[(self.df_market['date'] == self.current_date) &
-                                       (self.df_market['symbol'] == symbol), 'close'].values[0]
+                                       (self.df_market['symbol'] == symbol), 'adj_close'].values[0]
         else:
             price = 0
         return price

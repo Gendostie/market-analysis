@@ -164,7 +164,7 @@ def get_historic_value_all_company(db=None):
                              'BVPS': book_value,
                              'FCFPS': cash_flow,
                              'datetime_daily_value': date_daily_value,
-                             'Close': adj_close,
+                             'Adj. Close': adj_close,
                              'Div. Yield (%)': divide(dividends, adj_close, 100),
                              'P/E Ratio': divide(adj_close, earning),
                              'P/B Ratio': divide(adj_close, book_value),
