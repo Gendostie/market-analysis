@@ -38,6 +38,12 @@
      <height>20</height>
     </rect>
    </property>
+   <property name="maximumSize">
+    <size>
+     <width>160</width>
+     <height>20</height>
+    </size>
+   </property>
    <property name="text">
     <string>Minimum Investment</string>
    </property>
@@ -75,6 +81,12 @@
      <width>160</width>
      <height>20</height>
     </rect>
+   </property>
+   <property name="maximumSize">
+    <size>
+     <width>160</width>
+     <height>20</height>
+    </size>
    </property>
    <property name="text">
     <string>Maximum Investment</string>
@@ -116,12 +128,12 @@
    </property>
    <item>
     <property name="text">
-     <string>Invest in as much company possible</string>
+     <string>Invest in as much company as possible</string>
     </property>
    </item>
    <item>
     <property name="text">
-     <string>Inverst in as much money possible</string>
+     <string>Invest in as much money as possible</string>
     </property>
    </item>
   </widget>

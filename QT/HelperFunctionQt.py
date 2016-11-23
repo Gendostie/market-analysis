@@ -419,9 +419,10 @@ def get_min_max_layout_checked(layout):
 
 def get_params_simulation(parent_object):
     """
-
-    :param parent_object:
-    :return:
+    Get params of simulation with a specific QWidget containing param. ex: QLayout, QFrame
+    :param parent_object: Object contains children object who contains value
+    :rtype parent_object: QtGui.QFrame | QtGui.QLayout
+    :return: dictionary containing names of the values and their values
     :rtype: dict
     """
     return_res = {}

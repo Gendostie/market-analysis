@@ -9,8 +9,9 @@ from QT import HelperFunctionQt
 from QT.Singleton import Singleton
 
 dict_type_simulation = {'Technical Analysis': 'technical_analysis_windows', 'By Low Set High': 'by_low_set_high',
-                        'Global Ranking': 'global_ranking', '1$ For Each Company': ''}
+                        'Global Ranking': 'global_ranking', '1 Stock For Each Company': ''}
 dict_params_value_sim = {}  # get last value of params of type simulation until no change type simulation
+market_object = None
 
 
 class ManagerMainWindow(Ui_MainWindow):
@@ -504,6 +505,10 @@ class Slots:
         dict_params_simulation = HelperFunctionQt.get_params_simulation(ui.frame_simulation)
         dict_params_simulation.update(dict_params_value_sim)
         print(dict_params_simulation)
+        dict_min_max = {}
+        dict_min_max.update(HelperFunctionQt.get_min_max_layout_checked(ui.verticalLayout_left_2))
+        dict_min_max.update(HelperFunctionQt.get_min_max_layout_checked(ui.verticalLayout_right_2))
+        print(dict_min_max)
 
     # TODO: to completed
     @staticmethod
