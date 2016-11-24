@@ -23,3 +23,8 @@ def filter3(lst, market):
         if price > 75:
             new_list.append(price)
     return new_list
+
+
+def fl_not(lst, market):
+    """Filter that removes all companies in the list."""
+    return []

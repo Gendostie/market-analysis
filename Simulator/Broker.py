@@ -1,4 +1,6 @@
 from enum import Enum
+import random
+import math
 
 #########################################################################################################
 #                                           Commission
@@ -85,12 +87,15 @@ def percent_commission(value):
 #                                         Portfolio
 #########################################################################################################
 class _Portfolio:
-    def __init__(self):
+    def __init__(self, initial_liquidity, min_value=0, max_value=int("inf")):
         """A portfolio is keeping the number of stocks we own."""
         self.portfolio = {}
+        self.liquidity = initial_liquidity
+
+        self.min_stock_value = min_value
+        self.max_stock_value = max_value
 
     def add_stocks(self, symbol, nb_stocks):
-        # TODO: Test for integer
         # TODO: Check if "stocks" is okay
         # TODO: Validate more? Exception? ValueError?
         """Add a certain number of stocks for a company.
@@ -109,18 +114,52 @@ class _Portfolio:
             else:
                 self.portfolio[symbol] = nb_stocks
 
-    def remove_cie(self, symbol):
-        # TODO : Comment
-        self.portfolio.pop(symbol)
+    def optimize_buy(self, symbol, price):
+        # Verify if we have enough cash money to buy stocks in the first place.
+        # Do nothing and return immediately if that's not the case.
+        # Also add a safety check for price. If it's 0, we also refuse the operation.
+        if self.liquidity < self.min_stock_value or price == 0:
+            return 0
 
-    def get_stocks(self, symbol):
+        # Calculate the maximum we can put in $ for this company without busting the maximum set by the user.
+        if symbol in self.portfolio:
+            max_value = self.max_stock_value - (self.portfolio[symbol] * price)
+        else:
+            max_value = self.max_stock_value
+
+        # The maximum value cannot be greater than the cash money that we have
+        max_value = min(self.liquidity, max_value)
+
+        # Calculate how many stocks we can buy to max out our investment in this company
+        stocks_to_buy = math.floor(max_value / price)
+
+        # Add the stocks
+
+    def remove_company(self, symbol):
+        """Ask the portfolio to remove all stocks owned for a company and return how many stocks were removed.
+
+        The broker is responsible to adjust the liquidity.
+
+        :param symbol: Symbol of the company which we want to get rid of all of its stocks.
+        :type symbol: str
+        :return: Number of stocks that were removed.
+        :rtype: int
+        """
+        nb_stocks_removed = self.get_number_of_stocks(symbol)
+        if nb_stocks_removed > 0:
+            self.portfolio.pop(symbol)
+            return nb_stocks_removed
+        else:
+            return 0
+
+    def get_number_of_stocks(self, symbol):
         # TODO : Comment
         if symbol in self.portfolio:
             return self.portfolio[symbol]
         else:
             return 0
 
-    def get_companies(self):
+    def get_all_companies(self):
         """Return a list of the symbol of each company in the portfolio.
 
         :return: List of the symbol of each company in the portfolio.
@@ -128,8 +167,8 @@ class _Portfolio:
         """
         return list(self.portfolio.keys())
 
-    def get_value(self, market):
-        # TODO: To finish
+    def get_value_of_portfolio(self, market):
+        # TODO: Finish comment
         """Return how much we could make if we were to sell all of our stocks at the current date.
 
         :param market: An instance of the class Market
@@ -147,13 +186,24 @@ class _Portfolio:
 
 
 #########################################################################################################
-#                                           TEST
+#                                           Filters
 #########################################################################################################
 
 def perform(lst, market, filters):
     for f in filters:
         lst = f(lst, market)
     return lst
+
+class Filters:
+    @staticmethod
+    def fl_not(lst, market):
+        """Filter that removes all companies in the list."""
+        return []
+
+    @staticmethod
+    def fl_not_in_portfolio(lst, market):
+        # TODO : Do...
+        return True
 
 
 #########################################################################################################
@@ -164,14 +214,22 @@ class Broker:
                  market,
                  sell_commission=_Commission(_TypeCommission.none),
                  buy_commission=_Commission(_TypeCommission.none)):
+        # TODO: Remove commission in params?
+        # The Market where the broker is buying and selling stocks
         self._market = market
 
-        self._liquidity = initial_liquidity
-        self._portfolio = _Portfolio()
+        # The portfolio contains all the stocks bought for the current day and time and
+        # the liquidity (cash money that can be used instantly by the broker to buy stocks).
+        self._portfolio = _Portfolio(initial_liquidity)
 
+        # The bill is how much the broker has charged for its services.
+        self._bill = 0.0
+
+        # A commission is how much the broker is asking to get paid for a given transaction.
         self._sell_commission = sell_commission
         self._buy_commission = buy_commission
 
+        # Filters are functions used to select which companies should be in our portfolio at any given time.
         self._sell_filters = []
         self._buy_filters = []
 
@@ -209,45 +267,88 @@ class Broker:
         for f in filters:
             self._buy_filters.append(f)
 
-    def _sell(self):
-        # Get the list of all companies that we can sell
-        lst = self._portfolio.get_companies()
+    def _how_many_stocks_to_buy(self, symbol):
+        # TODO: Make a real function to calculate the number of stocks to buy.
+        return 1
 
-        # Filter the list to only keep the companies that should be sold
+    def _sell(self):
+        # Get the list of all companies that we can sell (which is what we have in our portfolio);
+        lst = self._portfolio.get_all_companies()
+
+        # Filter the list to only keep the companies that should be sold;
+        # TODO : Take into consideration the commission? Gain - commission > 0 ?
         for f in self._sell_filters:
             lst = f(lst, self._market)
 
-        # For all companies that we should sell, sell 'em.
+        # For all companies that we should sell, sell 'em;
         for symbol in lst:
-            # Get how much you get for selling all the stocks in the market
-            gain = self._market.sell(symbol, self._portfolio.get_stocks(symbol))
+            # Get how much you get for selling all the stocks in the market;
+            gain = self._market.sell(symbol, self._portfolio.get_number_of_stocks(symbol))
 
-            # Remove the stocks in our portfolio
+            # Remove the stocks in our portfolio;
             # TODO: If gain == 0, what to do?
-            self._portfolio.remove_cie(symbol)
+            self._portfolio.remove_company(symbol)
 
-            # Calculate its commission
+            # Calculate the commission;
+            commission = self._sell_commission.calculate(gain)
+            self._bill += commission
 
-            # Adjust the liquidity available
+            # Adjust the liquidity available.
+            self._liquidity += (gain - commission)
+
+    def _buy(self):
+        # Get the list of all companies that we can buy;
+        lst = self._market.get_trading_stocks()
+
+        # Filter the list to only keep the companies that we should buy;
+        # TODO : Remove those that we already have and which are maxed out.
+        for f in self._buy_filters:
+            lst = f(lst, self._market)
+
+        # For all companies that we should buy, as long as we have money, buy 'em (random order)
+        # TODO : Minimum liquidity in portfolio?
+        random.shuffle(lst)
+        for symbol in lst:
+            # Get the number of stocks that we should and can buy for this company
+            nb_of_stocks = self._how_many_stocks_to_buy(symbol)
+
+            # If it's greater than 0 stock, get how much you must pay to acquire them in the market
+            if nb_of_stocks > 0:
+                cost = self._market.buy(symbol, self._portfolio.get_number_of_stocks(symbol))
+
+                # Add the stocks to our portfolio
+                self._portfolio.add_stocks(symbol, nb_of_stocks)
+
+                # Calculate the commission
+                commission = self._buy_commission.calculate(cost)
+                self._bill += commission
+
+                # Adjust the liquidity available
+                self._liquidity -= (cost + commission)
+
+                # Validate if we can continue to buy
+                # TODO: Add a real function to check if we can still buy stocks
+                if self._liquidity <= 0:
+                    break
 
     def run_simulation(self):
         # As long as there is a new business day in our simulation;
+        trading = True
+        while trading:
+            # Sell companies in our portfolio that satisfy our criteria for selling;
+            self._sell()
 
-        # Sell companies in our portfolio that satisfy our criteria for selling;
+            # If we have enough money, buy companies trading this day that satisfy our criteria for buying;
+            # TODO : What is "enough money"?
+            if self._liquidity > 0:
+                self._buy()
 
-        # Buy companies trading this day that satisfy our criteria for buying;
+            # Adjust the value of our assets for the day;
+            # TODO : Add the draw(), data structure to keep track of value over time & maybe more
+            print("{}: {}".format(self._market.get_current_date(),
+                                  self._liquidity +
+                                  self._portfolio.get_value_of_portfolio(self._market)))
 
-        # Adjust the value of our assets for the day.
+            # Go to the next trading day.
+            trading = self._market.next()
 
-
-
-        # TODO: ONLY FOR TESTING
-        lst = self._market.get_trading_stocks()
-        print(lst)
-        lst = perform(lst, self._market, self._sell_filters)
-        print(lst)
-        self._market.next()
-        lst = self._market.get_trading_stocks()
-        lst = perform(lst, self._market, self._sell_filters)
-        print(lst)
-        # TODO: ONLY FOR TESTING

@@ -5,7 +5,7 @@ from Broker import Broker, flat_fee_commission, percent_commission
 import Filters
 
 
-def main_simulator(initial_liquidity, transaction_cost, begin=None, end=None):
+def main_simulator(initial_liquidity, begin=None, end=None):
         # Open a database connection for the queries
         config = configparser.ConfigParser()
         config.read('../config.ini')
@@ -23,7 +23,7 @@ def main_simulator(initial_liquidity, transaction_cost, begin=None, end=None):
         # TODO: ONLY FOR TESTING
         broker = Broker(initial_liquidity, Market(begin, end, db),
                         percent_commission(2), percent_commission(2.5))
-        broker.add_sell_filters(Filters.filter1, Filters.filter2, Filters.filter3)
+        broker.add_sell_filters(Filters.fl_not)
         broker.run_simulation()
 
         """
@@ -59,4 +59,4 @@ def get_min_trading_date(db):
 # TODO: ONLY FOR TESTING
 
 if __name__ == "__main__":
-    main_simulator(1000, 20)
+    main_simulator(1000000, begin="2016-01-01")
