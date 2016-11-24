@@ -1,5 +1,3 @@
-#!/usr/bin/python
-# -*- coding: utf-8 -*-
 import pandas as pd
 from PyQt4 import QtCore, QtGui
 import configparser
