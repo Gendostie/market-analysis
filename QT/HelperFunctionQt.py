@@ -168,9 +168,14 @@ def link_spin_slider_layout(layout):
         max_range_slider.valueChanged.connect(min_range_slider.setMaximum)
 
 
-# TODO: Commenting
 # TODO: Create a DbConnection Object
 def set_min_max_slider_layout(layout):
+    """
+    Set value min and max of QSlider of layout attribute
+    :param layout: Widget layout, must be a simple layout in layout
+    :type layout: QtGui.QLayout
+    :return: None
+    """
     config = configparser.ConfigParser()
     config.read('../config.ini')
 
@@ -179,40 +184,39 @@ def set_min_max_slider_layout(layout):
                       config.get('database', 'PASSWORD'),
                       config.get('database', 'DATABASE'))
 
-    list_histo = ['Revenue (Mil)', 'Net Income (Mil)', 'Gross Margin (%)',
-                   'Dividends', 'EPS', 'BVPS', 'FCFPS']
-    list_calc = ['Div. Yield (%)', 'P/E Ratio', 'P/B Ratio', '52wk (%)']
-    dict_name = {'Revenue (Mil)': "revenu_usd_mil",
-                 'Net Income (Mil)': "net_income_usd_mil",
-                 'Gross Margin (%)': "gross_margin_pct",
-                 'Dividends': "dividends_usd",
-                 'EPS': "earning_per_share_usd",
-                 'BVPS': "book_value_per_share_usd",
-                 'FCFPS': "free_cash_flow_per_share_usd",
-                 'Adj. Close': "close_val",
-                 'Div. Yield (%)': "dividend_yield",
+    dict_calc = {'Div. Yield (%)': "dividend_yield",
                  'P/E Ratio': "p_e_ratio",
                  'P/B Ratio': "p_b_ratio",
                  '52wk (%)': "52wk"}
+    dict_histo = {'Revenue (Mil)': "revenu_usd_mil",
+                  'Net Income (Mil)': "net_income_usd_mil",
+                  'Gross Margin (%)': "gross_margin_pct",
+                  'Dividends': "dividends_usd",
+                  'EPS': "earning_per_share_usd",
+                  'BVPS': "book_value_per_share_usd",
+                  'FCFPS': "free_cash_flow_per_share_usd"}
+    dict_adj_close = {'Adj. Close': "close_val"}
 
     for idx_layout in range(layout.count()):
+        # Layout of the attribute
+        layout_attr = layout.itemAt(idx_layout)
         # Name of the attribute
-        name_attr = get_widget_of_layout(layout.itemAt(idx_layout), QtGui.QCheckBox).text()
-        if name_attr in list_histo:
-            min_val = ManagerCompany.get_minimum_value_historical(dict_name[name_attr], db)
-            max_val = ManagerCompany.get_maximum_value_historical(dict_name[name_attr], db)
-        elif name_attr == 'Adj. Close':
-            min_val = ManagerCompany.get_minimum_value_daily(dict_name[name_attr], db)
-            max_val = ManagerCompany.get_maximum_value_daily(dict_name[name_attr], db)
-        elif name_attr in list_calc:
-            min_val = ManagerCompany.get_minimum_value_calculation(dict_name[name_attr], db)
-            max_val = ManagerCompany.get_maximum_value_calculation(dict_name[name_attr], db)
+        name_attr = layout_attr.itemAt(0).widget().text()
+        if name_attr in dict_histo:
+            min_val = ManagerCompany.get_minimum_value_historical(dict_histo[name_attr], db)
+            max_val = ManagerCompany.get_maximum_value_historical(dict_histo[name_attr], db)
+        elif name_attr == list(dict_adj_close.keys())[0]:
+            min_val = ManagerCompany.get_minimum_value_daily(dict_adj_close[name_attr], db)
+            max_val = ManagerCompany.get_maximum_value_daily(dict_adj_close[name_attr], db)
+        elif name_attr in dict_calc:
+            min_val = ManagerCompany.get_minimum_value_calculation(dict_calc[name_attr], db)
+            max_val = ManagerCompany.get_maximum_value_calculation(dict_calc[name_attr], db)
         else:
             continue
 
         # Min value
-        min_spin_box = get_widget_of_layout(layout.itemAt(idx_layout), QtGui.QDoubleSpinBox)
-        min_range_slider = get_widget_of_layout(layout.itemAt(idx_layout), QtGui.QSlider)
+        min_spin_box = get_widget_of_layout(layout_attr, QtGui.QDoubleSpinBox)
+        min_range_slider = get_widget_of_layout(layout_attr, QtGui.QSlider)
 
         min_spin_box.setMinimum(min_val)
         min_spin_box.setValue(min_val)
@@ -220,8 +224,8 @@ def set_min_max_slider_layout(layout):
         min_range_slider.setValue(min_val)
 
         # Max value
-        max_spin_box = get_widget_of_layout(layout.itemAt(idx_layout), QtGui.QDoubleSpinBox, 1)
-        max_range_slider = get_widget_of_layout(layout.itemAt(idx_layout), QtGui.QSlider, 1)
+        max_spin_box = get_widget_of_layout(layout_attr, QtGui.QDoubleSpinBox, 1)
+        max_range_slider = get_widget_of_layout(layout_attr, QtGui.QSlider, 1)
 
         max_spin_box.setMaximum(max_val)
         max_spin_box.setValue(max_val)

@@ -1,6 +1,5 @@
-#!/usr/bin/python
-# -*- coding: utf-8 -*-
 from PyQt4 import QtCore, QtGui
+import time
 
 from QT.MainWindow import Ui_MainWindow
 from QT.DialogPopUp import Ui_Dialog
@@ -525,15 +524,15 @@ class Slots:
 
 if __name__ == "__main__":
     import sys
-
     app = QtGui.QApplication(sys.argv)
     MainWindow = QtGui.QMainWindow()
     ui = ManagerMainWindow()
     ui.setupUi(MainWindow)
 
+    # start = time.clock()
     ui.setup_manager()
     ui.setup_size_fixed()
     ui.create_connection_signal_slot()
-
+    # print(str(time.clock() - start))
     MainWindow.show()
     sys.exit(app.exec_())
