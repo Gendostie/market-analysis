@@ -1,9 +1,9 @@
-#!/usr/bin/python
 from os import path
 import json
 import configparser
-from Manager_DB import ManagerCompany
+
 from Manager_DB.DbConnection import DbConnection
+from Manager_DB import ManagerCompany
 
 
 def insert_company_snp500():

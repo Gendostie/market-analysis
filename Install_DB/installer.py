@@ -1,4 +1,3 @@
-#!/usr/bin/python
 import os
 import initialize_db as init_sql
 import update_manager as um
