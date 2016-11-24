@@ -1,7 +1,6 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 import finsymbols
-import sys
 import math
 from datetime import timedelta
 from QT.Singleton import divide
@@ -507,8 +506,3 @@ def insert_dividend_to_db(symbol_company, datetime, dividend, db=None):
     db.modified_db(query, params)
 
     return 0
-
-
-if __name__ == '__main__':
-    if len(sys.argv) > 1:
-        print(locals()[sys.argv[1]](sys.argv[2:]))

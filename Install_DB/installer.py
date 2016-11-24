@@ -1,7 +1,7 @@
 #!/usr/bin/python
 import os
-import Install_DB.initialize_db as init_sql
-import Install_DB.update_manager as um
+import initialize_db as init_sql
+import update_manager as um
 import configparser
 from time import localtime, strftime
 
