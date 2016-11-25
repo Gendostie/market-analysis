@@ -2,7 +2,7 @@ import math
 
 
 class Portfolio:
-    def __init__(self, initial_liquidity, min_value=0, max_value=int("inf")):
+    def __init__(self, initial_liquidity, min_value, max_value):
         # TODO : Better comment...
         """A portfolio is keeping the number of stocks we own."""
         self._portfolio = {}
@@ -52,6 +52,9 @@ class Portfolio:
         else:
             self._portfolio[symbol] = stocks_to_buy
 
+        # Adjust the cash we have after the transaction
+        self._cash -= cost
+
         return cost
 
     def sell_all_stocks(self, symbol, price):
@@ -74,6 +77,9 @@ class Portfolio:
         # Sell the stocks and remove them from the portfolio
         gain = nb_stocks * price
         self._portfolio.pop(symbol)
+
+        # Adjust the cash we have after the transaction
+        self._cash += gain
 
         return gain
 

@@ -3,6 +3,7 @@ from DbConnection import DbConnection
 from Market import Market
 from Broker import Broker
 import Filters
+from datetime import datetime
 
 
 def main_simulator(initial_liquidity, begin=None, end=None):
@@ -21,29 +22,10 @@ def main_simulator(initial_liquidity, begin=None, end=None):
             end = get_max_trading_date(db)
 
         # TODO: ONLY FOR TESTING
-        broker = Broker(initial_liquidity, Market(begin, end, db))
+        broker = Broker(initial_liquidity, Market(begin, end, db), max_value=1000)
         broker.set_percent_commission(2)
         broker.add_sell_filters(Filters.fl_not)
         broker.run_simulation()
-
-        """
-        market.debug_print()
-        print(market.get_price("ZTS"))
-        print(market.sell("ZTS", 1))
-        print(market.sell("ZTS", 100))
-        cpt = 0
-        flag = market.next()
-        while flag:
-            cpt += 1
-            if cpt == 100:
-                cpt = 0
-                print(market.get_current_date())
-            flag = market.next()
-        market.debug_print()
-        print(market.get_price("ZTS"))
-        print(market.sell("ZTS", 1))
-        print(market.sell("ZTS", 100))
-        """
         # TODO: ONLY FOR TESTING
 
 
@@ -59,4 +41,4 @@ def get_min_trading_date(db):
 # TODO: ONLY FOR TESTING
 
 if __name__ == "__main__":
-    main_simulator(1000000, begin="2016-01-01")
+    main_simulator(1000000, begin=datetime(2016, 1, 1))

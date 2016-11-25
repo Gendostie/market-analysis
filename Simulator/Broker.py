@@ -67,16 +67,19 @@ def perform(lst, market, filters):
 #                                           Broker
 #########################################################################################################
 class Broker:
-    def __init__(self, initial_liquidity, market):
+    def __init__(self, initial_liquidity, market, min_value=0, max_value=float("inf")):
         # The Market where the broker is buying and selling stocks
         self._market = market
 
         # The portfolio contains all the stocks bought for the current day and time and
         # the liquidity (cash money that can be used instantly by the broker to buy stocks).
-        self._portfolio = Portfolio(initial_liquidity)
+        self._portfolio = Portfolio(initial_liquidity, min_value, max_value)
 
         # The bill is how much the broker has charged for its services.
         self._bill = 0.0
+
+        # Dictionary that keep tracks of the value of our portfolio at any given time since the start of the simulation.
+        self._hist_market_value = {}
 
         # A commission is how much the broker is asking to get paid for a given transaction.
         # Initially, there is no commission.
@@ -154,10 +157,6 @@ class Broker:
         for f in filters:
             self._buy_filters.append(f)
 
-    def _how_many_stocks_to_buy(self, symbol):
-        # TODO: Make a real function to calculate the number of stocks to buy.
-        return 1
-
     #######################################################################################################
     #                                Run the simulation
     #######################################################################################################
@@ -167,25 +166,18 @@ class Broker:
         lst = self._portfolio.get_companies()
 
         # Filter the list to only keep the companies that should be sold;
-        # TODO : Take into consideration the commission? Gain - commission > 0 ?
         for f in self._sell_filters:
             lst = f(lst, self._market, self._portfolio)
 
         # For all companies that we should sell, sell 'em;
         for symbol in lst:
-            # Get how much you get for selling all the stocks in the market;
-            gain = self._market.sell(symbol, self._portfolio.get_stocks_count(symbol))
+            # Instruct the portfolio to sell all stocks it has for this company
+            gain = self._portfolio.sell_all_stocks(symbol, self._market.get_price(symbol))
 
-            # Remove the stocks in our portfolio;
-            # TODO: If gain == 0, what to do?
-            self._portfolio.sell_all_stocks(symbol)
-
-            # Calculate the commission;
-            commission = self._commission.calculate(gain)
-            self._bill += commission
-
-            # Adjust the liquidity available.
-            self._liquidity += (gain - commission)
+            # If it succeeded, calculate the commission
+            if gain > 0:
+                commission = self._commission.calculate(gain)
+                self._bill += commission
 
     def _buy(self):
         # Get the list of all companies that we can buy;
@@ -197,30 +189,20 @@ class Broker:
             lst = f(lst, self._market, self._portfolio)
 
         # For all companies that we should buy, as long as we have money, buy 'em (random order)
-        # TODO : Minimum liquidity in portfolio?
         random.shuffle(lst)
         for symbol in lst:
-            # Get the number of stocks that we should and can buy for this company
-            nb_of_stocks = self._how_many_stocks_to_buy(symbol)
+            # Attempt to buy as many stocks as possible for this company
+            # TODO : Choose a different algorithm for buying
+            cost = self._portfolio.maximize_buy(symbol, self._market.get_price(symbol))
 
-            # If it's greater than 0 stock, get how much you must pay to acquire them in the market
-            if nb_of_stocks > 0:
-                cost = self._market.buy(symbol, self._portfolio.get_stocks_count(symbol))
-
-                # Add the stocks to our portfolio
-                self._portfolio.add_stocks(symbol, nb_of_stocks)
-
-                # Calculate the commission
+            # If it succeeded, calculate the commission
+            if cost > 0:
                 commission = self._commission.calculate(cost)
                 self._bill += commission
 
-                # Adjust the liquidity available
-                self._liquidity -= (cost + commission)
-
-                # Validate if we can continue to buy
-                # TODO: Add a real function to check if we can still buy stocks
-                if self._liquidity <= 0:
-                    break
+            # Validate if we can continue to buy
+            if not self._portfolio.can_buy():
+                break
 
     def run_simulation(self):
         # As long as there is a new business day in our simulation;
@@ -230,15 +212,13 @@ class Broker:
             self._sell()
 
             # If we have enough money, buy companies trading this day that satisfy our criteria for buying;
-            # TODO : What is "enough money"?
-            if self._liquidity > 0:
+            if self._portfolio.can_buy():
                 self._buy()
 
-            # Adjust the value of our assets for the day;
+            # Keep track of our assets
             # TODO : Add the draw(), data structure to keep track of value over time & maybe more
-            print("{}: {}".format(self._market.get_current_date(),
-                                  self._liquidity +
-                                  self._portfolio.get_value_of_portfolio(self._market)))
+            self._hist_market_value[self._market.get_current_date] = self._portfolio.get_assets_value(self._market)
+            print(self._hist_market_value[self._market.get_current_date])
 
             # Go to the next trading day.
             trading = self._market.next()
