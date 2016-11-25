@@ -2,10 +2,13 @@ import math
 
 
 class Portfolio:
-    def __init__(self, initial_liquidity, min_value, max_value):
+    def __init__(self, initial_liquidity, min_value, max_value, log):
         # TODO : Better comment...
         """A portfolio is keeping the number of stocks we own."""
         self._portfolio = {}
+
+        # Log file to log each transaction
+        self.log = log
 
         # Cash must be an integer between [1, inf[
         # Verification must be done when the user sends input
@@ -50,7 +53,7 @@ class Portfolio:
         max_value = min(self._cash, max_value)
 
         # Calculate how many stocks we can buy to max out our investment in this company
-        # Check in case we are in the negative (cash), max_value will be negative and generate negative
+        # Since max_value can be negative and generate negative
         #    number of stocks to buy (which we don't want). We set it to at least 0.
         stocks_to_buy = max(math.floor(max_value / price), 0)
 
@@ -66,6 +69,8 @@ class Portfolio:
             # Adjust the cash we have after the transaction
             self._cash -= cost
 
+            # Log the transaction
+            self.log.write("BUY {} {} -{}\n".format(symbol, stocks_to_buy, cost))
         return cost
 
     def sell_all_stocks(self, symbol, price):
@@ -91,6 +96,7 @@ class Portfolio:
 
         # Adjust the cash we have after the transaction
         self._cash += gain
+        self.log.write("SELL {} {} +{}\n".format(symbol, nb_stocks, gain))
 
         return gain
 
@@ -100,7 +106,6 @@ class Portfolio:
 
     def can_buy(self):
         # TODO: Better function?
-        # TODO: Put to 100 for testing
         """Indicate if it is possible to buy stocks to avoid calculating for nothing.
 
         As for now, only checks if we have at least one cent.

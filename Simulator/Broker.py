@@ -15,6 +15,10 @@ def perform(lst, market, filters):
     return lst
 
 
+#########################################################################################################
+#                                           ENUM
+#########################################################################################################
+
 class _TypeCommission(Enum):
     """Enumeration of all possible types of commissions for a given transaction.
 
@@ -31,16 +35,20 @@ class _TypeCommission(Enum):
 #                                           Broker
 #########################################################################################################
 class Broker:
-    def __init__(self, initial_liquidity, db,
+    # TODO: Keep log?
+    def __init__(self, initial_liquidity, db, log,
                  min_date=datetime(2006, 1, 3), max_date=datetime(2016, 11, 4),
                  min_value=0, max_value=float("inf")):
         # TODO: Add comment
         # The Market where the broker is buying and selling stocks
         self._market = Market(min_date, max_date, db)
 
+        # TODO: LOG
+        self.log = log
+
         # The portfolio contains all the stocks bought for the current day and time and
         # the cash money that can be used instantly by the broker to buy stocks.
-        self._portfolio = Portfolio(initial_liquidity, min_value, max_value)
+        self._portfolio = Portfolio(initial_liquidity, min_value, max_value, log)
 
         # The bill is how much the broker has charged for its services.
         # TODO : Make something of it
@@ -108,16 +116,11 @@ class Broker:
     def set_percent_commission(self, value):
         """Set the commission of the broker to a percentage of any transaction done.
 
-        If the value is between ]0,1], it will be considered already as a percentage.
-        If the value is > 1, it will be converted into a percentage between ]0,1].
-
-        :param value: Percentage of the transaction that will be charged. Must be > 0.
+        :param value: Percentage of the transaction that will be charged. Must be > 0. 0.5 => 0.005%
         :type value: float | int
         :return: Nothing
         """
-        if 0 < value <= 1:
-            self._commission = self._Commission(_TypeCommission.percent, value)
-        elif value > 1:
+        if value > 0:
             self._commission = self._Commission(_TypeCommission.percent, value/100)
         else:
             raise ValueError
@@ -173,7 +176,7 @@ class Broker:
 
         # Filter the list to only keep the companies that should be sold;
         for f in self._sell_filters:
-            lst = f(lst, self._market, self._portfolio)
+            lst = f.run(lst, self._market, self._portfolio)
 
         # For all companies that we should sell, sell 'em;
         for symbol in lst:
@@ -193,7 +196,7 @@ class Broker:
         # Filter the list to only keep the companies that we should buy;
         # TODO : Remove those that we already have and which are maxed out.
         for f in self._buy_filters:
-            lst = f(lst, self._market, self._portfolio)
+            lst = f.run(lst, self._market, self._portfolio)
 
         # For all companies that we should buy, as long as we have money, buy 'em (random order)
         random.shuffle(lst)
@@ -215,6 +218,7 @@ class Broker:
         # TODO : Add the draw(), data structure to keep track of value over time & maybe more
         self._hist_market_value[self._market.get_current_date()] = \
             self._portfolio.get_assets_value(self._market) - self._bill
+        # TODO : Remove the print
         print("{}: {}\tBill:{}".format(self._market.get_current_date(),
                                        self._hist_market_value[self._market.get_current_date()],
                                        self._bill))
@@ -224,6 +228,9 @@ class Broker:
         # As long as there is a new business day in our simulation;
         trading = True
         while trading:
+            # TODO : Log
+            self.log.write("{}\n".format(self._market.get_current_date()))
+
             # Sell companies in our portfolio that satisfy our criteria for selling;
             self._sell()
 
@@ -236,4 +243,5 @@ class Broker:
 
             # Go to the next trading day.
             trading = self._market.next()
-
+        # TODO: Remove the print, instead, print a résumé in the log.
+        self._portfolio.print_portfolio()
