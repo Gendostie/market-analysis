@@ -1,6 +1,8 @@
 from enum import Enum
 import random
 from Portfolio import Portfolio
+from Market import Market
+from datetime import datetime
 
 #########################################################################################################
 #                                           Commission
@@ -67,9 +69,11 @@ def perform(lst, market, filters):
 #                                           Broker
 #########################################################################################################
 class Broker:
-    def __init__(self, initial_liquidity, market, min_value=0, max_value=float("inf")):
+    def __init__(self, initial_liquidity, db,
+                 min_date=datetime(2006, 1, 3), max_date=datetime(2016, 11, 4),
+                 min_value=0, max_value=float("inf")):
         # The Market where the broker is buying and selling stocks
-        self._market = market
+        self._market = Market(min_date, max_date, db)
 
         # The portfolio contains all the stocks bought for the current day and time and
         # the liquidity (cash money that can be used instantly by the broker to buy stocks).
@@ -192,7 +196,7 @@ class Broker:
         random.shuffle(lst)
         for symbol in lst:
             # Attempt to buy as many stocks as possible for this company
-            # TODO : Choose a different algorithm for buying
+            # TODO : Allow to choose a different algorithm for buying
             cost = self._portfolio.maximize_buy(symbol, self._market.get_price(symbol))
 
             # If it succeeded, calculate the commission
@@ -217,8 +221,8 @@ class Broker:
 
             # Keep track of our assets
             # TODO : Add the draw(), data structure to keep track of value over time & maybe more
-            self._hist_market_value[self._market.get_current_date] = self._portfolio.get_assets_value(self._market)
-            print(self._hist_market_value[self._market.get_current_date])
+            self._hist_market_value[self._market.get_current_date()] = self._portfolio.get_assets_value(self._market)
+            print("{}: {}".format(self._market.get_current_date(), self._hist_market_value[self._market.get_current_date()]))
 
             # Go to the next trading day.
             trading = self._market.next()

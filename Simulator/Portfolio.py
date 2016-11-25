@@ -132,7 +132,7 @@ class Portfolio:
 
         :param market: An instance of the class Market
         :type market: Market
-        :return: float
+        :return: int
         """
         return self._cash + self.get_value_of_portfolio(market)
 
