@@ -1,6 +1,6 @@
 from enum import Enum
 import random
-import math
+from Portfolio import Portfolio
 
 #########################################################################################################
 #                                           Commission
@@ -53,140 +53,8 @@ class _Commission:
             return 0
 
 
-def flat_fee_commission(value):
-    """Construct an instance of _Commission of the type flat_fee for a type of transaction (buy or sell)
-
-    :param value: The flat fee which is charged for this type of transaction. Must be > 0.
-    :type value: float | int
-    :return: An instance of _Commission for a flat fee. If value <= 0, there will be no commission.
-    :rtype: _Commission
-    """
-    if value > 0:
-        return _Commission(_TypeCommission.flat_fee, value)
-    else:
-        return _Commission(_TypeCommission.none)
-
-
-def percent_commission(value):
-    """Construct an instance of _Commission of the type percent for a type of transaction (buy or sell)
-
-    :param value: The percent of the transaction value which is charged. Must be > 0 or between ]0,1].
-    :type value: float | int
-    :return: An instance of _Commission for a percent commission. If value is not valid, there will be no commission.
-    :rtype: _Commission
-    """
-    if 0 < value <= 1:
-        return _Commission(_TypeCommission.percent, value)
-    elif value > 0:
-        return _Commission(_TypeCommission.percent, value/100)
-    else:
-        return _Commission(_TypeCommission.none)
-
-
 #########################################################################################################
-#                                         Portfolio
-#########################################################################################################
-class _Portfolio:
-    def __init__(self, initial_liquidity, min_value=0, max_value=int("inf")):
-        """A portfolio is keeping the number of stocks we own."""
-        self.portfolio = {}
-        self.liquidity = initial_liquidity
-
-        self.min_stock_value = min_value
-        self.max_stock_value = max_value
-
-    def add_stocks(self, symbol, nb_stocks):
-        # TODO: Check if "stocks" is okay
-        # TODO: Validate more? Exception? ValueError?
-        """Add a certain number of stocks for a company.
-
-        Do nothing if the number of stocks is 0 or less; or if the number of stocks is not an integer.
-
-        :param symbol: Symbol of the stocks' company.
-        :type symbol: str
-        :param nb_stocks: Number of stocks we want to add for the company. Must be > 0.
-        :type nb_stocks: int
-        :return: Nothing
-        """
-        if nb_stocks > 0 and isinstance(nb_stocks, int):
-            if symbol in self.portfolio:
-                self.portfolio[symbol] += nb_stocks
-            else:
-                self.portfolio[symbol] = nb_stocks
-
-    def optimize_buy(self, symbol, price):
-        # Verify if we have enough cash money to buy stocks in the first place.
-        # Do nothing and return immediately if that's not the case.
-        # Also add a safety check for price. If it's 0, we also refuse the operation.
-        if self.liquidity < self.min_stock_value or price == 0:
-            return 0
-
-        # Calculate the maximum we can put in $ for this company without busting the maximum set by the user.
-        if symbol in self.portfolio:
-            max_value = self.max_stock_value - (self.portfolio[symbol] * price)
-        else:
-            max_value = self.max_stock_value
-
-        # The maximum value cannot be greater than the cash money that we have
-        max_value = min(self.liquidity, max_value)
-
-        # Calculate how many stocks we can buy to max out our investment in this company
-        stocks_to_buy = math.floor(max_value / price)
-
-        # Add the stocks
-
-    def remove_company(self, symbol):
-        """Ask the portfolio to remove all stocks owned for a company and return how many stocks were removed.
-
-        The broker is responsible to adjust the liquidity.
-
-        :param symbol: Symbol of the company which we want to get rid of all of its stocks.
-        :type symbol: str
-        :return: Number of stocks that were removed.
-        :rtype: int
-        """
-        nb_stocks_removed = self.get_number_of_stocks(symbol)
-        if nb_stocks_removed > 0:
-            self.portfolio.pop(symbol)
-            return nb_stocks_removed
-        else:
-            return 0
-
-    def get_number_of_stocks(self, symbol):
-        # TODO : Comment
-        if symbol in self.portfolio:
-            return self.portfolio[symbol]
-        else:
-            return 0
-
-    def get_all_companies(self):
-        """Return a list of the symbol of each company in the portfolio.
-
-        :return: List of the symbol of each company in the portfolio.
-        :rtype: list
-        """
-        return list(self.portfolio.keys())
-
-    def get_value_of_portfolio(self, market):
-        # TODO: Finish comment
-        """Return how much we could make if we were to sell all of our stocks at the current date.
-
-        :param market: An instance of the class Market
-        :return: Market
-        """
-        stocks_value = 0
-        for symbol, nb_stocks in self.portfolio.items():
-            stocks_value += nb_stocks * market.get_price(symbol)
-        return stocks_value
-
-    # TODO: ONLY FOR DEBUGGING
-    def print_portfolio(self):
-        for symbol, stocks in self.portfolio.items():
-            print("{} -> {}".format(symbol, stocks))
-
-
-#########################################################################################################
-#                                           Filters
+#                                           TEST
 #########################################################################################################
 
 def perform(lst, market, filters):
@@ -194,44 +62,63 @@ def perform(lst, market, filters):
         lst = f(lst, market)
     return lst
 
-class Filters:
-    @staticmethod
-    def fl_not(lst, market):
-        """Filter that removes all companies in the list."""
-        return []
-
-    @staticmethod
-    def fl_not_in_portfolio(lst, market):
-        # TODO : Do...
-        return True
-
 
 #########################################################################################################
 #                                           Broker
 #########################################################################################################
 class Broker:
-    def __init__(self, initial_liquidity,
-                 market,
-                 sell_commission=_Commission(_TypeCommission.none),
-                 buy_commission=_Commission(_TypeCommission.none)):
-        # TODO: Remove commission in params?
+    def __init__(self, initial_liquidity, market):
         # The Market where the broker is buying and selling stocks
         self._market = market
 
         # The portfolio contains all the stocks bought for the current day and time and
         # the liquidity (cash money that can be used instantly by the broker to buy stocks).
-        self._portfolio = _Portfolio(initial_liquidity)
+        self._portfolio = Portfolio(initial_liquidity)
 
         # The bill is how much the broker has charged for its services.
         self._bill = 0.0
 
         # A commission is how much the broker is asking to get paid for a given transaction.
-        self._sell_commission = sell_commission
-        self._buy_commission = buy_commission
+        # Initially, there is no commission.
+        self._commission = _Commission(_TypeCommission.none)
 
         # Filters are functions used to select which companies should be in our portfolio at any given time.
         self._sell_filters = []
         self._buy_filters = []
+
+    #######################################################################################################
+    #                                Setters for the commission
+    #######################################################################################################
+
+    def set_flat_fee_commission(self, value):
+        """Set the commission of the broker to a flat fee for any transaction done.
+
+        :param value: The flat fee which is charged for any transaction. Must be > 0.
+        :type value: float | int
+        :return: Nothing
+        """
+        if value > 0:
+            self._commission = _Commission(_TypeCommission.flat_fee, value)
+        else:
+            raise ValueError
+
+    def set_percent_commission(self, value):
+        """Set the commission of the broker to a percentage of any transaction done.
+
+        :param value: The percent of the transaction value which is charged. Must be > 0 or between ]0,1].
+        :type value: float | int
+        :return: Nothing
+        """
+        if 0 < value <= 1:
+            self._commission = _Commission(_TypeCommission.percent, value)
+        elif value > 0:
+            self._commission = _Commission(_TypeCommission.percent, value/100)
+        else:
+            raise ValueError
+
+    #######################################################################################################
+    #                                Setters for the filters
+    #######################################################################################################
 
     def add_sell_filters(self, *filters):
         """Add one or many filters to reduce the list of companies in our portfolio.
@@ -271,26 +158,30 @@ class Broker:
         # TODO: Make a real function to calculate the number of stocks to buy.
         return 1
 
+    #######################################################################################################
+    #                                Run the simulation
+    #######################################################################################################
+
     def _sell(self):
         # Get the list of all companies that we can sell (which is what we have in our portfolio);
-        lst = self._portfolio.get_all_companies()
+        lst = self._portfolio.get_companies()
 
         # Filter the list to only keep the companies that should be sold;
         # TODO : Take into consideration the commission? Gain - commission > 0 ?
         for f in self._sell_filters:
-            lst = f(lst, self._market)
+            lst = f(lst, self._market, self._portfolio)
 
         # For all companies that we should sell, sell 'em;
         for symbol in lst:
             # Get how much you get for selling all the stocks in the market;
-            gain = self._market.sell(symbol, self._portfolio.get_number_of_stocks(symbol))
+            gain = self._market.sell(symbol, self._portfolio.get_stocks_count(symbol))
 
             # Remove the stocks in our portfolio;
             # TODO: If gain == 0, what to do?
-            self._portfolio.remove_company(symbol)
+            self._portfolio.sell_all_stocks(symbol)
 
             # Calculate the commission;
-            commission = self._sell_commission.calculate(gain)
+            commission = self._commission.calculate(gain)
             self._bill += commission
 
             # Adjust the liquidity available.
@@ -303,7 +194,7 @@ class Broker:
         # Filter the list to only keep the companies that we should buy;
         # TODO : Remove those that we already have and which are maxed out.
         for f in self._buy_filters:
-            lst = f(lst, self._market)
+            lst = f(lst, self._market, self._portfolio)
 
         # For all companies that we should buy, as long as we have money, buy 'em (random order)
         # TODO : Minimum liquidity in portfolio?
@@ -314,13 +205,13 @@ class Broker:
 
             # If it's greater than 0 stock, get how much you must pay to acquire them in the market
             if nb_of_stocks > 0:
-                cost = self._market.buy(symbol, self._portfolio.get_number_of_stocks(symbol))
+                cost = self._market.buy(symbol, self._portfolio.get_stocks_count(symbol))
 
                 # Add the stocks to our portfolio
                 self._portfolio.add_stocks(symbol, nb_of_stocks)
 
                 # Calculate the commission
-                commission = self._buy_commission.calculate(cost)
+                commission = self._commission.calculate(cost)
                 self._bill += commission
 
                 # Adjust the liquidity available

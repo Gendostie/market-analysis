@@ -1,7 +1,7 @@
 import configparser
 from DbConnection import DbConnection
 from Market import Market
-from Broker import Broker, flat_fee_commission, percent_commission
+from Broker import Broker
 import Filters
 
 
@@ -21,8 +21,8 @@ def main_simulator(initial_liquidity, begin=None, end=None):
             end = get_max_trading_date(db)
 
         # TODO: ONLY FOR TESTING
-        broker = Broker(initial_liquidity, Market(begin, end, db),
-                        percent_commission(2), percent_commission(2.5))
+        broker = Broker(initial_liquidity, Market(begin, end, db))
+        broker.set_percent_commission(2)
         broker.add_sell_filters(Filters.fl_not)
         broker.run_simulation()
 

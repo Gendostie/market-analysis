@@ -1,4 +1,4 @@
-def filter1(lst, market):
+def filter1(lst, market, portfolio):
     new_list = []
     for symbol in lst:
         price = market.get_price(symbol)
@@ -7,7 +7,7 @@ def filter1(lst, market):
     return new_list
 
 
-def filter2(lst, market):
+def filter2(lst, market, portfolio):
     new_list = []
     for symbol in lst:
         price = market.get_price(symbol)
@@ -16,7 +16,7 @@ def filter2(lst, market):
     return new_list
 
 
-def filter3(lst, market):
+def filter3(lst, market, portfolio):
     new_list = []
     for symbol in lst:
         price = market.get_price(symbol)
@@ -25,6 +25,6 @@ def filter3(lst, market):
     return new_list
 
 
-def fl_not(lst, market):
+def fl_not(lst, market, portfolio):
     """Filter that removes all companies in the list."""
     return []
