@@ -17,7 +17,7 @@ class Market:
         self.current_date = begin
         self.end_date = end
 
-        # Get the list of all business days
+        # Get the list of all business days (must be initialized before any call to __is_business_day() )
         self.business_days = self.__get_business_days()
 
         # Safety check

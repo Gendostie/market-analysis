@@ -16,8 +16,8 @@ def main_simulator(initial_liquidity):
                       config.get('database', 'DATABASE'))
 
     # TODO: ONLY FOR TESTING
-    broker = Broker(initial_liquidity, db, min_date=datetime(2016, 10, 1), max_value=1000)
-    broker.set_percent_commission(2)
+    broker = Broker(initial_liquidity, db, min_date=datetime(2016, 9, 1), min_value=500, max_value=2000)
+    broker.set_flat_fee_commission(9.49)
     broker.add_sell_filters(Filters.fl_not)
     broker.run_simulation()
     # TODO: ONLY FOR TESTING

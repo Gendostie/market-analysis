@@ -6,8 +6,13 @@ class Portfolio:
         # TODO : Better comment...
         """A portfolio is keeping the number of stocks we own."""
         self._portfolio = {}
+
+        # Cash must be an integer between [1, inf[
+        # Verification must be done when the user sends input
         self._cash = initial_liquidity
 
+        # Minimum and maximum must be between [0, inf[ and min < max.
+        # Verification must be done when the user sends input.
         self._min_stock_value = min_value
         self._max_stock_value = max_value
 
@@ -19,7 +24,9 @@ class Portfolio:
         """Buy as many stocks as possible at a given price for the given company.
 
         It will not buy for more than the maximum amount set by the user, nor more than it can buy with the
-        cash it has. It might leave no margin for the broker's commission though.
+        cash it has. That might leave no margin for the broker's commission though.
+
+        The amount of cash we have is automatically adjusted.
 
         :param symbol: Symbol of the company of which we want to buy stocks.
         :type symbol: str
@@ -43,17 +50,21 @@ class Portfolio:
         max_value = min(self._cash, max_value)
 
         # Calculate how many stocks we can buy to max out our investment in this company
-        stocks_to_buy = math.floor(max_value / price)
+        # Check in case we are in the negative (cash), max_value will be negative and generate negative
+        #    number of stocks to buy (which we don't want). We set it to at least 0.
+        stocks_to_buy = max(math.floor(max_value / price), 0)
 
         # Buy the stocks and add them to our portfolio
         cost = stocks_to_buy * price
-        if symbol in self._portfolio:
-            self._portfolio[symbol] += stocks_to_buy
-        else:
-            self._portfolio[symbol] = stocks_to_buy
 
-        # Adjust the cash we have after the transaction
-        self._cash -= cost
+        if cost > 0:
+            if symbol in self._portfolio:
+                self._portfolio[symbol] += stocks_to_buy
+            else:
+                self._portfolio[symbol] = stocks_to_buy
+
+            # Adjust the cash we have after the transaction
+            self._cash -= cost
 
         return cost
 
@@ -62,7 +73,7 @@ class Portfolio:
 
         The amount of cash we have is automatically adjusted.
 
-        :param symbol: Symbol of the company which we want to sell all of its stocks that we own.
+        :param symbol: Symbol of the company of which we want to sell all of its stocks.
         :type symbol: str
         :param price: The price at which the stocks will be bought in the market.
         :type price: float
@@ -88,12 +99,21 @@ class Portfolio:
     #######################################################################################################
 
     def can_buy(self):
-        return self._cash > 0
+        # TODO: Better function?
+        # TODO: Put to 100 for testing
+        """Indicate if it is possible to buy stocks to avoid calculating for nothing.
+
+        As for now, only checks if we have at least one cent.
+
+        :return: True if it's possible to buy stocks. False otherwise.
+        :rtype: bool
+        """
+        return self._cash > 100.0
 
     def get_stocks_count(self, symbol):
         """Return the number of stocks owned for a company.
 
-        :param symbol: The symbol of the company which we want to know the stocks' count.
+        :param symbol: The symbol of the company for which we want to know the stocks' count.
         :type symbol: str
         :return: Number of stocks owned for the company. 0 if we hold no stocks for this company.
         :rtype: int
@@ -122,7 +142,7 @@ class Portfolio:
         :type market: Market
         :return: float
         """
-        stocks_value = 0
+        stocks_value = 0.0
         for symbol, nb_stocks in self._portfolio.items():
             stocks_value += nb_stocks * market.get_price(symbol)
         return stocks_value
