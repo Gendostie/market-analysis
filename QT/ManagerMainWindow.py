@@ -1,6 +1,5 @@
 from PyQt4 import QtCore, QtGui
 import configparser
-import time
 
 from DbConnection import DbConnection
 from QT.MainWindow import Ui_MainWindow
@@ -9,7 +8,7 @@ from Manager_DB import ManagerPortfolio, ManagerCompany
 from QT import HelperFunctionQt
 from QT.Singleton import Singleton
 
-dict_min_max_value_criteria_calc = {}
+dict_min_max_value_criteria = {}
 dict_type_simulation = {'Technical Analysis': 'technical_analysis_windows', 'By Low Set High': 'by_low_set_high',
                         'Global Ranking': 'global_ranking', '1 Stock For Each Company': ''}
 dict_params_value_sim = {}  # get last value of params of type simulation until no change type simulation
@@ -49,11 +48,11 @@ class ManagerMainWindow(Ui_MainWindow):
         Setup for widget already in MainWindow.ui to modify
         :return: None
         """
-        self.get_min_max_value_criteria_calculate()
+        self.get_min_max_value_criteria()
         # Stock Screener
         # Set min max criteria Stock Screener
-        HelperFunctionQt.set_min_max_slider_layout(self.verticalLayout_left, dict_min_max_value_criteria_calc, db)
-        HelperFunctionQt.set_min_max_slider_layout(self.verticalLayout_right, dict_min_max_value_criteria_calc, db)
+        HelperFunctionQt.set_min_max_slider_layout(self.verticalLayout_left, dict_min_max_value_criteria)
+        HelperFunctionQt.set_min_max_slider_layout(self.verticalLayout_right, dict_min_max_value_criteria)
         self.create_data_table_stock_screener()
         # Add placeholder to combobox portfolio Stock screener
         self.comboBox_stockScreener_portfolio.lineEdit().setPlaceholderText("Choose your portfolio name.")
@@ -66,8 +65,8 @@ class ManagerMainWindow(Ui_MainWindow):
         self.create_combobox_company_portfolio_manager()
         # Simulator
         # Set min max criteria Simulator
-        HelperFunctionQt.set_min_max_slider_layout(self.verticalLayout_left_2, dict_min_max_value_criteria_calc, db)
-        HelperFunctionQt.set_min_max_slider_layout(self.verticalLayout_right_2, dict_min_max_value_criteria_calc, db)
+        HelperFunctionQt.set_min_max_slider_layout(self.verticalLayout_left_2, dict_min_max_value_criteria)
+        HelperFunctionQt.set_min_max_slider_layout(self.verticalLayout_right_2, dict_min_max_value_criteria)
         # Set min max datetime Simulator
         self.get_min_max_date_historic()
         # Add items of combobox type_simulation who be in list_type_simulation
@@ -77,17 +76,29 @@ class ManagerMainWindow(Ui_MainWindow):
         self.dateEdit_simulatorTo.setDisplayFormat('yyyy-MM-dd')
 
     @staticmethod
-    def get_min_max_value_criteria_calculate():
+    def get_min_max_value_criteria():
         """
-        Get min and max value of criteria to calculate for slider criteria n tab Stock Screener and Simulator.
+        Get min and max value of criteria for slider criteria n tab Stock Screener and Simulator.
         Put result in global dictionary.
         :return: None
         """
-        dict_value_criteria_calc = ['dividend_yield', 'p_e_ratio', 'p_b_ratio', '52wk']
-        for criterion in dict_value_criteria_calc:
+        min_val = ManagerCompany.get_minimum_value_daily('close_val', db)
+        max_val = ManagerCompany.get_maximum_value_daily('close_val', db)
+        dict_min_max_value_criteria['close_val'] = {'min': min_val, 'max': max_val}
+
+        list_histo_criteria = ['revenu_usd_mil', 'net_income_usd_mil', 'gross_margin_pct', 'dividends_usd',
+                               'earning_per_share_usd', 'book_value_per_share_usd', 'free_cash_flow_per_share_usd']
+        for criterion in list_histo_criteria:
+            min_val = ManagerCompany.get_minimum_value_historical(criterion, db)
+            max_val = ManagerCompany.get_maximum_value_historical(criterion, db)
+            dict_min_max_value_criteria[criterion] = {'min': min_val, 'max': max_val}
+
+        list_value_criteria_calc = ['dividend_yield', 'p_e_ratio', 'p_b_ratio', '52wk']
+        for criterion in list_value_criteria_calc:
             min_val = ManagerCompany.get_minimum_value_calculation(criterion, db)
             max_val = ManagerCompany.get_maximum_value_calculation(criterion, db)
-            dict_min_max_value_criteria_calc[criterion] = {'min': min_val, 'max': max_val}
+            dict_min_max_value_criteria[criterion] = {'min': min_val, 'max': max_val}
+        # print(dict_min_max_value_criteria)
 
     def create_data_table_stock_screener(self):
         """
@@ -204,6 +215,10 @@ class ManagerMainWindow(Ui_MainWindow):
         self.btn_selectAllCriteria_2.clicked.connect(Slots.select_all_criteria_simulator)
         # btn deselect criteria Simulator
         self.btn_deselectAllCriteria_2.clicked.connect(Slots.deselect_all_criteria_simulator)
+        # link slider and spin box of box layout to left
+        HelperFunctionQt.link_spin_slider_layout(self.verticalLayout_left_2)
+        # link slider and spin box of box layout to right
+        HelperFunctionQt.link_spin_slider_layout(self.verticalLayout_right_2)
         # connect min max datetime
         self.dateEdit_simulatorFrom.dateTimeChanged.connect(self.dateEdit_simulatorTo.setMinimumDateTime)
         self.dateEdit_simulatorTo.dateTimeChanged.connect(self.dateEdit_simulatorFrom.setMaximumDateTime)
@@ -558,10 +573,8 @@ if __name__ == "__main__":
     ui = ManagerMainWindow()
     ui.setupUi(MainWindow)
 
-    # start = time.clock()
-    ui.setup_manager()
     ui.setup_size_fixed()
+    ui.setup_manager()
     ui.create_connection_signal_slot()
-    # print(str(time.clock() - start))
     MainWindow.show()
     sys.exit(app.exec_())

@@ -2,7 +2,7 @@ import pandas as pd
 from PyQt4 import QtCore, QtGui
 
 from MainWindow import _translate
-from Manager_DB import ManagerPortfolio, ManagerCompany
+from Manager_DB import ManagerPortfolio
 from QT import ValueTableItem
 from Singleton import divide
 
@@ -168,43 +168,35 @@ def link_spin_slider_layout(layout):
 
 
 # TODO: Create a DbConnection Object
-def set_min_max_slider_layout(layout, dict_min_max_value_criteria_calc, db):
+def set_min_max_slider_layout(layout, dict_min_max_value_criteria_calc):
     """
     Set value min and max of QSlider of layout attribute
     :param layout: Widget layout, must be a simple layout in layout
     :type layout: QtGui.QLayout
     :param dict_min_max_value_criteria_calc: dict of value min and max of criteria we must calculate
     :type dict_min_max_value_criteria_calc: dict{dict}
-    :param db: connection to db
-    :type db: DbConnection.DbConnection
     :return: None
     """
-    dict_histo_criteria = {'Revenue (Mil)': "revenu_usd_mil",
-                           'Net Income (Mil)': "net_income_usd_mil",
-                           'Gross Margin (%)': "gross_margin_pct",
-                           'Dividends': "dividends_usd",
-                           'EPS': "earning_per_share_usd",
-                           'BVPS': "book_value_per_share_usd",
-                           'FCFPS': "free_cash_flow_per_share_usd"}
-
-    dict_value_criteria_calc = {'Div. Yield (%)': "dividend_yield",
-                                'P/E Ratio': "p_e_ratio",
-                                'P/B Ratio': "p_b_ratio",
-                                '52wk (%)': "52wk"}
+    dict_criteria = {'Adj. Close': 'close_val',
+                     'Revenue (Mil)': 'revenu_usd_mil',
+                     'Net Income (Mil)': 'net_income_usd_mil',
+                     'Gross Margin (%)': 'gross_margin_pct',
+                     'Dividends': 'dividends_usd',
+                     'EPS': 'earning_per_share_usd',
+                     'BVPS': 'book_value_per_share_usd',
+                     'FCFPS': 'free_cash_flow_per_share_usd',
+                     'Div. Yield (%)': 'dividend_yield',
+                     'P/E Ratio': 'p_e_ratio',
+                     'P/B Ratio': 'p_b_ratio',
+                     '52wk (%)': '52wk'}
 
     for idx_layout in range(layout.count()):
         # Layout of the attribute
         layout_attr = layout.itemAt(idx_layout)
         # Name of the attribute
         name_attr = layout_attr.itemAt(0).widget().text()
-        if name_attr in dict_histo_criteria:
-            min_val = ManagerCompany.get_minimum_value_historical(dict_histo_criteria[name_attr], db)
-            max_val = ManagerCompany.get_maximum_value_historical(dict_histo_criteria[name_attr], db)
-        elif name_attr == 'Adj. Close':
-            min_val = ManagerCompany.get_minimum_value_daily('close_val', db)
-            max_val = ManagerCompany.get_maximum_value_daily('close_val', db)
-        elif name_attr in dict_value_criteria_calc:
-            name_attr_db = dict_value_criteria_calc[name_attr]
+        if name_attr in dict_criteria.keys():
+            name_attr_db = dict_criteria[name_attr]
             min_val = dict_min_max_value_criteria_calc[name_attr_db].get('min', 0)
             max_val = dict_min_max_value_criteria_calc[name_attr_db].get('max', 0)
         else:
@@ -215,16 +207,20 @@ def set_min_max_slider_layout(layout, dict_min_max_value_criteria_calc, db):
         min_range_slider = get_widget_of_layout(layout_attr, QtGui.QSlider)
 
         min_spin_box.setMinimum(min_val)
+        min_spin_box.setMaximum(max_val)
         min_spin_box.setValue(min_val)
         min_range_slider.setMinimum(min_val)
+        min_range_slider.setMaximum(max_val)
         min_range_slider.setValue(min_val)
 
         # Max value
         max_spin_box = get_widget_of_layout(layout_attr, QtGui.QDoubleSpinBox, 1)
         max_range_slider = get_widget_of_layout(layout_attr, QtGui.QSlider, 1)
 
+        max_spin_box.setMinimum(min_val)
         max_spin_box.setMaximum(max_val)
         max_spin_box.setValue(max_val)
+        max_range_slider.setMinimum(min_val)
         max_range_slider.setMaximum(max_val)
         max_range_slider.setValue(max_val)
 
@@ -322,6 +318,8 @@ def delete_companies_to_portfolio_db(portfolio_id, list_company, db):
     :type portfolio_id: int
     :param list_company: list of companies checked to deleted
     :type list_company: list[str]
+    :param db: connection to db
+    :type db: DbConnection.DbConnection
     :return: None
     """
     # delete companies to portfolio in db
