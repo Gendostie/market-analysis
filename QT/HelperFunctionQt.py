@@ -1,10 +1,8 @@
 import pandas as pd
 from PyQt4 import QtCore, QtGui
-import configparser
 
 from MainWindow import _translate
 from Manager_DB import ManagerPortfolio, ManagerCompany
-from Manager_DB.DbConnection import DbConnection
 from QT import ValueTableItem
 from Singleton import divide
 
@@ -108,19 +106,22 @@ def get_widget_of_layout(layout, type_object_to_find, nb_same_type_skip=0):
     return return_object
 
 
-def add_companies_to_portfolio_db(portfolio_name, list_company):
+def add_companies_to_portfolio_db(portfolio_name, list_company, db):
     """
     Call function for add company to portfolio in db
     :param portfolio_name: name of portfolio
     :type portfolio_name: str
     :param list_company: list symbol of company
     :type list_company: list[str]
+    :param db: connection to db
+    :type db: DbConnection.DbConnection
     :return: None
     """
     # add portfolio if is new
-    portfolio_id = ManagerPortfolio.create_portfolio(portfolio_name)
+    portfolio_id = ManagerPortfolio.create_portfolio(portfolio_name, db)
     # add company to portfolio in db
-    nb_company_added = ManagerPortfolio.add_companies_to_portfolio(portfolio_id[0].get('id_portfolio')[0], list_company)
+    nb_company_added = ManagerPortfolio.add_companies_to_portfolio(portfolio_id[0].get('id_portfolio')[0],
+                                                                   list_company, db)
     print("Nb company added: %s" % nb_company_added)
 
 
@@ -167,48 +168,45 @@ def link_spin_slider_layout(layout):
 
 
 # TODO: Create a DbConnection Object
-def set_min_max_slider_layout(layout):
+def set_min_max_slider_layout(layout, dict_min_max_value_criteria_calc, db):
     """
     Set value min and max of QSlider of layout attribute
     :param layout: Widget layout, must be a simple layout in layout
     :type layout: QtGui.QLayout
+    :param dict_min_max_value_criteria_calc: dict of value min and max of criteria we must calculate
+    :type dict_min_max_value_criteria_calc: dict{dict}
+    :param db: connection to db
+    :type db: DbConnection.DbConnection
     :return: None
     """
-    config = configparser.ConfigParser()
-    config.read('../config.ini')
+    dict_histo_criteria = {'Revenue (Mil)': "revenu_usd_mil",
+                           'Net Income (Mil)': "net_income_usd_mil",
+                           'Gross Margin (%)': "gross_margin_pct",
+                           'Dividends': "dividends_usd",
+                           'EPS': "earning_per_share_usd",
+                           'BVPS': "book_value_per_share_usd",
+                           'FCFPS': "free_cash_flow_per_share_usd"}
 
-    db = DbConnection(config.get('database', 'HOST'),
-                      config.get('database', 'USER'),
-                      config.get('database', 'PASSWORD'),
-                      config.get('database', 'DATABASE'))
-
-    dict_calc = {'Div. Yield (%)': "dividend_yield",
-                 'P/E Ratio': "p_e_ratio",
-                 'P/B Ratio': "p_b_ratio",
-                 '52wk (%)': "52wk"}
-    dict_histo = {'Revenue (Mil)': "revenu_usd_mil",
-                  'Net Income (Mil)': "net_income_usd_mil",
-                  'Gross Margin (%)': "gross_margin_pct",
-                  'Dividends': "dividends_usd",
-                  'EPS': "earning_per_share_usd",
-                  'BVPS': "book_value_per_share_usd",
-                  'FCFPS': "free_cash_flow_per_share_usd"}
-    dict_adj_close = {'Adj. Close': "close_val"}
+    dict_value_criteria_calc = {'Div. Yield (%)': "dividend_yield",
+                                'P/E Ratio': "p_e_ratio",
+                                'P/B Ratio': "p_b_ratio",
+                                '52wk (%)': "52wk"}
 
     for idx_layout in range(layout.count()):
         # Layout of the attribute
         layout_attr = layout.itemAt(idx_layout)
         # Name of the attribute
         name_attr = layout_attr.itemAt(0).widget().text()
-        if name_attr in dict_histo:
-            min_val = ManagerCompany.get_minimum_value_historical(dict_histo[name_attr], db)
-            max_val = ManagerCompany.get_maximum_value_historical(dict_histo[name_attr], db)
-        elif name_attr == list(dict_adj_close.keys())[0]:
-            min_val = ManagerCompany.get_minimum_value_daily(dict_adj_close[name_attr], db)
-            max_val = ManagerCompany.get_maximum_value_daily(dict_adj_close[name_attr], db)
-        elif name_attr in dict_calc:
-            min_val = ManagerCompany.get_minimum_value_calculation(dict_calc[name_attr], db)
-            max_val = ManagerCompany.get_maximum_value_calculation(dict_calc[name_attr], db)
+        if name_attr in dict_histo_criteria:
+            min_val = ManagerCompany.get_minimum_value_historical(dict_histo_criteria[name_attr], db)
+            max_val = ManagerCompany.get_maximum_value_historical(dict_histo_criteria[name_attr], db)
+        elif name_attr == 'Adj. Close':
+            min_val = ManagerCompany.get_minimum_value_daily('close_val', db)
+            max_val = ManagerCompany.get_maximum_value_daily('close_val', db)
+        elif name_attr in dict_value_criteria_calc:
+            name_attr_db = dict_value_criteria_calc[name_attr]
+            min_val = dict_min_max_value_criteria_calc[name_attr_db].get('min', 0)
+            max_val = dict_min_max_value_criteria_calc[name_attr_db].get('max', 0)
         else:
             continue
 
@@ -317,7 +315,7 @@ def sorted_column_checkbox_table_widget(table_widget):
     table_widget.horizontalHeader().setSortIndicator(column, sort_order)  # set indicator column sort
 
 
-def delete_companies_to_portfolio_db(portfolio_id, list_company):
+def delete_companies_to_portfolio_db(portfolio_id, list_company, db):
     """
     Delete companies checked in table portfolio for deleted of bd for a portfolio_id specific
     :param portfolio_id: id of portfolio
@@ -327,7 +325,7 @@ def delete_companies_to_portfolio_db(portfolio_id, list_company):
     :return: None
     """
     # delete companies to portfolio in db
-    nb_company_deleted = ManagerPortfolio.delete_companies_to_portfolio(portfolio_id, list_company)
+    nb_company_deleted = ManagerPortfolio.delete_companies_to_portfolio(portfolio_id, list_company, db)
     print("Nb company deleted: %s" % nb_company_deleted)
 
 

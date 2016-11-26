@@ -1,16 +1,31 @@
 from PyQt4 import QtCore, QtGui
+import configparser
 import time
 
+from DbConnection import DbConnection
 from QT.MainWindow import Ui_MainWindow
 from QT.DialogPopUp import Ui_Dialog
 from Manager_DB import ManagerPortfolio, ManagerCompany
 from QT import HelperFunctionQt
 from QT.Singleton import Singleton
 
+dict_min_max_value_criteria_calc = {}
 dict_type_simulation = {'Technical Analysis': 'technical_analysis_windows', 'By Low Set High': 'by_low_set_high',
                         'Global Ranking': 'global_ranking', '1 Stock For Each Company': ''}
 dict_params_value_sim = {}  # get last value of params of type simulation until no change type simulation
 market_object = None
+
+# Create db connection global
+config = configparser.ConfigParser()
+config.read('../config.ini')
+db = DbConnection(config.get('database', 'HOST'),
+                  config.get('database', 'USER'),
+                  config.get('database', 'PASSWORD'),
+                  config.get('database', 'DATABASE'))
+
+
+def get_db_connection():
+    return db
 
 
 class ManagerMainWindow(Ui_MainWindow):
@@ -34,10 +49,11 @@ class ManagerMainWindow(Ui_MainWindow):
         Setup for widget already in MainWindow.ui to modify
         :return: None
         """
+        self.get_min_max_value_criteria_calculate()
         # Stock Screener
         # Set min max criteria Stock Screener
-        HelperFunctionQt.set_min_max_slider_layout(self.verticalLayout_left)
-        HelperFunctionQt.set_min_max_slider_layout(self.verticalLayout_right)
+        HelperFunctionQt.set_min_max_slider_layout(self.verticalLayout_left, dict_min_max_value_criteria_calc, db)
+        HelperFunctionQt.set_min_max_slider_layout(self.verticalLayout_right, dict_min_max_value_criteria_calc, db)
         self.create_data_table_stock_screener()
         # Add placeholder to combobox portfolio Stock screener
         self.comboBox_stockScreener_portfolio.lineEdit().setPlaceholderText("Choose your portfolio name.")
@@ -50,8 +66,8 @@ class ManagerMainWindow(Ui_MainWindow):
         self.create_combobox_company_portfolio_manager()
         # Simulator
         # Set min max criteria Simulator
-        HelperFunctionQt.set_min_max_slider_layout(self.verticalLayout_left_2)
-        HelperFunctionQt.set_min_max_slider_layout(self.verticalLayout_right_2)
+        HelperFunctionQt.set_min_max_slider_layout(self.verticalLayout_left_2, dict_min_max_value_criteria_calc, db)
+        HelperFunctionQt.set_min_max_slider_layout(self.verticalLayout_right_2, dict_min_max_value_criteria_calc, db)
         # Set min max datetime Simulator
         self.get_min_max_date_historic()
         # Add items of combobox type_simulation who be in list_type_simulation
@@ -59,6 +75,19 @@ class ManagerMainWindow(Ui_MainWindow):
         # Set display format date, bu in Linux
         self.dateEdit_simulatorFrom.setDisplayFormat('yyyy-MM-dd')
         self.dateEdit_simulatorTo.setDisplayFormat('yyyy-MM-dd')
+
+    @staticmethod
+    def get_min_max_value_criteria_calculate():
+        """
+        Get min and max value of criteria to calculate for slider criteria n tab Stock Screener and Simulator.
+        Put result in global dictionary.
+        :return: None
+        """
+        dict_value_criteria_calc = ['dividend_yield', 'p_e_ratio', 'p_b_ratio', '52wk']
+        for criterion in dict_value_criteria_calc:
+            min_val = ManagerCompany.get_minimum_value_calculation(criterion, db)
+            max_val = ManagerCompany.get_maximum_value_calculation(criterion, db)
+            dict_min_max_value_criteria_calc[criterion] = {'min': min_val, 'max': max_val}
 
     def create_data_table_stock_screener(self):
         """
@@ -70,7 +99,7 @@ class ManagerMainWindow(Ui_MainWindow):
                              'Div. Yield (%)', 'EPS', 'P/E Ratio',
                              'BVPS', 'P/B Ratio', 'FCFPS', 'Adj. Close', '52wk (%)', 'Global Ranking']
 
-        dict_company = ManagerCompany.get_historic_value_all_company()
+        dict_company = ManagerCompany.get_historic_value_all_company(db)
         dict_params = self.get_all_min_max_criteria(self.horizontalLayout)
 
         max_nb_company = len(dict_company)
@@ -199,7 +228,7 @@ class ManagerMainWindow(Ui_MainWindow):
         tab_widget = self.tab.findChild(QtGui.QWidget, tab_widget_name)
         cb = tab_widget.findChild(QtGui.QComboBox, combobox_name)
 
-        list_portfolio = ManagerPortfolio.get_all_portfolio_info()
+        list_portfolio = ManagerPortfolio.get_all_portfolio_info(db)
         for dict_portfolio in list_portfolio:
             cb.addItem(dict_portfolio.get('name'))
 
@@ -223,13 +252,13 @@ class ManagerMainWindow(Ui_MainWindow):
         return dict_min_max
 
     def get_min_max_date_historic(self):
-        min_datetime, max_datetime = ManagerCompany.get_minimum_maximum_value_date_daily()
+        min_datetime, max_datetime = ManagerCompany.get_minimum_maximum_value_date_daily(db)
         self.dateEdit_simulatorFrom.setDateTimeRange(QtCore.QDateTime(min_datetime), QtCore.QDateTime(max_datetime))
         self.dateEdit_simulatorTo.setDateTimeRange(QtCore.QDateTime(min_datetime), QtCore.QDateTime(max_datetime))
         self.dateEdit_simulatorTo.setDateTime(QtCore.QDateTime(max_datetime))
 
     def create_combobox_company_portfolio_manager(self):
-        list_company = ManagerCompany.get_snp500()
+        list_company = ManagerCompany.get_snp500(db)
 
         for company in list_company:
             self.comboBox_portfolioManager_addCompany.addItem(company.get("symbol") + " " + company.get("name"))
@@ -255,10 +284,10 @@ class ManagerMainWindow(Ui_MainWindow):
             self.frame_managerPortfolio.setEnabled(True)
 
         # add portfolio if is new
-        portfolio_id = ManagerPortfolio.create_portfolio(portfolio_name)[0].get('id_portfolio')[0]
+        portfolio_id = ManagerPortfolio.create_portfolio(portfolio_name, db)[0].get('id_portfolio')[0]
         self.lineEdit_noPortfolio.setText(str(portfolio_id))  # set id portfolio to line edit
 
-        list_company = ManagerPortfolio.get_companies_to_portfolio(portfolio_id)
+        list_company = ManagerPortfolio.get_companies_to_portfolio(portfolio_id, db)
 
         if self.tableWidget_portfolio.rowCount() < len(list_company):
             self.tableWidget_portfolio.setRowCount(len(list_company))
@@ -342,7 +371,7 @@ class Slots:
             # get name portfolio
             portfolio_name = ui.comboBox_stockScreener_portfolio.lineEdit().text()
             # add company to portfolio in db
-            HelperFunctionQt.add_companies_to_portfolio_db(portfolio_name, list_company)
+            HelperFunctionQt.add_companies_to_portfolio_db(portfolio_name, list_company, db)
             # Refresh combo box if is new
             if ui.comboBox_stockScreener_portfolio.findText(portfolio_name) == -1:
                 ui.comboBox_stockScreener_portfolio.addItem(portfolio_name)
@@ -381,7 +410,7 @@ class Slots:
             return 0  # no combobox portfolio find in tab widget
 
         cb.clear()  # clear all item of combobox
-        list_portfolio = ManagerPortfolio.get_all_portfolio_info()
+        list_portfolio = ManagerPortfolio.get_all_portfolio_info(db)
         for dict_portfolio in list_portfolio:
             cb.addItem(dict_portfolio.get('name'))
 
@@ -421,7 +450,7 @@ class Slots:
         # get name portfolio
         portfolio_name = ui.comboBox_portfolioManager_portfolio.lineEdit().text()
         # add company to portfolio in db
-        HelperFunctionQt.add_companies_to_portfolio_db(portfolio_name, [company[0]])
+        HelperFunctionQt.add_companies_to_portfolio_db(portfolio_name, [company[0]], db)
         # refresh table portfolio manager
         ui.refresh_data_table_portfolio()
 
@@ -441,7 +470,7 @@ class Slots:
             # get name portfolio
             portfolio_id = ui.lineEdit_noPortfolio.text()
             # add company to portfolio in db
-            HelperFunctionQt.delete_companies_to_portfolio_db(portfolio_id, list_company_deleted)
+            HelperFunctionQt.delete_companies_to_portfolio_db(portfolio_id, list_company_deleted, db)
             # refresh table portfolio
             ui.refresh_data_table_portfolio()
 
