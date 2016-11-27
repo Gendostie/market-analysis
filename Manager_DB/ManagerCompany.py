@@ -169,6 +169,18 @@ def get_historic_value_all_company(db=None):
     return return_value
 
 
+# TODO: test to show plot qt
+def get_daily_values(db=None):
+    if not db or type(db) is not DbConnection:
+        db = DbConnection(HOST, USER, PASSWORD, DATABASE)
+    query = """SELECT date_daily_value, adj_close FROM daily_value WHERE id_symbol = 'GOOGL' ORDER BY date_daily_value"""
+    res = db.select_in_db(query)
+    return_value = []
+    for date, value in res:
+        return_value.append({'date': date, 'value': value})
+    return return_value
+
+
 #######################################################################################################################
 #
 #                                                GET MIN/MAX

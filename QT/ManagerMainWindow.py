@@ -7,6 +7,7 @@ from QT.DialogPopUp import Ui_Dialog
 from Manager_DB import ManagerPortfolio, ManagerCompany
 from QT import HelperFunctionQt
 from QT.Singleton import Singleton
+from QT.MplCanvas import MplCanvas
 
 dict_min_max_value_criteria = {}
 dict_type_simulation = {'Technical Analysis': 'technical_analysis_windows', 'By Low Set High': 'by_low_set_high',
@@ -21,10 +22,6 @@ db = DbConnection(config.get('database', 'HOST'),
                   config.get('database', 'USER'),
                   config.get('database', 'PASSWORD'),
                   config.get('database', 'DATABASE'))
-
-
-def get_db_connection():
-    return db
 
 
 class ManagerMainWindow(Ui_MainWindow):
@@ -555,6 +552,16 @@ class Slots:
         dict_min_max.update(HelperFunctionQt.get_min_max_layout_checked(ui.verticalLayout_left_2))
         dict_min_max.update(HelperFunctionQt.get_min_max_layout_checked(ui.verticalLayout_right_2))
         print(dict_min_max)
+
+        if ui.horizontalLayout_plot.count() > 0:
+            ui.horizontalLayout_plot.itemAt(0).widget().setParent(None)
+		# TODO: delete call to ManagerCompany
+        res_val = ManagerCompany.get_daily_values(db)
+        list_date = [v['date'] for v in res_val]
+        list_val = [v['value'] for v in res_val]
+		
+        mpl_canvas = MplCanvas(ui.horizontalLayout_plot, list_date[:], list_val[:])
+        print('End update plot')
 
     # TODO: to completed
     @staticmethod
