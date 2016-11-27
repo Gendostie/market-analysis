@@ -1,5 +1,8 @@
 from PyQt4 import QtCore, QtGui
 import configparser
+from matplotlib.backends.backend_qt4agg import FigureCanvasQTAgg as FigureCanvas
+from matplotlib.figure import Figure
+from matplotlib import dates
 
 from DbConnection import DbConnection
 from QT.MainWindow import Ui_MainWindow
@@ -7,7 +10,6 @@ from QT.DialogPopUp import Ui_Dialog
 from Manager_DB import ManagerPortfolio, ManagerCompany
 from QT import HelperFunctionQt
 from QT.Singleton import Singleton
-from QT.MplCanvas import MplCanvas
 
 dict_min_max_value_criteria = {}
 dict_type_simulation = {'Technical Analysis': 'technical_analysis_windows', 'By Low Set High': 'by_low_set_high',
@@ -95,7 +97,6 @@ class ManagerMainWindow(Ui_MainWindow):
             min_val = ManagerCompany.get_minimum_value_calculation(criterion, db)
             max_val = ManagerCompany.get_maximum_value_calculation(criterion, db)
             dict_min_max_value_criteria[criterion] = {'min': min_val, 'max': max_val}
-        # print(dict_min_max_value_criteria)
 
     def create_data_table_stock_screener(self):
         """
@@ -545,22 +546,25 @@ class Slots:
     @staticmethod
     def start_simulation():
         print('Start simulation')
-        dict_params_simulation = HelperFunctionQt.get_params_simulation(ui.frame_simulation)
-        dict_params_simulation.update(dict_params_value_sim)
-        print(dict_params_simulation)
-        dict_min_max = {}
-        dict_min_max.update(HelperFunctionQt.get_min_max_layout_checked(ui.verticalLayout_left_2))
-        dict_min_max.update(HelperFunctionQt.get_min_max_layout_checked(ui.verticalLayout_right_2))
-        print(dict_min_max)
+        # dict_params_simulation = HelperFunctionQt.get_params_simulation(ui.frame_simulation)
+        # dict_params_simulation.update(dict_params_value_sim)
+        # print(dict_params_simulation)
+        # dict_min_max = {}
+        # dict_min_max.update(HelperFunctionQt.get_min_max_layout_checked(ui.verticalLayout_left_2))
+        # dict_min_max.update(HelperFunctionQt.get_min_max_layout_checked(ui.verticalLayout_right_2))
+        # print(dict_min_max)
 
-        if ui.horizontalLayout_plot.count() > 0:
-            ui.horizontalLayout_plot.itemAt(0).widget().setParent(None)
-		# TODO: delete call to ManagerCompany
+        # TODO: delete call to ManagerCompany
         res_val = ManagerCompany.get_daily_values(db)
         list_date = [v['date'] for v in res_val]
         list_val = [v['value'] for v in res_val]
-		
-        mpl_canvas = MplCanvas(ui.horizontalLayout_plot, list_date[:], list_val[:])
+        
+        # mpl_canvas = MplCanvas(ui.horizontalLayout_plot, list_date[:], list_val[:])
+        fig = create_plot_qt(list_date[:10], list_val[:10])
+        for i in range(10, len(list_date[:100]), 10):
+            # update_plot(fig, list_date[i:i+10], list_val[i:i+10])
+            update_plot(fig, list_date[:i], list_val[:i])
+            # create_plot_qt(list_date[:i], list_val[:i])
         print('End update plot')
 
     # TODO: to completed
@@ -572,6 +576,70 @@ class Slots:
     @staticmethod
     def get_value_params():
         print(0)
+
+
+def create_plot_qt(x_date, y_value):
+    """
+    Create plot to display in interface qt in a layout box.
+    :param x_date: list datetime associate to values in axis y
+    :type x_date: list[datetime]
+    :param y_value: list of value to display line of plot
+    :type y_value: list[float]
+    :return: figure of plot
+    :rtype: Figure
+    """
+    fig = Figure()
+
+    axes = fig.add_subplot(111)
+    axes.plot(x_date, y_value)
+    set_axes_fig_plot(axes, x_date[0], x_date[-1])
+    fig.autofmt_xdate()
+
+    canvas = FigureCanvas(fig)
+    ui.horizontalLayout_plot.addWidget(canvas)
+    canvas.draw()
+
+    return fig
+
+
+def set_axes_fig_plot(axes, x_min, x_max):
+    """
+    Set axes to display label of axis and title of plot and
+    :param axes: object axes
+    :type axes: Axes of matplotlib
+    :param x_min: datetime min
+    :type x_min: datetime
+    :param x_max: datetime max
+    :type x_max: datetime
+    :return: None
+    """
+    axes.set_xlim(x_min, x_max)
+    axes.xaxis.set_major_formatter(dates.DateFormatter('%Y-%m-%d'))
+    axes.format_xdata = dates.DateFormatter('%Y-%m-%d')
+
+    axes.set_title('Results of saimulation')
+    axes.set_xlabel('Dates')
+    axes.set_ylabel('Values ($)')
+
+
+def update_plot(fig, x_date, y_value):
+    """
+    Udate plot current of widget
+    :param fig: object Figure
+    :type fig: Figure
+    :param x_date: list datetime associate to values in axis y
+    :type x_date: list[datetime]
+    :param y_value: list of value to display line of plot
+    :type y_value: list[float]
+    :return: None
+    """
+    axes = fig.get_axes()[0]
+    axes.cla()
+    axes.plot(x_date, y_value)
+    set_axes_fig_plot(axes, x_date[0], x_date[-1])
+    fig.autofmt_xdate()
+    fig.canvas.draw()
+
 
 if __name__ == "__main__":
     import sys
