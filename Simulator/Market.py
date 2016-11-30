@@ -3,6 +3,7 @@ from datetime import timedelta
 
 
 class Market:
+    # TODO: To complete in the end
     """Class that encapsulate information about the market between two dates in the past.
 
     The class is initiated with a starting and ending date. It keeps the current date of the simulation.
@@ -16,27 +17,33 @@ class Market:
         self.current_date = begin
         self.end_date = end
 
-        # Get the list of all business days
+        # Get the list of all business days (must be initialized before any call to __is_business_day() )
         self.business_days = self.__get_business_days()
 
+        # Safety check
+        # If the start date given is not a business day, go to the next business day.
+        if not self.__is_business_day(begin):
+            self.next()
+
         # Charge the data for the first day
-        self.df_market = self.__load_all_data()
+        # TODO : Optimize to load only a month or a year at a time. Should be moved to next()
+        self.df_market = self.__load_daily_data()
 
     ####################################################################################################
     #     Callable functions
     ####################################################################################################
+
     def next(self):
         """Set the date of the market to the next business day.
 
         This function must be used to go to the next business day of the simulation. It will return
-         false if the next day is beyond the simulation's limit. Its only effect is to change the
-         state of the object.
+        false if the next day is beyond the simulation's limit. Its only effect is to change the
+        state of the object.
 
         :return: True if the next day is still in the simulation. False if it went beyond the end date.
         :rtype: bool
         """
         if self.__is_over():
-            # print("OVER at {} with end date: {}\n".format(self.current_date, self.end_date))
             return False
         self.current_date = self.current_date + timedelta(days=1)
         if not self.__is_business_day(self.current_date):
@@ -67,47 +74,23 @@ class Market:
 
         :param symbol: Symbol of the company of which we are requesting the price.
         :type symbol: str
-        :return: The "close" price of the company for the current day. Return 0 if the company is not trading that day.
+        :return: The "adjusted close" price of the company for the current day. 0 if the company isn't trading that day.
         :rtype: float
         """
         if symbol in self.get_trading_stocks():
             price = self.df_market.loc[(self.df_market['date'] == self.current_date) &
                                        (self.df_market['symbol'] == symbol), 'adj_close'].values[0]
         else:
-            price = 0
+            price = 0.0
         return price
-
-    def sell(self, symbol, nb_stocks):
-        """Return how much you get for selling a certain number of stocks of a company for the current day.
-
-        :param symbol: Symbol of the company of the stocks we are trying to sell.
-        :type symbol: str
-        :param nb_stocks: Number of stocks we are trying to sell. To be useful, must be > 0.
-        :type nb_stocks: int
-        :return: How much money you get for selling this number of stocks for this company for the current day.
-        :rtype: float
-        """
-        price = self.get_price(symbol)
-        return price * nb_stocks
-
-    def buy(self, symbol, nb_stocks):
-        """Return how much you must pay to acquire a certain number of stocks of a company for the current day.
-
-        :param symbol: Symbol of the company of the stocks we are trying to buy.
-        :type symbol: str
-        :param nb_stocks: Number of stocks we are trying to buy. To be useful, must be > 0.
-        :type nb_stocks: int
-        :return: How much money you must pay to acquire this number of stocks for this company for the current day.
-        :rtype: float
-        """
-        price = self.get_price(symbol)
-        return price * nb_stocks
 
     ####################################################################################################
     #     Set up some variables for the simulation
     ####################################################################################################
-    def __load_all_data(self):
+
+    def __load_daily_data(self):
         # TODO: Take a lot of time. Charge only a year?
+        # TODO: Close needed?
         """Load the daily information of the database in a DataFrame (pandas's object).
 
         The starting and ending dates are defined when the object is initialized and cannot be changed
@@ -152,13 +135,14 @@ class Market:
     ####################################################################################################
     #     Check state of the simulation.
     ####################################################################################################
+
     def __is_business_day(self, date):
         """Boolean function that verify if a day is a business day.
 
         Require the initialization of self.business_day with the function get_business_days().
 
         :param date: The date that we want to check.
-        :type date: datetime.datetime
+        :type date: datetime
         :return: True if it's a business day. False otherwise.
         :rtype: bool
         """
@@ -168,8 +152,7 @@ class Market:
         return False
 
     def __is_over(self):
-        # TODO: >= is for testing. Set to > after
-        """Boolean function that verify is the simulation is over.
+        """Boolean function that verify if the simulation is over.
 
         :return: True if the current day comes after the ending date. False otherwise.
         :rtype: bool
