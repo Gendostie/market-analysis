@@ -3836,6 +3836,16 @@
       <property name="frameShadow">
        <enum>QFrame::Raised</enum>
       </property>
+      <widget class="QWidget" name="widget_plot" native="true">
+       <property name="geometry">
+        <rect>
+         <x>140</x>
+         <y>10</y>
+         <width>780</width>
+         <height>410</height>
+        </rect>
+       </property>
+      </widget>
       <widget class="QPushButton" name="btn_showReport">
        <property name="geometry">
         <rect>
@@ -3860,21 +3870,6 @@
        <property name="text">
         <string>Show report</string>
        </property>
-      </widget>
-      <widget class="QWidget" name="horizontalLayoutWidget_5">
-       <property name="geometry">
-        <rect>
-         <x>210</x>
-         <y>2</y>
-         <width>781</width>
-         <height>428</height>
-        </rect>
-       </property>
-       <layout class="QHBoxLayout" name="horizontalLayout_plot">
-        <property name="spacing">
-         <number>0</number>
-        </property>
-       </layout>
       </widget>
      </widget>
      <widget class="QFrame" name="frame_simulation">
@@ -4345,29 +4340,10 @@
          <property name="sizeHint" stdset="0">
           <size>
            <width>30</width>
-           <height>40</height>
+           <height>45</height>
           </size>
          </property>
         </spacer>
-       </item>
-       <item>
-        <widget class="QPushButton" name="btn_RefreshTableStockScreener_2">
-         <property name="minimumSize">
-          <size>
-           <width>145</width>
-           <height>35</height>
-          </size>
-         </property>
-         <property name="maximumSize">
-          <size>
-           <width>160</width>
-           <height>40</height>
-          </size>
-         </property>
-         <property name="text">
-          <string>Refresh</string>
-         </property>
-        </widget>
        </item>
       </layout>
      </widget>
@@ -7370,7 +7346,7 @@
      <x>0</x>
      <y>0</y>
      <width>1280</width>
-     <height>31</height>
+     <height>21</height>
     </rect>
    </property>
   </widget>

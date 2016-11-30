@@ -617,7 +617,7 @@ def set_axes_fig_plot(axes, x_min, x_max):
     axes.xaxis.set_major_formatter(dates.DateFormatter('%Y-%m-%d'))
     axes.format_xdata = dates.DateFormatter('%Y-%m-%d')
 
-    axes.set_title('Results of saimulation')
+    axes.set_title('Results of simulation')
     axes.set_xlabel('Dates')
     axes.set_ylabel('Values ($)')
 
