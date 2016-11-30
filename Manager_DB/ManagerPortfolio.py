@@ -1,5 +1,3 @@
-#!/usr/bin/python
-import sys
 from DbConnection import DbConnection
 
 HOST = '127.0.0.1'
@@ -368,7 +366,3 @@ def get_transaction_simulation(id_simulation, db=None):
         return_value.append({'id_transaction': id_transaction, 'id_portfolio': id_portfolio, 'id_symbol': id_symbol,
                              'quantity': quantity, 'value_current': value_current, 'transaction_date': transaction_date})
     return return_value
-
-if __name__ == '__main__':
-    if len(sys.argv) > 1:
-        print(locals()[sys.argv[1]](sys.argv[2:]))
