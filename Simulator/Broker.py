@@ -9,7 +9,7 @@ from datetime import datetime
 #########################################################################################################
 class Broker:
     # TODO: Keep log?
-    def __init__(self, initial_liquidity, db, log,
+    def __init__(self, initial_liquidity, db, log_broker, log_port,
                  min_date=datetime(2006, 1, 3), max_date=datetime(2016, 11, 4),
                  min_value=0, max_value=float("inf")):
         # TODO: Add comment
@@ -17,11 +17,11 @@ class Broker:
         self._market = Market(min_date, max_date, db)
 
         # TODO: LOG
-        self.log = log
+        self.log = log_broker
 
         # The portfolio contains all the stocks bought for the current day and time and
         # the cash money that can be used instantly by the broker to buy stocks.
-        self._portfolio = Portfolio(initial_liquidity, min_value, max_value, log)
+        self._portfolio = Portfolio(initial_liquidity, min_value, max_value, log_port)
 
         # The bill is how much the broker has charged for its services.
         # TODO : Make something of it
@@ -152,7 +152,8 @@ class Broker:
         # For all companies that we should sell, sell 'em;
         for symbol in lst:
             # Instruct the portfolio to sell all stocks it has for this company
-            gain = self._portfolio.sell_all_stocks(symbol, self._market.get_price(symbol))
+            gain = self._portfolio.sell_all_stocks(symbol, self._market.get_price(symbol),
+                                                   self._market.get_current_date())
 
             # If it succeeded, calculate the commission
             if gain > 0:
@@ -174,7 +175,8 @@ class Broker:
         for symbol in lst:
             # Attempt to buy as many stocks as possible for this company
             # TODO : Allow to choose a different algorithm for buying
-            cost = self._portfolio.buy_stocks(symbol, self._market.get_price(symbol))
+            cost = self._portfolio.buy_stocks(symbol, self._market.get_price(symbol),
+                                              self._market.get_current_date())
 
             # If it succeeded, calculate the commission
             if cost > 0:
@@ -187,21 +189,25 @@ class Broker:
 
     def _tracking(self):
         # TODO : Add the draw(), data structure to keep track of value over time & maybe more
+        # Calculate how much we have
+        # TODO : Remove bill?
         self._hist_market_value[self._market.get_current_date()] = \
-            self._portfolio.get_assets_value(self._market) - self._bill
-        # TODO : Remove the print
-        print("{}: {}\tBill:{}".format(self._market.get_current_date(),
-                                       self._hist_market_value[self._market.get_current_date()],
-                                       self._bill))
+            self._portfolio.get_cash_money() + \
+            self._portfolio.get_value_of_portfolio(self._market) -\
+            self._bill
+        # TODO : Only for debugging
+        print("{}\t\t{}".format(self._market.get_current_date(),
+                                self._hist_market_value[self._market.get_current_date()]))
+        self.log.write("{};{};{};{}\n".format(self._market.get_current_date(),
+                                              self._portfolio.get_cash_money(),
+                                              self._portfolio.get_value_of_portfolio(self._market),
+                                              self._bill))
 
     def run_simulation(self):
         # TODO: Comment
         # As long as there is a new business day in our simulation;
         trading = True
         while trading:
-            # TODO : Log
-            self.log.write("{}\n".format(self._market.get_current_date()))
-
             # Sell companies in our portfolio that satisfy our criteria for selling;
             self._sell()
 
@@ -214,5 +220,5 @@ class Broker:
 
             # Go to the next trading day.
             trading = self._market.next()
-        # TODO: Remove the print, instead, print a résumé in the log.
+        # TODO: Remove this print, instead, print a résumé in the log.
         self._portfolio.print_portfolio()

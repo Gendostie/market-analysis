@@ -23,7 +23,7 @@ class Portfolio:
     #                                Buy/Sell algorithms
     #######################################################################################################
 
-    def buy_stocks(self, symbol, price):
+    def buy_stocks(self, symbol, price, date):
         """Buy as many stocks as possible at a given price for the given company.
 
         It will not buy for more than the maximum amount set by the user, nor more than it can buy with the
@@ -70,12 +70,12 @@ class Portfolio:
             self._cash -= cost
 
             # Log the transaction
-            self.log.write("BUY {} {} -{}\n".format(symbol, stocks_to_buy, cost))
+            self.log.write("{};BUY;{};{};{}\n".format(date, symbol, stocks_to_buy, cost))
         else:
             cost = 0.0
         return cost
 
-    def sell_all_stocks(self, symbol, price):
+    def sell_all_stocks(self, symbol, price, date):
         """Ask the portfolio to sell all stocks owned for a company at the given price.
 
         The amount of cash we have is automatically adjusted.
@@ -98,7 +98,7 @@ class Portfolio:
 
         # Adjust the cash we have after the transaction
         self._cash += gain
-        self.log.write("SELL {} {} +{}\n".format(symbol, nb_stocks, gain))
+        self.log.write("{};SELL;{};{};{}\n".format(date, symbol, nb_stocks, gain))
 
         return gain
 
@@ -154,14 +154,8 @@ class Portfolio:
             stocks_value += nb_stocks * market.get_price(symbol)
         return stocks_value
 
-    def get_assets_value(self, market):
-        """Return the total of all our assets (cash money available and value of our stocks)
-
-        :param market: An instance of the class Market
-        :type market: Market
-        :return: int
-        """
-        return self._cash + self.get_value_of_portfolio(market)
+    def get_cash_money(self):
+        return self._cash
 
     #######################################################################################################
     #                                         Others
