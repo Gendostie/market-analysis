@@ -1,4 +1,5 @@
-from datetime import timedelta
+from datetime import datetime, timedelta
+from QT.Singleton import divide
 
 
 class Market:
@@ -83,6 +84,92 @@ class Market:
         else:
             price = 0.0
         return price
+
+    def _query_historical_data(self, col_name, symbol):
+        query = """SELECT {}
+                   FROM historic_value
+                   WHERE id_symbol = "{}"
+                   AND date_historic_value = (SELECT date_historic_value
+                                              FROM historic_value
+                                              WHERE date_historic_value <= "{}"
+                                              AND id_symbol = "{}"
+                                              ORDER BY date_historic_value DESC
+                                              LIMIT 1);""".format(col_name, symbol,
+                                                                  self._current_date, symbol)
+
+        result = self._db.select_in_db(query)
+        if result is not ():
+            result = result[0][0]
+        else:
+            result = None
+        return result
+
+    def get_revenue(self, symbol):
+        return self._query_historical_data("revenu_usd_mil", symbol)
+
+    def get_gross_margin(self, symbol):
+        return self._query_historical_data("gross_margin_pct", symbol)
+
+    def get_net_income(self, symbol):
+        return self._query_historical_data("net_income_usd_mil", symbol)
+
+    def get_EPS(self, symbol):
+        return self._query_historical_data("earning_per_share_usd", symbol)
+
+    def get_dividends(self, symbol):
+        return self._query_historical_data("dividends_usd", symbol)
+
+    def get_BVPS(self, symbol):
+        return self._query_historical_data("book_value_per_share_usd", symbol)
+
+    def get_free_cash_flow_per_share(self, symbol):
+        return self._query_historical_data("free_cash_flow_per_share_usd", symbol)
+
+    def get_dividend_yield(self, symbol):
+        return divide(self.get_dividends(symbol),
+                      self.get_price(symbol), 100)
+
+    def get_p_e_ratio(self, symbol):
+        return divide(self.get_price(symbol),
+                      self.get_EPS(symbol))
+
+    def get_p_b_ratio(self, symbol):
+        return divide(self.get_price(symbol),
+                      self.get_BVPS(symbol))
+
+    def get_52wk(self, symbol):
+        actual_price = self.get_price(symbol)
+        # Test if we even need to calculate the 52wk
+        if actual_price is None:
+            return None
+
+        # If one year before now is before the 3rd of January of 2006, we set it to that date (our min)
+        # Check for the dreadful 29th of February...
+        if self._current_date.month == 2 and self._current_date.day == 29:
+            last_year_date = max(self._current_date.replace(year=self._current_date.year - 1,
+                                                            day=self._current_date.day - 1),
+                                 datetime(2006, 1, 3))
+        else:
+            last_year_date = max(self._current_date.replace(year=self._current_date.year - 1),
+                                 datetime(2006, 1, 3))
+
+        # Go the the nearest business day (if it isn't already one)
+        while not self.__is_business_day(last_year_date):
+            last_year_date = last_year_date + timedelta(days=1)
+
+        # Get the price at that date
+        query = """SELECT adj_close
+                     FROM daily_value
+                     WHERE date_daily_value = "{}"
+                     AND id_symbol = "{}";""".format(last_year_date, symbol)
+        result = self._db.select_in_db(query)
+        if result is not ():
+            last_year_price = result[0][0]
+        else:
+            last_year_price = 0
+
+        return divide(actual_price - last_year_price,
+                      last_year_price, 100)
 
     ####################################################################################################
     #     Set up some variables for the simulation

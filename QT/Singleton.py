@@ -26,7 +26,7 @@ class Singleton:
 
 # TODO: Add comment
 def divide(num, denom, mult=1):
-    if (num is None) or (denom is None):
+    if (num is None) or (denom is None) or (denom == 0):
         return None
     else:
         return "{0:.2f}".format(num/denom*mult)

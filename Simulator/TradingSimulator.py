@@ -23,8 +23,8 @@ def main_simulator(initial_liquidity):
     broker = Broker(initial_liquidity, db, log_broker, log_port, min_value=0, max_value=2000)
     #broker.set_percent_commission(1)
     broker.add_max_nb_of_stocks_to_buy(1)
-    broker.add_sell_filters(Filters.FilterNot())
-    broker.add_buy_filters(Filters.FilterNotInPortfolio())
+    broker.add_sell_filters(Filters.FilterVIP(), Filters.FilterHistorical())
+    broker.add_buy_filters()
     broker.run_simulation()
     # TODO: ONLY FOR TESTING
 
