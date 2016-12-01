@@ -19,9 +19,36 @@ class Portfolio:
         self._min_stock_value = min_value
         self._max_stock_value = max_value
 
+        # We can set a maximum number of stocks to buy for each companies.
+        # Otherwise, it's as many as possible.
+        self._max_number_stocks = None
+
     #######################################################################################################
     #                                Buy/Sell algorithms
     #######################################################################################################
+
+    def get_nb_stocks_to_buy(self, symbol, price):
+        # Calculate the maximum we can put in $ for this company without busting the maximum set by the user.
+        # Formula:= Maximum we can put for one company ($) - Value of stocks we already own for the company ($)
+        if symbol in self._portfolio:
+            max_value = self._max_stock_value - (self._portfolio[symbol] * price)
+        else:
+            max_value = self._max_stock_value
+
+        # The maximum value cannot be greater than the cash money we have
+        max_value = min(self._cash, max_value)
+
+        # Calculate how many stocks we can buy to max out our investment in this company
+        # Since max_value can be negative and generate negative
+        #    number of stocks to buy (which we don't want). We set it to at least 0.
+        stocks_to_buy = max(math.floor(max_value / price), 0)
+
+        # If we have a maximum number of stock we can buy for a given transaction,
+        # return the minimum between our calculated maximum and the one given by the user.
+        if self._max_number_stocks is not None:
+            stocks_to_buy = min(stocks_to_buy, self._max_number_stocks)
+
+        return stocks_to_buy
 
     def buy_stocks(self, symbol, price, date):
         """Buy as many stocks as possible at a given price for the given company.
@@ -42,20 +69,7 @@ class Portfolio:
         if (not self.can_buy()) or price <= 0:
             return 0.0
 
-        # Calculate the maximum we can put in $ for this company without busting the maximum set by the user.
-        # Formula:= Maximum we can put for one company ($) - Value of stocks we already own for the company ($)
-        if symbol in self._portfolio:
-            max_value = self._max_stock_value - (self._portfolio[symbol] * price)
-        else:
-            max_value = self._max_stock_value
-
-        # The maximum value cannot be greater than the cash money we have
-        max_value = min(self._cash, max_value)
-
-        # Calculate how many stocks we can buy to max out our investment in this company
-        # Since max_value can be negative and generate negative
-        #    number of stocks to buy (which we don't want). We set it to at least 0.
-        stocks_to_buy = max(math.floor(max_value / price), 0)
+        stocks_to_buy = self.get_nb_stocks_to_buy(symbol, price)
 
         # Buy the stocks and add them to our portfolio
         cost = stocks_to_buy * price
@@ -160,6 +174,9 @@ class Portfolio:
     #######################################################################################################
     #                                         Others
     #######################################################################################################
+
+    def set_max_number_of_stocks_to_buy(self, nb_stocks):
+        self._max_number_stocks = nb_stocks
 
     def print_portfolio(self):
         # TODO: ONLY FOR DEBUGGING

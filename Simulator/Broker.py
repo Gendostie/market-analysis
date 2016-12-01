@@ -72,6 +72,10 @@ class Broker:
                     "no_commission": 0.0
                     }[self.type]
 
+    #######################################################################################################
+    #                                         Setters
+    #######################################################################################################
+
     def set_flat_fee_commission(self, value):
         """Set the commission of the broker to a flat fee for any transaction done.
 
@@ -95,10 +99,6 @@ class Broker:
             self._commission = self._Commission("percent", value/100)
         else:
             raise ValueError
-
-    #######################################################################################################
-    #                                         Filters
-    #######################################################################################################
 
     def add_sell_filters(self, *filters):
         """Add one or many filters to reduce the list of companies in our portfolio.
@@ -135,6 +135,9 @@ class Broker:
         """
         for f in filters:
             self._buy_filters.append(f)
+
+    def add_max_nb_of_stocks_to_buy(self, nb_stocks):
+        self._portfolio.set_max_number_of_stocks_to_buy(nb_stocks)
 
     #######################################################################################################
     #                                Run the simulation
