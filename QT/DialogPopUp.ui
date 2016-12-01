@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>435</width>
-    <height>253</height>
+    <width>301</width>
+    <height>177</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -17,8 +17,8 @@
    <property name="geometry">
     <rect>
      <x>10</x>
-     <y>210</y>
-     <width>411</width>
+     <y>140</y>
+     <width>281</width>
      <height>32</height>
     </rect>
    </property>
@@ -51,7 +51,7 @@
   <widget class="QDoubleSpinBox" name="doubleSpinBox_minInvest">
    <property name="geometry">
     <rect>
-     <x>170</x>
+     <x>160</x>
      <y>10</y>
      <width>130</width>
      <height>25</height>
@@ -69,8 +69,11 @@
    <property name="maximum">
     <double>999999999.990000009536743</double>
    </property>
+   <property name="singleStep">
+    <double>100.000000000000000</double>
+   </property>
    <property name="value">
-    <double>0.000000000000000</double>
+    <double>1000.000000000000000</double>
    </property>
   </widget>
   <widget class="QLabel" name="label_maxInvest">
@@ -95,7 +98,7 @@
   <widget class="QDoubleSpinBox" name="doubleSpinBox_maxInvest">
    <property name="geometry">
     <rect>
-     <x>170</x>
+     <x>160</x>
      <y>58</y>
      <width>130</width>
      <height>25</height>
@@ -113,82 +116,11 @@
    <property name="maximum">
     <double>999999999.990000009536743</double>
    </property>
-   <property name="value">
-    <double>0.000000000000000</double>
-   </property>
-  </widget>
-  <widget class="QComboBox" name="cb_typeInvest">
-   <property name="geometry">
-    <rect>
-     <x>139</x>
-     <y>108</y>
-     <width>285</width>
-     <height>25</height>
-    </rect>
-   </property>
-   <item>
-    <property name="text">
-     <string>Invest in as much company as possible</string>
-    </property>
-   </item>
-   <item>
-    <property name="text">
-     <string>Invest in as much money as possible</string>
-    </property>
-   </item>
-  </widget>
-  <widget class="QLabel" name="label_meanInvest">
-   <property name="geometry">
-    <rect>
-     <x>10</x>
-     <y>110</y>
-     <width>131</width>
-     <height>20</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Mean Investment</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_nbMaxCieInvest">
-   <property name="geometry">
-    <rect>
-     <x>10</x>
-     <y>158</y>
-     <width>210</width>
-     <height>20</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Nb max companies to invest</string>
-   </property>
-  </widget>
-  <widget class="QDoubleSpinBox" name="doubleSpinBox_nbMaxCieInvest">
-   <property name="geometry">
-    <rect>
-     <x>220</x>
-     <y>156</y>
-     <width>81</width>
-     <height>25</height>
-    </rect>
-   </property>
-   <property name="alignment">
-    <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-   </property>
-   <property name="buttonSymbols">
-    <enum>QAbstractSpinBox::NoButtons</enum>
-   </property>
-   <property name="suffix">
-    <string/>
-   </property>
-   <property name="decimals">
-    <number>0</number>
-   </property>
-   <property name="maximum">
-    <double>1000000.000000000000000</double>
+   <property name="singleStep">
+    <double>100.000000000000000</double>
    </property>
    <property name="value">
-    <double>0.000000000000000</double>
+    <double>2000.000000000000000</double>
    </property>
   </widget>
  </widget>
