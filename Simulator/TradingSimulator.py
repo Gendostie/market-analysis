@@ -19,8 +19,8 @@ def main_simulator(initial_liquidity):
 
     # TODO: ONLY FOR TESTING
     broker = Broker(initial_liquidity, db, log, min_value=500, max_value=2000)
-    # broker.set_flat_fee_commission(5.25)
-    broker.add_sell_filters()
+    #broker.set_percent_commission(5.25)
+    broker.add_sell_filters(Filters.FilterNot())
     broker.add_buy_filters(Filters.FilterPriceGreaterThan(value=50),
                            Filters.FilterPriceLesserThan(value=100),
                            Filters.FilterPriceGreaterThan(value=75))

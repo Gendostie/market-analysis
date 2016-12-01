@@ -1,24 +1,7 @@
-from enum import Enum
 import random
 from Portfolio import Portfolio
 from Market import Market
 from datetime import datetime
-
-
-#########################################################################################################
-#                                           ENUM
-#########################################################################################################
-
-class _TypeCommission(Enum):
-    """Enumeration of all possible types of commissions for a given transaction.
-
-    percent: The commission is based on a percentage of the value of the transaction done.
-    flat_fee: The commission is a fixed fee for every transaction done.
-    none: There is no commission.
-    """
-    percent = 1
-    flat_fee = 2
-    none = 3
 
 
 #########################################################################################################
@@ -50,7 +33,7 @@ class Broker:
 
         # A commission is how much the broker is asking to get paid for a given transaction.
         # Initially, there is no commission. It must be added with a setter.
-        self._commission = self._Commission(_TypeCommission.none)
+        self._commission = self._Commission()
 
         # Filters are functions used to select which companies should be in our portfolio at any given time.
         self._sell_filters = []
@@ -61,14 +44,14 @@ class Broker:
     #######################################################################################################
 
     class _Commission:
-        def __init__(self, type_commission, commission_val=None):
+        def __init__(self, type_commission="no_commission", commission_val=0):
             """Represent a commission charged by the broker to execute a transaction.
 
             An instance of _Commission should always be created by one of the two functions
             set_flat_fee_commission() and set_percent_commission().
 
-            :param type_commission: An instance of _TypeCommission. (Percent, Flat Fee or None)
-            :type type_commission: _TypeCommission
+            :param type_commission: "percent", "flat_fee" or "no_commission". Default is "no_commission"
+            :type type_commission: str
             :param commission_val: The value of the commission. In % or $ depending of its type.
             :type commission_val: float | int
             :return: Nothing
@@ -84,12 +67,10 @@ class Broker:
             :return: The commission that should be charged by the broker for this transaction.
             :rtype: float | int
             """
-            if self.type == _TypeCommission.percent:
-                return transaction_value * self.value
-            elif self.type == _TypeCommission.flat_fee:
-                return self.value
-            else:
-                return 0
+            return {"percent": transaction_value * self.value,
+                    "flat_fee": self.value,
+                    "no_commission": 0.0
+            }[self.type]
 
     def set_flat_fee_commission(self, value):
         """Set the commission of the broker to a flat fee for any transaction done.
@@ -99,7 +80,7 @@ class Broker:
         :return: Nothing
         """
         if value > 0:
-            self._commission = self._Commission(_TypeCommission.flat_fee, value)
+            self._commission = self._Commission("flat_fee", value)
         else:
             raise ValueError
 
@@ -111,7 +92,7 @@ class Broker:
         :return: Nothing
         """
         if value > 0:
-            self._commission = self._Commission(_TypeCommission.percent, value/100)
+            self._commission = self._Commission("percent", value/100)
         else:
             raise ValueError
 
