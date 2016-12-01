@@ -70,7 +70,7 @@ class Broker:
             return {"percent": transaction_value * self.value,
                     "flat_fee": self.value,
                     "no_commission": 0.0
-            }[self.type]
+                    }[self.type]
 
     def set_flat_fee_commission(self, value):
         """Set the commission of the broker to a flat fee for any transaction done.
@@ -174,7 +174,7 @@ class Broker:
         for symbol in lst:
             # Attempt to buy as many stocks as possible for this company
             # TODO : Allow to choose a different algorithm for buying
-            cost = self._portfolio.maximize_buy(symbol, self._market.get_price(symbol))
+            cost = self._portfolio.buy_stocks(symbol, self._market.get_price(symbol))
 
             # If it succeeded, calculate the commission
             if cost > 0:

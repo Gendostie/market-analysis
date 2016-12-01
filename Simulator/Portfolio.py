@@ -23,7 +23,7 @@ class Portfolio:
     #                                Buy/Sell algorithms
     #######################################################################################################
 
-    def maximize_buy(self, symbol, price):
+    def buy_stocks(self, symbol, price):
         """Buy as many stocks as possible at a given price for the given company.
 
         It will not buy for more than the maximum amount set by the user, nor more than it can buy with the
@@ -39,7 +39,7 @@ class Portfolio:
         :rtype: float
         """
         # Safety check
-        if not self.can_buy() or price <= 0:
+        if (not self.can_buy()) or price <= 0:
             return 0.0
 
         # Calculate the maximum we can put in $ for this company without busting the maximum set by the user.
@@ -60,7 +60,7 @@ class Portfolio:
         # Buy the stocks and add them to our portfolio
         cost = stocks_to_buy * price
 
-        if cost > 0:
+        if cost >= self._min_stock_value:
             if symbol in self._portfolio:
                 self._portfolio[symbol] += stocks_to_buy
             else:
@@ -71,6 +71,8 @@ class Portfolio:
 
             # Log the transaction
             self.log.write("BUY {} {} -{}\n".format(symbol, stocks_to_buy, cost))
+        else:
+            cost = 0.0
         return cost
 
     def sell_all_stocks(self, symbol, price):
@@ -113,7 +115,7 @@ class Portfolio:
         :return: True if it's possible to buy stocks. False otherwise.
         :rtype: bool
         """
-        return self._cash > 100.0
+        return self._cash >= self._min_stock_value
 
     def get_stocks_count(self, symbol):
         """Return the number of stocks owned for a company.
