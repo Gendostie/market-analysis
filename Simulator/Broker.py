@@ -8,15 +8,32 @@ from datetime import datetime
 #                                           Broker
 #########################################################################################################
 class Broker:
-    # TODO: Keep log?
     def __init__(self, initial_liquidity, db, log_broker, log_port,
                  min_date=datetime(2006, 1, 3), max_date=datetime(2016, 11, 4),
                  min_value=0, max_value=float("inf")):
         # TODO: Add comment
+        """
+        Create Broker
+        :param initial_liquidity: value to portfolio to begin
+        :type initial_liquidity: int
+        :param db: connexion in to DB
+        :type db: Manager_DB.DbConnection.DbConnection
+        :param log_broker: file to write log of Broker
+        :type log_broker: file
+        :param log_port: file to write log of Portfolio
+        :type log_port: file
+        :param min_date: date to start simulation
+        :type min_date: datetime.datetime
+        :param max_date: date included when the simulation stops
+        :type max_date: datetime.datetime
+        :param min_value: min stock value to do transaction
+        :type min_value: int
+        :param max_value: max stock value to invest in a company
+        :type max_value: int
+        """
         # The Market where the broker is buying and selling stocks
         self._market = Market(min_date, max_date, db)
 
-        # TODO: LOG
         self.log = log_broker
 
         # The portfolio contains all the stocks bought for the current day and time and
@@ -145,6 +162,10 @@ class Broker:
 
     def _sell(self):
         # TODO : Comment
+        """
+        Sell company
+        :return: None
+        """
         # Get the list of all companies that we can sell (those we have in our portfolio);
         lst = self._portfolio.get_companies()
 
@@ -165,6 +186,10 @@ class Broker:
 
     def _buy(self):
         # TODO: Comment
+        """
+        Buy company
+        :return: None
+        """
         # Get the list of all companies that we can buy (those trading that day in the market);
         lst = self._market.get_trading_stocks()
 
@@ -190,7 +215,13 @@ class Broker:
             if not self._portfolio.can_buy():
                 break
 
-    def _tracking(self):
+    def _tracking(self, mode_debug=False):
+        """
+        Log transaction of day
+        :param mode_debug: if want print the logs
+        :type mode_debug: bool
+        :return: None
+        """
         # TODO : Add the draw(), data structure to keep track of value over time & maybe more
         # Calculate how much we have
         # TODO : Remove bill?
@@ -198,16 +229,21 @@ class Broker:
             self._portfolio.get_cash_money() + \
             self._portfolio.get_value_of_portfolio(self._market) -\
             self._bill
-        # TODO : Only for debugging
-        print("{}\t\t{}".format(self._market.get_current_date(),
-                                self._hist_market_value[self._market.get_current_date()]))
+        if mode_debug:
+            print("{}\t\t{}".format(self._market.get_current_date(),
+                                    self._hist_market_value[self._market.get_current_date()]))
         self.log.write("{};{};{};{}\n".format(self._market.get_current_date(),
                                               self._portfolio.get_cash_money(),
                                               self._portfolio.get_value_of_portfolio(self._market),
                                               self._bill))
 
-    def run_simulation(self):
-        # TODO: Comment
+    def run_simulation(self, mode_debug=False):
+        """
+        Start simulation
+        :param mode_debug: if want print the logs
+        :type mode_debug: bool
+        :return: None
+        """
         # As long as there is a new business day in our simulation;
         trading = True
         while trading:
@@ -219,9 +255,10 @@ class Broker:
                 self._buy()
 
             # Keep track of our assets
-            self._tracking()
+            self._tracking(mode_debug)
 
             # Go to the next trading day.
             trading = self._market.next()
-        # TODO: Remove this print, instead, print a résumé in the log.
-        self._portfolio.print_portfolio()
+        # TODO: Remove this print, instead, print a summarize in the log.
+        if mode_debug:
+            self._portfolio.print_portfolio()

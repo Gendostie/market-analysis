@@ -6,7 +6,6 @@ import Filters
 
 def main_simulator(initial_liquidity):
     # TODO: Pass parameters
-    # TODO: Keep log?
     # Open a database connection for the queries
     config = configparser.ConfigParser()
     config.read('../config.ini')
@@ -21,7 +20,7 @@ def main_simulator(initial_liquidity):
 
     # TODO: ONLY FOR TESTING
     broker = Broker(initial_liquidity, db, log_broker, log_port, min_value=0, max_value=2000)
-    #broker.set_percent_commission(1)
+    # broker.set_percent_commission(1)
     broker.add_max_nb_of_stocks_to_buy(1)
     broker.add_sell_filters(Filters.FilterNot())
     broker.add_buy_filters(Filters.FilterNotInPortfolio())

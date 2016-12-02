@@ -11,6 +11,15 @@ class Market:
     """
 
     def __init__(self, begin, end, db):
+        """
+
+        :param begin:
+        :type begin: datetime.datetime
+        :param end:
+        :type end: datetime.datetime
+        :param db: connexion in to DB
+        :type db: Manager_DB.DbConnection.DbConnection
+        """
         self._db = db
 
         # Set the dates for the simulation
@@ -52,6 +61,7 @@ class Market:
         return True
 
     def debug_print(self):
+        """For debugging, print df_market"""
         # TODO : REMOVE, only for debugging
         """Print the information for the current date."""
         print(self.df_market.loc[self._current_date])
@@ -108,15 +118,18 @@ class Market:
             business_days[date.year][date.month].append(date.day)
         return business_days
 
-    # TODO: Comments
     def __load_prices(self):
-        list_prices = {}
+        """
+        Get adjusted close value of companies in table SQL daily_value
+        :return: dict
+        """
+        dict_prices = {}
         query = """SELECT id_symbol, adj_close
                    FROM daily_value
                    WHERE date_daily_value = "{}";""" .format(self._current_date)
         for symbol, price in self._db.select_in_db(query):
-            list_prices[symbol] = price
-        return list_prices
+            dict_prices[symbol] = price
+        return dict_prices
 
     ####################################################################################################
     #     Check state of the simulation.
@@ -128,7 +141,7 @@ class Market:
         Require the initialization of self.business_day with the function get_business_days().
 
         :param date: The date that we want to check.
-        :type date: datetime
+        :type date: datetime.datetime
         :return: True if it's a business day. False otherwise.
         :rtype: bool
         """
@@ -149,4 +162,3 @@ class Market:
             return True
         else:
             return False
-

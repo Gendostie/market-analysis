@@ -4,7 +4,17 @@ import math
 class Portfolio:
     def __init__(self, initial_liquidity, min_value, max_value, log):
         # TODO : Better comment...
-        """A portfolio is keeping the number of stocks we own."""
+        """
+        A portfolio is keeping the number of stocks we own.
+        :param initial_liquidity: value to portfolio to begin
+        :type initial_liquidity: int
+        :param min_value: min stock value to do transaction
+        :type min_value: int
+        :param max_value: max stock value to invest in a company
+        :type max_value: int
+        :param log: file to write log
+        :type log: file
+        """
         self._portfolio = {}
 
         # Log file to log each transaction
@@ -160,7 +170,7 @@ class Portfolio:
         """Return how much we could make if we were to sell all of our stocks at the current date.
 
         :param market: An instance of the class Market
-        :type market: Market
+        :type market: Market.Market
         :return: float
         """
         stocks_value = 0.0
@@ -179,6 +189,6 @@ class Portfolio:
         self._max_number_stocks = nb_stocks
 
     def print_portfolio(self):
-        # TODO: ONLY FOR DEBUGGING
+        """ONLY FOR DEBUGGING"""
         for symbol, stocks in self._portfolio.items():
             print("{} -> {}".format(symbol, stocks))

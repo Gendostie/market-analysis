@@ -3,7 +3,11 @@ import math
 from datetime import timedelta
 from QT.Singleton import divide
 
-from DbConnection import DbConnection
+try:
+    from DbConnection import DbConnection
+except ImportError:
+    from Manager_DB.DbConnection import DbConnection
+
 
 # TODO : Config
 HOST = '127.0.0.1'
