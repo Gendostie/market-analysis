@@ -19,29 +19,15 @@ class Portfolio:
         self._min_stock_value = min_value
         self._max_stock_value = max_value
 
+        # We can set a maximum number of stocks to buy for each companies.
+        # Otherwise, it's as many as possible.
+        self._max_number_stocks = None
+
     #######################################################################################################
     #                                Buy/Sell algorithms
     #######################################################################################################
 
-    def maximize_buy(self, symbol, price):
-        """Buy as many stocks as possible at a given price for the given company.
-
-        It will not buy for more than the maximum amount set by the user, nor more than it can buy with the
-        cash it has. That might leave no margin for the broker's commission though.
-
-        The amount of cash we have is automatically adjusted.
-
-        :param symbol: Symbol of the company of which we want to buy stocks.
-        :type symbol: str
-        :param price: Price at which the stocks of the company are sold in the market.
-        :type price: float
-        :return: Value of the transaction, which is how much money it cost to buy the stocks. 0 if nothing was done.
-        :rtype: float
-        """
-        # Safety check
-        if not self.can_buy() or price <= 0:
-            return 0.0
-
+    def get_nb_stocks_to_buy(self, symbol, price):
         # Calculate the maximum we can put in $ for this company without busting the maximum set by the user.
         # Formula:= Maximum we can put for one company ($) - Value of stocks we already own for the company ($)
         if symbol in self._portfolio:
@@ -57,10 +43,38 @@ class Portfolio:
         #    number of stocks to buy (which we don't want). We set it to at least 0.
         stocks_to_buy = max(math.floor(max_value / price), 0)
 
+        # If we have a maximum number of stock we can buy for a given transaction,
+        # return the minimum between our calculated maximum and the one given by the user.
+        if self._max_number_stocks is not None:
+            stocks_to_buy = min(stocks_to_buy, self._max_number_stocks)
+
+        return stocks_to_buy
+
+    def buy_stocks(self, symbol, price, date):
+        """Buy as many stocks as possible at a given price for the given company.
+
+        It will not buy for more than the maximum amount set by the user, nor more than it can buy with the
+        cash it has. That might leave no margin for the broker's commission though.
+
+        The amount of cash we have is automatically adjusted.
+
+        :param symbol: Symbol of the company of which we want to buy stocks.
+        :type symbol: str
+        :param price: Price at which the stocks of the company are sold in the market.
+        :type price: float
+        :return: Value of the transaction, which is how much money it cost to buy the stocks. 0 if nothing was done.
+        :rtype: float
+        """
+        # Safety check
+        if (not self.can_buy()) or price <= 0:
+            return 0.0
+
+        stocks_to_buy = self.get_nb_stocks_to_buy(symbol, price)
+
         # Buy the stocks and add them to our portfolio
         cost = stocks_to_buy * price
 
-        if cost > 0:
+        if cost >= self._min_stock_value:
             if symbol in self._portfolio:
                 self._portfolio[symbol] += stocks_to_buy
             else:
@@ -70,10 +84,12 @@ class Portfolio:
             self._cash -= cost
 
             # Log the transaction
-            self.log.write("BUY {} {} -{}\n".format(symbol, stocks_to_buy, cost))
+            self.log.write("{};BUY;{};{};{}\n".format(date, symbol, stocks_to_buy, cost))
+        else:
+            cost = 0.0
         return cost
 
-    def sell_all_stocks(self, symbol, price):
+    def sell_all_stocks(self, symbol, price, date):
         """Ask the portfolio to sell all stocks owned for a company at the given price.
 
         The amount of cash we have is automatically adjusted.
@@ -96,7 +112,7 @@ class Portfolio:
 
         # Adjust the cash we have after the transaction
         self._cash += gain
-        self.log.write("SELL {} {} +{}\n".format(symbol, nb_stocks, gain))
+        self.log.write("{};SELL;{};{};{}\n".format(date, symbol, nb_stocks, gain))
 
         return gain
 
@@ -113,7 +129,7 @@ class Portfolio:
         :return: True if it's possible to buy stocks. False otherwise.
         :rtype: bool
         """
-        return self._cash > 100.0
+        return self._cash >= self._min_stock_value
 
     def get_stocks_count(self, symbol):
         """Return the number of stocks owned for a company.
@@ -152,18 +168,15 @@ class Portfolio:
             stocks_value += nb_stocks * market.get_price(symbol)
         return stocks_value
 
-    def get_assets_value(self, market):
-        """Return the total of all our assets (cash money available and value of our stocks)
-
-        :param market: An instance of the class Market
-        :type market: Market
-        :return: int
-        """
-        return self._cash + self.get_value_of_portfolio(market)
+    def get_cash_money(self):
+        return self._cash
 
     #######################################################################################################
     #                                         Others
     #######################################################################################################
+
+    def set_max_number_of_stocks_to_buy(self, nb_stocks):
+        self._max_number_stocks = nb_stocks
 
     def print_portfolio(self):
         # TODO: ONLY FOR DEBUGGING

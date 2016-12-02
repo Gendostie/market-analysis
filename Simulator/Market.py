@@ -1,4 +1,3 @@
-import pandas as pd
 from datetime import timedelta
 
 
@@ -10,24 +9,24 @@ class Market:
     You can go to the next business day with the function next().
 
     """
+
     def __init__(self, begin, end, db):
-        self.db = db
+        self._db = db
 
         # Set the dates for the simulation
-        self.current_date = begin
-        self.end_date = end
+        self._current_date = begin
+        self._end_date = end
 
         # Get the list of all business days (must be initialized before any call to __is_business_day() )
-        self.business_days = self.__get_business_days()
+        self._business_days = self.__get_business_days()
 
         # Safety check
         # If the start date given is not a business day, go to the next business day.
         if not self.__is_business_day(begin):
             self.next()
 
-        # Charge the data for the first day
-        # TODO : Optimize to load only a month or a year at a time. Should be moved to next()
-        self.df_market = self.__load_daily_data()
+        # Charge the prices for this day. Optimization to speed up the get_price function.
+        self._prices = self.__load_prices()
 
     ####################################################################################################
     #     Callable functions
@@ -45,29 +44,31 @@ class Market:
         """
         if self.__is_over():
             return False
-        self.current_date = self.current_date + timedelta(days=1)
-        if not self.__is_business_day(self.current_date):
+        self._current_date = self._current_date + timedelta(days=1)
+        if not self.__is_business_day(self._current_date):
             self.next()
+        # Charge the new prices for the day. Optimization to speed up the get_price function.
+        self._prices = self.__load_prices()
         return True
 
     def debug_print(self):
         # TODO : REMOVE, only for debugging
         """Print the information for the current date."""
-        print(self.df_market.loc[self.df_market['date'] == self.current_date])
+        print(self.df_market.loc[self._current_date])
 
     def get_current_date(self):
         """Return the current date of the simulation.
 
         :rtype: datetime
         """
-        return self.current_date
+        return self._current_date
 
     def get_trading_stocks(self):
         """Return a list of all companies that you can trade for the current date.
 
         :rtype: list
         """
-        return self.df_market.loc[self.df_market['date'] == self.current_date, 'symbol'].tolist()
+        return list(self._prices.keys())
 
     def get_price(self, symbol):
         """Return the closing price of a company for the current day.
@@ -77,9 +78,8 @@ class Market:
         :return: The "adjusted close" price of the company for the current day. 0 if the company isn't trading that day.
         :rtype: float
         """
-        if symbol in self.get_trading_stocks():
-            price = self.df_market.loc[(self.df_market['date'] == self.current_date) &
-                                       (self.df_market['symbol'] == symbol), 'adj_close'].values[0]
+        if symbol in self._prices:
+            price = self._prices[symbol]
         else:
             price = 0.0
         return price
@@ -87,30 +87,6 @@ class Market:
     ####################################################################################################
     #     Set up some variables for the simulation
     ####################################################################################################
-
-    def __load_daily_data(self):
-        # TODO: Take a lot of time. Charge only a year?
-        # TODO: Close needed?
-        """Load the daily information of the database in a DataFrame (pandas's object).
-
-        The starting and ending dates are defined when the object is initialized and cannot be changed
-        afterward.
-
-        The columns are 'date', 'symbol', 'close' and 'adj_close' (for the adjusted close).
-
-        :return: A Dataframe with all the information from starting date to ending date.
-        :rtype: pandas.DataFrame
-        """
-        query = """SELECT date_daily_value, id_symbol, close_val, adj_close
-                   FROM daily_value
-                   WHERE date_daily_value >= "{}"
-                   AND date_daily_value <= "{}";"""\
-            .format(self.current_date, self.end_date)
-        list_results = []
-        for date, symbol, close, adj_close in self.db.select_in_db(query):
-            list_results.append({'date': date, 'symbol': symbol, 'close': close, 'adj_close': adj_close})
-
-        return pd.DataFrame.from_dict(list_results)
 
     def __get_business_days(self):
         """Load a dictionary with all business days of the simulation.
@@ -121,9 +97,9 @@ class Market:
         query = """SELECT DISTINCT date_daily_value
                    FROM daily_value
                    WHERE date_daily_value >= "{}"
-                     AND date_daily_value <= "{}";""".format(self.current_date, self.end_date)
+                     AND date_daily_value <= "{}";""".format(self._current_date, self._end_date)
         business_days = {}
-        for tpl in self.db.select_in_db(query):
+        for tpl in self._db.select_in_db(query):
             date = tpl[0]
             if date.year not in business_days:
                 business_days[date.year] = {1: [], 2: [], 3: [], 4: [],
@@ -131,6 +107,16 @@ class Market:
                                             9: [], 10: [], 11: [], 12: []}
             business_days[date.year][date.month].append(date.day)
         return business_days
+
+    # TODO: Comments
+    def __load_prices(self):
+        list_prices = {}
+        query = """SELECT id_symbol, adj_close
+                   FROM daily_value
+                   WHERE date_daily_value = "{}";""" .format(self._current_date)
+        for symbol, price in self._db.select_in_db(query):
+            list_prices[symbol] = price
+        return list_prices
 
     ####################################################################################################
     #     Check state of the simulation.
@@ -146,8 +132,8 @@ class Market:
         :return: True if it's a business day. False otherwise.
         :rtype: bool
         """
-        if date.year in self.business_days:
-            if date.day in self.business_days[date.year][date.month]:
+        if date.year in self._business_days:
+            if date.day in self._business_days[date.year][date.month]:
                 return True
         return False
 
@@ -157,9 +143,10 @@ class Market:
         :return: True if the current day comes after the ending date. False otherwise.
         :rtype: bool
         """
-        if self.current_date.year >= self.end_date.year and\
-           self.current_date.month >= self.end_date.month and\
-           self.current_date.day >= self.end_date.day:
+        if self._current_date.year >= self._end_date.year and \
+           self._current_date.month >= self._end_date.month and \
+           self._current_date.day >= self._end_date.day:
             return True
         else:
             return False
+

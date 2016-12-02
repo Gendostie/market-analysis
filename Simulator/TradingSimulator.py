@@ -2,7 +2,6 @@ import configparser
 from DbConnection import DbConnection
 from Broker import Broker
 import Filters
-from datetime import datetime
 
 
 def main_simulator(initial_liquidity):
@@ -15,17 +14,19 @@ def main_simulator(initial_liquidity):
                       config.get('database', 'USER'),
                       config.get('database', 'PASSWORD'),
                       config.get('database', 'DATABASE'))
-    log = open(config.get('path', 'path_log_simulator'), 'a')
+    log_broker = open(config.get('path', 'path_log_broker'), 'w')
+    log_broker.write("date;cash;stocks_value;bill\n")
+    log_port = open(config.get('path', 'path_log_portfolio'), 'w')
+    log_port.write("date;type_transaction;symbol;nb_stocks;transaction_value\n")
 
     # TODO: ONLY FOR TESTING
-    broker = Broker(initial_liquidity, db, log, min_date=datetime(2016, 10, 1), min_value=500, max_value=2000)
-    # broker.set_flat_fee_commission(5.25)
+    broker = Broker(initial_liquidity, db, log_broker, log_port, min_value=0, max_value=2000)
+    #broker.set_percent_commission(1)
+    broker.add_max_nb_of_stocks_to_buy(1)
     broker.add_sell_filters(Filters.FilterNot())
-    broker.add_buy_filters(Filters.FilterPriceGreaterThan(value=50),
-                           Filters.FilterPriceLesserThan(value=100),
-                           Filters.FilterPriceGreaterThan(value=75))
+    broker.add_buy_filters(Filters.FilterNotInPortfolio())
     broker.run_simulation()
     # TODO: ONLY FOR TESTING
 
 if __name__ == "__main__":
-    main_simulator(1000000)
+    main_simulator(100000)
