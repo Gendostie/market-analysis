@@ -3,7 +3,7 @@ from PyQt4 import QtCore, QtGui
 
 from MainWindow import _translate
 from Manager_DB import ManagerPortfolio
-from QT import ValueTableItem
+import ValueTableItem
 from Singleton import divide
 
 

@@ -4,12 +4,22 @@ from matplotlib.backends.backend_qt4agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.figure import Figure
 from matplotlib import dates
 
-from DbConnection import DbConnection
-from QT.MainWindow import Ui_MainWindow
-from QT.DialogPopUp import Ui_Dialog
-from Manager_DB import ManagerPortfolio, ManagerCompany
-from QT import HelperFunctionQt
-from QT.Singleton import Singleton
+try:
+    from Manager_DB.DbConnection import DbConnection
+    from Manager_DB import ManagerCompany, ManagerPortfolio
+except ImportError:
+    from os import getcwd
+    import sys
+    sys.path.extend([getcwd()[:-len('QT')-1]])  # add path of project for call Manager_DB
+
+    from Manager_DB.DbConnection import DbConnection
+    from Manager_DB import ManagerCompany, ManagerPortfolio
+
+from MainWindow import Ui_MainWindow
+from DialogPopUp import Ui_Dialog
+import HelperFunctionQt
+from Singleton import Singleton
+
 
 dict_min_max_value_criteria = {}
 dict_type_simulation = {'Technical Analysis': 'technical_analysis_windows', 'By Low Set High': 'by_low_set_high',
@@ -652,4 +662,4 @@ if __name__ == "__main__":
     ui.setup_manager()
     ui.create_connection_signal_slot()
     MainWindow.show()
-    sys.exit(app.exec_())
+    app.exec_()

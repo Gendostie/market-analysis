@@ -38,3 +38,16 @@ Two functions can using:
 ## Installation
 1. `pip install -r requirements.txt`, for install package and add -U for 
    update package
+2. Check `config.ini` if all value of `[installer]` is to True and :
+
+        [daily]
+        day_min = 01
+        month_min = 00
+        year_min = 2006
+        
+        [dividend]
+        day_min = 01
+        month_min = 00
+        year_min = 2006
+3. Execute script of `Install_DB/installer.py` for create Database
+4. You are ready to begin.

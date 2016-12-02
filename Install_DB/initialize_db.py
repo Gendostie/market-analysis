@@ -2,7 +2,6 @@ from os import path, getcwd
 import json
 import configparser
 
-
 try:
     from Manager_DB.DbConnection import DbConnection
     from Manager_DB import ManagerCompany
