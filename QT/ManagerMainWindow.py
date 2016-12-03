@@ -1,25 +1,23 @@
+import sys
+import os
+if os.path.abspath('..') not in sys.path:
+    sys.path.insert(0, os.path.abspath('..'))  # add path of project for call Manager_DB
+
 from PyQt4 import QtCore, QtGui
 import configparser
 from matplotlib.backends.backend_qt4agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.figure import Figure
 from matplotlib import dates
 
-try:
-    from Manager_DB.DbConnection import DbConnection
-    from Manager_DB import ManagerCompany, ManagerPortfolio
-except ImportError:
-    from os import getcwd
-    import sys
-    sys.path.extend([getcwd()[:-len('QT')-1]])  # add path of project for call Manager_DB
-
-    from Manager_DB.DbConnection import DbConnection
-    from Manager_DB import ManagerCompany, ManagerPortfolio
-
+from Manager_DB.DbConnection import DbConnection
+from Manager_DB import ManagerCompany, ManagerPortfolio
 from MainWindow import Ui_MainWindow
 from DialogPopUp import Ui_Dialog
 import HelperFunctionQt
 from Singleton import Singleton
+from Simulator.Broker import Broker
 
+MAX_INT = pow(2, 63)-1  # replace sys.maxint no available in python 3
 
 dict_min_max_value_criteria = {}
 dict_type_simulation = {'Technical Analysis': 'technical_analysis_windows', 'By Low Set High': 'by_low_set_high',
@@ -238,6 +236,8 @@ class ManagerMainWindow(Ui_MainWindow):
         self.btn_showReport.clicked.connect(Slots.show_report)
         # clear old params of type simulation
         self.comboBox_typeSimulation.currentIndexChanged.connect(dict_params_value_sim.clear)
+        # Set max combobox commission depending if is in % or $
+        self.comboBox_commissionPctDollar.currentIndexChanged.connect(Slots.change_max_spinbox_commission)
 
     def create_combobox_portfolio(self, tab_widget_name, combobox_name):
         """
@@ -521,6 +521,22 @@ class Slots:
         HelperFunctionQt.select_deselect_combobox_layout(ui.verticalLayout_right_2, QtCore.Qt.Unchecked)
 
     @staticmethod
+    def change_max_spinbox_commission(idx_type_commission):
+        """
+        Change max of spinbox commission depending type of commission. If %, max is 100 and if in $, max is 999
+        :param idx_type_commission: index of item combobox selected. Normally is 0 for $ and 1 for $
+        :type idx_type_commission: int
+        :return:None
+        """
+        if ui.comboBox_commissionPctDollar.itemText(idx_type_commission) == '%':
+            ui.doubleSpinBox_commission.setMaximum(100)
+        elif ui.comboBox_commissionPctDollar.itemText(idx_type_commission) == '$':
+            ui.doubleSpinBox_commission.setMaximum(999)
+        else:
+            print('Error type commission, % or $, you put %s' %
+                  ui.comboBox_commissionPctDollar.itemText(idx_type_commission))
+
+    @staticmethod
     def open_windows_setting_params_simulation():
         """
         Open pop-up of dialog Qt to set params specific to type simulation selected. The value of params is
@@ -556,26 +572,43 @@ class Slots:
     @staticmethod
     def start_simulation():
         print('Start simulation')
-        # dict_params_simulation = HelperFunctionQt.get_params_simulation(ui.frame_simulation)
-        # dict_params_simulation.update(dict_params_value_sim)
-        # print(dict_params_simulation)
-        # dict_min_max = {}
-        # dict_min_max.update(HelperFunctionQt.get_min_max_layout_checked(ui.verticalLayout_left_2))
-        # dict_min_max.update(HelperFunctionQt.get_min_max_layout_checked(ui.verticalLayout_right_2))
-        # print(dict_min_max)
+        dict_params_simulation = HelperFunctionQt.get_params_simulation(ui.frame_simulation)
+        dict_params_simulation.update(dict_params_value_sim)
+        print(dict_params_simulation)
+        dict_min_max = {}
+        dict_min_max.update(HelperFunctionQt.get_min_max_layout_checked(ui.verticalLayout_left_2))
+        dict_min_max.update(HelperFunctionQt.get_min_max_layout_checked(ui.verticalLayout_right_2))
+        print(dict_min_max)
 
+        broker = Broker(db, dict_params_simulation['valuePortfolio'], config.get('path', 'path_log_broker'),
+                        config.get('path', 'path_log_portfolio'), dict_params_simulation['simulatorTo'],
+                        dict_params_simulation['simulatorFrom'], dict_params_simulation.get('minInvest', 0),
+                        dict_params_simulation.get('maxInvest', MAX_INT))
+        if dict_params_simulation['commissionPctDollar'] == '%':
+            broker.set_percent_commission(dict_params_simulation.get('commission', 0))
+        elif dict_params_simulation['commissionPctDollar'] == 'S':
+            broker.set_flat_fee_commission(dict_params_simulation.get('commission', 0))
+        else:
+            raise ValueError('Error type commission, % or $, you put %s'
+                             % str(dict_params_simulation['commissionPctDollar']))
+
+        if dict_params_simulation['typeSimulation'] == '1 Stock For Each Company':
+            broker.add_max_nb_of_stocks_to_buy(1)
+        # broker.add_sell_filters(Filters.FilterNot())
+        # broker.add_buy_filters(Filters.FilterNotInPortfolio())
+        broker.run_simulation()
         # TODO: delete call to ManagerCompany
-        res_val = ManagerCompany.get_daily_values(db)
-        list_date = [v['date'] for v in res_val]
-        list_val = [v['value'] for v in res_val]
-        
-        # mpl_canvas = MplCanvas(ui.horizontalLayout_plot, list_date[:], list_val[:])
-        fig = create_plot_qt(list_date[:10], list_val[:10])
-        for i in range(10, len(list_date[:100]), 10):
-            # update_plot(fig, list_date[i:i+10], list_val[i:i+10])
-            update_plot(fig, list_date[:i], list_val[:i])
-            # create_plot_qt(list_date[:i], list_val[:i])
-        print('End update plot')
+        # res_val = ManagerCompany.get_daily_values(db)
+        # list_date = [v['date'] for v in res_val]
+        # list_val = [v['value'] for v in res_val]
+        #
+        # # mpl_canvas = MplCanvas(ui.horizontalLayout_plot, list_date[:], list_val[:])
+        # fig = create_plot_qt(list_date[:10], list_val[:10])
+        # for i in range(10, len(list_date[:100]), 10):
+        #     # update_plot(fig, list_date[i:i+10], list_val[i:i+10])
+        #     update_plot(fig, list_date[:i], list_val[:i])
+        #     # create_plot_qt(list_date[:i], list_val[:i])
+        # print('End update plot')
 
     # TODO: to completed
     @staticmethod
@@ -600,6 +633,7 @@ def create_plot_qt(x_date, y_value):
     fig.autofmt_xdate()
 
     canvas = FigureCanvas(fig)
+    # Clear plot if exists already
     for i in range(ui.horizontalLayout_plot.count()):
         ui.horizontalLayout_plot.itemAt(i).widget().setParent(None)
     ui.horizontalLayout_plot.addWidget(canvas)

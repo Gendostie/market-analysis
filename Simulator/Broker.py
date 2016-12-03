@@ -1,23 +1,25 @@
+import sys
 import random
+from datetime import datetime
+
 from Portfolio import Portfolio
 from Market import Market
-from datetime import datetime
 
 
 #########################################################################################################
 #                                           Broker
 #########################################################################################################
 class Broker:
-    def __init__(self, initial_liquidity, db, log_broker, log_port,
+    def __init__(self, db, initial_liquidity, log_broker, log_port,
                  min_date=datetime(2006, 1, 3), max_date=datetime(2016, 11, 4),
                  min_value=0, max_value=float("inf")):
         # TODO: Add comment
         """
         Create Broker
-        :param initial_liquidity: value to portfolio to begin
-        :type initial_liquidity: int
         :param db: connexion in to DB
         :type db: Manager_DB.DbConnection.DbConnection
+        :param initial_liquidity: value to portfolio to begin
+        :type initial_liquidity: int
         :param log_broker: file to write log of Broker
         :type log_broker: file
         :param log_port: file to write log of Portfolio
@@ -71,7 +73,7 @@ class Broker:
             :type type_commission: str
             :param commission_val: The value of the commission. In % or $ depending of its type.
             :type commission_val: float | int
-            :return: Nothing
+            :return: None
             """
             self.value = commission_val
             self.type = type_commission
@@ -97,25 +99,27 @@ class Broker:
         """Set the commission of the broker to a flat fee for any transaction done.
 
         :param value: The flat fee that will be charged for any transaction. Must be > 0.
+                      If == 0, put to no_commission.
         :type value: float | int
-        :return: Nothing
+        :return: None
         """
         if value > 0:
             self._commission = self._Commission("flat_fee", value)
         else:
-            raise ValueError
+            self._commission = self._Commission()
 
     def set_percent_commission(self, value):
         """Set the commission of the broker to a percentage of any transaction done.
 
-        :param value: Percentage of the transaction that will be charged. Must be > 0. 0.5 => 0.005%
+        :param value: Percentage of the transaction that will be charged. Must be > 0 and < 100.
+                      If == 0, put to no_commission.
         :type value: float | int
-        :return: Nothing
+        :return: None
         """
         if value > 0:
-            self._commission = self._Commission("percent", value/100)
+            self._commission = self._Commission("percent", value)
         else:
-            raise ValueError
+            self._commission = self._Commission()
 
     def add_sell_filters(self, *filters):
         """Add one or many filters to reduce the list of companies in our portfolio.
@@ -130,7 +134,7 @@ class Broker:
         specific criterion (or many criteria).
 
         :param filters: One or many functions as described above.
-        :return: Nothing
+        :return: None
         """
         for f in filters:
             self._sell_filters.append(f)
@@ -148,7 +152,7 @@ class Broker:
         criterion (or many criteria).
 
         :param filters: One or many functions as described above.
-        :return: Nothing
+        :return: None
         """
         for f in filters:
             self._buy_filters.append(f)
