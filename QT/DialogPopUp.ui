@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>301</width>
-    <height>177</height>
+    <width>310</width>
+    <height>179</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -18,8 +18,8 @@
     <rect>
      <x>10</x>
      <y>140</y>
-     <width>281</width>
-     <height>32</height>
+     <width>290</width>
+     <height>30</height>
     </rect>
    </property>
    <property name="orientation">
@@ -51,7 +51,7 @@
   <widget class="QDoubleSpinBox" name="doubleSpinBox_minInvest">
    <property name="geometry">
     <rect>
-     <x>160</x>
+     <x>170</x>
      <y>10</y>
      <width>130</width>
      <height>25</height>
@@ -98,7 +98,7 @@
   <widget class="QDoubleSpinBox" name="doubleSpinBox_maxInvest">
    <property name="geometry">
     <rect>
-     <x>160</x>
+     <x>170</x>
      <y>58</y>
      <width>130</width>
      <height>25</height>

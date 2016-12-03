@@ -582,11 +582,6 @@ class Slots:
     def show_report():
         print('Show report simulation')
 
-    # TODO: to completed
-    @staticmethod
-    def get_value_params():
-        print(0)
-
 
 def create_plot_qt(x_date, y_value):
     """
@@ -599,13 +594,14 @@ def create_plot_qt(x_date, y_value):
     :rtype: Figure
     """
     fig = Figure()
-
-    axes = fig.add_subplot(111)
+    axes = fig.add_subplot(1,1,1)
     axes.plot(x_date, y_value)
     set_axes_fig_plot(axes, x_date[0], x_date[-1])
     fig.autofmt_xdate()
 
     canvas = FigureCanvas(fig)
+    for i in range(ui.horizontalLayout_plot.count()):
+        ui.horizontalLayout_plot.itemAt(i).widget().setParent(None)
     ui.horizontalLayout_plot.addWidget(canvas)
     canvas.draw()
 
