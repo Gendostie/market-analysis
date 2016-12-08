@@ -1,3 +1,5 @@
+import random
+
 class Filter:
     def __init__(self, attr=None, value=None):
         self._attr = attr
@@ -28,6 +30,25 @@ class FilterPriceLesserThan(Filter):
             if price <= self._value:
                 new_list.append(symbol)
         return new_list
+
+
+class FilterKeepOnlyTen(Filter):
+    def run(self, lst, market, portfolio):
+        random.shuffle(lst)
+        return lst[:10]
+
+
+class FilterVIP(Filter):
+    def run(self, lst, market, portfolio):
+        return ["A", "FB", "GOOGL"]
+
+
+class FilterHistorical(Filter):
+    def run(self, lst, market, portfolio):
+        for symbol in lst:
+            result = market.get_52wk(symbol)
+            print("{} is at {}".format(symbol, result))
+        return lst
 
 
 ##########################################################################################################

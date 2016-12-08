@@ -136,6 +136,7 @@ def get_historic_value_all_company(db=None):
         result_52wk = ()
         addedDays = 0
         while len(result_52wk) == 0:
+            # TODO: May fail if we are the 29th of february...
             new_date = date_daily_value.replace(year=date_daily_value.year - 1) + timedelta(days=addedDays)
 
             query_2 = """SELECT adj_close
