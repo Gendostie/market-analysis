@@ -3,7 +3,6 @@ from QT.Singleton import divide
 
 
 class Market:
-    # TODO: To complete in the end
     """Class that encapsulate information about the market between two dates in the past.
 
     The class is initiated with a starting and ending date. It keeps the current date of the simulation.
@@ -14,9 +13,9 @@ class Market:
     def __init__(self, begin, end, db):
         """
 
-        :param begin:
+        :param begin: start date of simulation
         :type begin: datetime.datetime
-        :param end:
+        :param end: end date of simulation
         :type end: datetime.datetime
         :param db: connexion in to DB
         :type db: Manager_DB.DbConnection.DbConnection
@@ -61,12 +60,6 @@ class Market:
         self._prices = self.__load_prices()
         return True
 
-    def debug_print(self):
-        """For debugging, print df_market"""
-        # TODO : REMOVE, only for debugging
-        """Print the information for the current date."""
-        print(self.df_market.loc[self._current_date])
-
     def get_current_date(self):
         """Return the current date of the simulation.
 
@@ -95,57 +88,41 @@ class Market:
             price = 0.0
         return price
 
-    def _query_historical_data(self, col_name, symbol):
-        query = """SELECT {}
-                   FROM historic_value
-                   WHERE id_symbol = "{}"
-                   AND date_historic_value = (SELECT date_historic_value
-                                              FROM historic_value
-                                              WHERE date_historic_value <= "{}"
-                                              AND id_symbol = "{}"
-                                              ORDER BY date_historic_value DESC
-                                              LIMIT 1);""".format(col_name, symbol,
-                                                                  self._current_date, symbol)
+    def get_value_criterion_company(self, col_name, symbol):
+        """
+        Return value criterion within col_name of company
+        :param col_name: name criterion to get value
+        :type col_name: str
+        :param symbol: symbol of a company
+        :type symbol: str
+        :return: value of criterion, if None, return 0.0
+        :rtype: float
+        """
+        query = """SELECT {} FROM historic_value
+                    WHERE id_symbol = '{}'
+                        AND date_historic_value = (SELECT date_historic_value
+                                                      FROM historic_value
+                                                      WHERE date_historic_value <= '{}' AND id_symbol = '{}'
+                                                    ORDER BY date_historic_value DESC
+                                                    LIMIT 1);""".format(col_name, symbol, self._current_date, symbol)
 
         result = self._db.select_in_db(query)
-        if result is not ():
-            result = result[0][0]
+        if len(result) > 0:
+            return result[0][0]
         else:
-            result = None
-        return result
-
-    def get_revenue(self, symbol):
-        return self._query_historical_data("revenu_usd_mil", symbol)
-
-    def get_gross_margin(self, symbol):
-        return self._query_historical_data("gross_margin_pct", symbol)
-
-    def get_net_income(self, symbol):
-        return self._query_historical_data("net_income_usd_mil", symbol)
-
-    def get_EPS(self, symbol):
-        return self._query_historical_data("earning_per_share_usd", symbol)
-
-    def get_dividends(self, symbol):
-        return self._query_historical_data("dividends_usd", symbol)
-
-    def get_BVPS(self, symbol):
-        return self._query_historical_data("book_value_per_share_usd", symbol)
-
-    def get_free_cash_flow_per_share(self, symbol):
-        return self._query_historical_data("free_cash_flow_per_share_usd", symbol)
+            return 0.0
 
     def get_dividend_yield(self, symbol):
-        return divide(self.get_dividends(symbol),
+        return divide(self.get_value_criterion_company('dividends_usd', symbol),
                       self.get_price(symbol), 100)
 
     def get_p_e_ratio(self, symbol):
         return divide(self.get_price(symbol),
-                      self.get_EPS(symbol))
+                      self.get_value_criterion_company('earning_per_share_usd', symbol))
 
     def get_p_b_ratio(self, symbol):
         return divide(self.get_price(symbol),
-                      self.get_BVPS(symbol))
+                      self.get_value_criterion_company('book_value_per_share_usd', symbol))
 
     def get_52wk(self, symbol):
         actual_price = self.get_price(symbol)
@@ -170,8 +147,8 @@ class Market:
         # Get the price at that date
         query = """SELECT adj_close
                      FROM daily_value
-                     WHERE date_daily_value = "{}"
-                     AND id_symbol = "{}";""".format(last_year_date, symbol)
+                     WHERE date_daily_value = '{}'
+                     AND id_symbol = '{}';""".format(last_year_date, symbol)
         result = self._db.select_in_db(query)
         if result is not ():
             last_year_price = result[0][0]
@@ -193,8 +170,8 @@ class Market:
         """
         query = """SELECT DISTINCT date_daily_value
                    FROM daily_value
-                   WHERE date_daily_value >= "{}"
-                     AND date_daily_value <= "{}";""".format(self._current_date, self._end_date)
+                   WHERE date_daily_value >= '{}'
+                     AND date_daily_value <= '{}';""".format(self._current_date, self._end_date)
         business_days = {}
         for tpl in self._db.select_in_db(query):
             date = tpl[0]
@@ -213,7 +190,7 @@ class Market:
         dict_prices = {}
         query = """SELECT id_symbol, adj_close
                    FROM daily_value
-                   WHERE date_daily_value = "{}";""" .format(self._current_date)
+                   WHERE date_daily_value = '{}';""" .format(self._current_date)
         for symbol, price in self._db.select_in_db(query):
             dict_prices[symbol] = price
         return dict_prices

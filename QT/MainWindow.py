@@ -1259,7 +1259,7 @@ class Ui_MainWindow(object):
         self.doubleSpinBox_valuePortfolio.setPrefix(_fromUtf8(""))
         self.doubleSpinBox_valuePortfolio.setMaximum(99999999.99)
         self.doubleSpinBox_valuePortfolio.setSingleStep(100.0)
-        self.doubleSpinBox_valuePortfolio.setProperty("value", 0.0)
+        self.doubleSpinBox_valuePortfolio.setProperty("value", 1000000.0)
         self.doubleSpinBox_valuePortfolio.setObjectName(_fromUtf8("doubleSpinBox_valuePortfolio"))
         self.label_commission = QtGui.QLabel(self.frame_simulation)
         self.label_commission.setGeometry(QtCore.QRect(367, 7, 115, 25))

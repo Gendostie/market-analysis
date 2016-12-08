@@ -13,10 +13,8 @@ def main_simulator(initial_liquidity):
                       config.get('database', 'USER'),
                       config.get('database', 'PASSWORD'),
                       config.get('database', 'DATABASE'))
-    log_broker = open(config.get('path', 'path_log_broker'), 'w')
-    log_broker.write("date;cash;stocks_value;bill\n")
-    log_port = open(config.get('path', 'path_log_portfolio'), 'w')
-    log_port.write("date;type_transaction;symbol;nb_stocks;transaction_value\n")
+    log_broker = config.get('path', 'path_log_broker')
+    log_port = config.get('path', 'path_log_portfolio')
 
     # TODO: ONLY FOR TESTING
     broker = Broker(db, initial_liquidity, log_broker, log_port, min_value=0, max_value=2000)

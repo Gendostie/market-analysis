@@ -1,10 +1,28 @@
+import io
 import pandas as pd
 from PyQt4 import QtCore, QtGui
+
+from matplotlib.backends.backend_qt4agg import FigureCanvasQTAgg as FigureCanvas
+from matplotlib.figure import Figure
+from matplotlib import dates
 
 from MainWindow import _translate
 from Manager_DB import ManagerPortfolio
 import ValueTableItem
 from Singleton import divide
+
+dict_criteria = {'Adj. Close': 'close_val',
+                 'Revenue (Mil)': 'revenu_usd_mil',
+                 'Net Income (Mil)': 'net_income_usd_mil',
+                 'Gross Margin (%)': 'gross_margin_pct',
+                 'Dividends': 'dividends_usd',
+                 'EPS': 'earning_per_share_usd',
+                 'BVPS': 'book_value_per_share_usd',
+                 'FCFPS': 'free_cash_flow_per_share_usd',
+                 'Div. Yield (%)': 'dividend_yield',
+                 'P/E Ratio': 'p_e_ratio',
+                 'P/B Ratio': 'p_b_ratio',
+                 '52wk (%)': '52wk'}
 
 
 def get_row_table_widget(table_widget, idx_row):
@@ -177,19 +195,6 @@ def set_min_max_slider_layout(layout, dict_min_max_value_criteria_calc):
     :type dict_min_max_value_criteria_calc: dict{dict}
     :return: None
     """
-    dict_criteria = {'Adj. Close': 'close_val',
-                     'Revenue (Mil)': 'revenu_usd_mil',
-                     'Net Income (Mil)': 'net_income_usd_mil',
-                     'Gross Margin (%)': 'gross_margin_pct',
-                     'Dividends': 'dividends_usd',
-                     'EPS': 'earning_per_share_usd',
-                     'BVPS': 'book_value_per_share_usd',
-                     'FCFPS': 'free_cash_flow_per_share_usd',
-                     'Div. Yield (%)': 'dividend_yield',
-                     'P/E Ratio': 'p_e_ratio',
-                     'P/B Ratio': 'p_b_ratio',
-                     '52wk (%)': '52wk'}
-
     for idx_layout in range(layout.count()):
         # Layout of the attribute
         layout_attr = layout.itemAt(idx_layout)
@@ -456,4 +461,80 @@ def read_reference_curve(path_log_broker, in_list=False):
             list_data.append(line)
         return list_data
     else:
-        return pd.read_csv(file, sep=';')
+        return pd.read_csv(io.StringIO(file.read()), sep=';')
+
+
+#########################################################################################################
+#                                 Function to create and update plot QT
+#########################################################################################################
+def create_plot_qt(x_date, y_value, horizontal_layout_plot):
+    """
+    Create plot to display in interface qt in a layout box.
+    :param x_date: list datetime associate to values in axis y
+    :type x_date: list[datetime]
+    :param y_value: list of value to display line of plot
+    :type y_value: list[float]
+    :param horizontal_layout_plot:
+    :type horizontal_layout_plot: QtGui.QLayout
+    :return: figure of plot
+    :rtype: Figure
+    """
+    fig = Figure()
+    axes = fig.add_subplot(111)
+    axes.plot(x_date, y_value)
+    if len(x_date) > 0:
+        set_axes_fig_plot(axes, x_date[0], x_date[-1])
+    fig.autofmt_xdate()
+
+    canvas = FigureCanvas(fig)
+    # Clear plot if exists already
+    for i in range(horizontal_layout_plot.count()):
+        horizontal_layout_plot.itemAt(i).widget().setParent(None)
+    horizontal_layout_plot.addWidget(canvas)
+    canvas.draw()
+
+    return fig
+
+
+def set_axes_fig_plot(axes, x_min, x_max):
+    """
+    Set axes to display label of axis and title of plot and
+    :param axes: object axes
+    :type axes: Axes of matplotlib
+    :param x_min: datetime min
+    :type x_min: datetime
+    :param x_max: datetime max
+    :type x_max: datetime
+    :return: None
+    """
+    axes.set_xlim(x_min, x_max)
+    axes.xaxis.set_major_formatter(dates.DateFormatter('%Y-%m-%d'))
+    axes.format_xdata = dates.DateFormatter('%Y-%m-%d')
+
+    axes.set_title('Results of simulation')
+    axes.set_xlabel('Dates')
+    axes.set_ylabel('Values ($)')
+
+
+def update_plot(fig, x_date, y_value, ref_curve):
+    """
+    Udate plot current of widget
+    :param fig: object Figure
+    :type fig: Figure
+    :param x_date: list datetime associate to values in axis y
+    :type x_date: list[datetime]
+    :param y_value: list of value to display line of plot
+    :type y_value: list[float]
+    :param ref_curve: Data of reference curve for plot Qt simulation
+    :type ref_curve: pandas.DataFrame
+    :return: None
+    """
+    axes = fig.get_axes()[0]
+    axes.cla()
+    axes.plot(x_date, y_value)
+    # axes.plot(list(ref_curve['date']), ref_curve.values)
+    # TODO Calculate portfolio_value with ref_curve for ref_curv optimal
+    axes.legend(['Simulation', 'Reference Curve'], loc='best')
+    set_axes_fig_plot(axes, x_date[0], x_date[-1])
+    fig.autofmt_xdate()
+    fig.canvas.draw()

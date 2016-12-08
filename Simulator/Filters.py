@@ -2,7 +2,7 @@ import random
 
 class Filter:
     def __init__(self, name_attr=None, param1=None, param2=None):
-        self._attr = name_attr
+        self._name_attr = name_attr
         self._param1 = param1
         self._param2 = param2
 
@@ -76,17 +76,43 @@ class FilterNotInPortfolio(Filter):
         return new_list
 
 
+class FilterCriteriaMinMaxBuy(Filter):
+    """
+    Buy company with value of criterion between min value and max value
+    _param1 = min_value and _param2 = max_value
+    """
+    def run(self, lst, market, portfolio):
+        fct_criterion_special = {'dividend_yield': market.get_dividend_yield, 'p_e_ratio': market.get_p_e_ratio,
+                                'p_b_ratio': market.get_p_b_ratio, '52wk': market.get_52wk}
+        new_list = []
+        for symbol in lst:
+            if self._name_attr in fct_criterion_special.keys():
+                value_criterion = fct_criterion_special.get(self._name_attr)(symbol)
+            else:
+                value_criterion = market.get_value_criterion_company(self._name_attr, symbol)
+            if self._param1 > value_criterion > self._param2:
+                new_list.append(symbol)
+        return new_list
+
+
 ##########################################################################################################
 #                                         Sell Filters
 #                             (keep symbol in list if we want to sell)
 ##########################################################################################################
-
-
-##########################################################################################################
-#                                         Buy and Sell Filters
-#                             (keep symbol in list if we want to buy or sell)
-##########################################################################################################
-class FilterBuySellCriteriaMinMax(Filter):
-    def run(self, lst, market, portfolio, is_to_sell=False):
+class FilterCriteriaMinMaxSell(Filter):
+    """
+    Sell company with value of criterion more than max value or less than min value
+    _param1 = min_value and _param2 = max_value
+    """
+    def run(self, lst, market, portfolio):
+        fct_criterion_special = {'dividend_yield': market.get_dividend_yield, 'p_e_ratio': market.get_p_e_ratio,
+                                'p_b_ratio': market.get_p_b_ratio, '52wk': market.get_52wk}
         new_list = []
+        for symbol in lst:
+            if self._name_attr in fct_criterion_special.keys():
+                value_criterion = fct_criterion_special.get(self._name_attr)(symbol)
+            else:
+                value_criterion = market.get_value_criterion_company(self._name_attr, symbol)
+            if self._param1 <= value_criterion <= self._param2:
+                new_list.append(symbol)
         return new_list

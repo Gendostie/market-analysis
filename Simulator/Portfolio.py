@@ -2,7 +2,7 @@ import math
 
 
 class Portfolio:
-    def __init__(self, initial_liquidity, min_value, max_value, log):
+    def __init__(self, initial_liquidity, min_value, max_value, log_port):
         # TODO : Better comment...
         """
         A portfolio is keeping the number of stocks we own.
@@ -12,13 +12,14 @@ class Portfolio:
         :type min_value: int
         :param max_value: max stock value to invest in a company
         :type max_value: int
-        :param log: file to write log
-        :type log: file
+        :param log_port: path file to write log
+        :type log_port: str
         """
         self._portfolio = {}
 
         # Log file to log each transaction
-        self.log = log
+        self.log_port = open(log_port, 'w')
+        self.log_port.write("date;type_transaction;symbol;nb_stocks;transaction_value\n")
 
         # Cash must be an integer between [1, inf[
         # Verification must be done when the user sends input
@@ -94,7 +95,7 @@ class Portfolio:
             self._cash -= cost
 
             # Log the transaction
-            self.log.write("{};BUY;{};{};{}\n".format(date, symbol, stocks_to_buy, cost))
+            self.log_port.write("{};BUY;{};{};{}\n".format(date, symbol, stocks_to_buy, cost))
         else:
             cost = 0.0
         return cost
@@ -122,7 +123,7 @@ class Portfolio:
 
         # Adjust the cash we have after the transaction
         self._cash += gain
-        self.log.write("{};SELL;{};{};{}\n".format(date, symbol, nb_stocks, gain))
+        self.log_port.write("{};SELL;{};{};{}\n".format(date, symbol, nb_stocks, gain))
 
         return gain
 
