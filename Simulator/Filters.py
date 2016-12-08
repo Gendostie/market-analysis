@@ -1,7 +1,8 @@
 class Filter:
-    def __init__(self, attr=None, value=None):
-        self._attr = attr
-        self._value = value
+    def __init__(self, name_attr=None, param1=None, param2=None):
+        self._attr = name_attr
+        self._param1 = param1
+        self._param2 = param2
 
     def run(self, lst, market, portfolio):
         return lst
@@ -15,7 +16,7 @@ class FilterPriceGreaterThan(Filter):
         new_list = []
         for symbol in lst:
             price = market.get_price(symbol)
-            if price > self._value:
+            if price > self._param1:
                 new_list.append(symbol)
         return new_list
 
@@ -25,7 +26,7 @@ class FilterPriceLesserThan(Filter):
         new_list = []
         for symbol in lst:
             price = market.get_price(symbol)
-            if price <= self._value:
+            if price <= self._param1:
                 new_list.append(symbol)
         return new_list
 
@@ -58,3 +59,13 @@ class FilterNotInPortfolio(Filter):
 #                                         Sell Filters
 #                             (keep symbol in list if we want to sell)
 ##########################################################################################################
+
+
+##########################################################################################################
+#                                         Buy and Sell Filters
+#                             (keep symbol in list if we want to buy or sell)
+##########################################################################################################
+class FilterBuySellCriteriaMinMax(Filter):
+    def run(self, lst, market, portfolio, is_to_sell=False):
+        new_list = []
+        return new_list

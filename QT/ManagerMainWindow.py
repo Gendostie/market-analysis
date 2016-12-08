@@ -16,6 +16,7 @@ from DialogPopUp import Ui_Dialog
 import HelperFunctionQt
 from Singleton import Singleton
 from Simulator.Broker import Broker
+from Simulator import Filters
 
 MAX_INT = pow(2, 63)-1  # replace sys.maxint no available in python 3
 
@@ -23,6 +24,7 @@ dict_min_max_value_criteria = {}
 dict_type_simulation = {'Technical Analysis': 'technical_analysis_windows', 'By Low Set High': 'by_low_set_high',
                         'Global Ranking': 'global_ranking', '1 Stock For Each Company': ''}
 dict_params_value_sim = {}  # get last value of params of type simulation until no change type simulation
+data_ref_curve = []
 market_object = None
 
 # Create db connection global
@@ -32,7 +34,8 @@ db = DbConnection(config.get('database', 'HOST'),
                   config.get('database', 'USER'),
                   config.get('database', 'PASSWORD'),
                   config.get('database', 'DATABASE'))
-
+path_log_broker = config.get('path', 'path_log_broker')
+path_log_port = config.get('path', 'path_log_portfolio')
 
 class ManagerMainWindow(Ui_MainWindow):
     def setup_size_fixed(self):
@@ -55,6 +58,8 @@ class ManagerMainWindow(Ui_MainWindow):
         Setup for widget already in MainWindow.ui to modify
         :return: None
         """
+        # Keep in memory reference curve for simulation
+        data_ref_curve = HelperFunctionQt.read_reference_curve(path_log_broker)
         self.get_min_max_value_criteria()
         # Stock Screener
         # Set min max criteria Stock Screener
@@ -580,23 +585,27 @@ class Slots:
         dict_min_max.update(HelperFunctionQt.get_min_max_layout_checked(ui.verticalLayout_right_2))
         print(dict_min_max)
 
-        broker = Broker(db, dict_params_simulation['valuePortfolio'], config.get('path', 'path_log_broker'),
-                        config.get('path', 'path_log_portfolio'), dict_params_simulation['simulatorTo'],
-                        dict_params_simulation['simulatorFrom'], dict_params_simulation.get('minInvest', 0),
-                        dict_params_simulation.get('maxInvest', MAX_INT))
+        broker = Broker(db, dict_params_simulation['valuePortfolio'], path_log_broker, path_log_port,
+                        dict_params_simulation['simulatorTo'], dict_params_simulation['simulatorFrom'],
+                        dict_params_simulation.get('minInvest', 0), dict_params_simulation.get('maxInvest', MAX_INT))
         if dict_params_simulation['commissionPctDollar'] == '%':
             broker.set_percent_commission(dict_params_simulation.get('commission', 0))
-        elif dict_params_simulation['commissionPctDollar'] == 'S':
+        elif dict_params_simulation['commissionPctDollar'] == '$':
             broker.set_flat_fee_commission(dict_params_simulation.get('commission', 0))
         else:
             raise ValueError('Error type commission, % or $, you put %s'
                              % str(dict_params_simulation['commissionPctDollar']))
 
+
+
+        # {'Technical Analysis': 'technical_analysis', 'By Low Set High': 'by_low_set_high',
+        #  'Global Ranking': 'global_ranking', '1 Stock For Each Company': ''}
         if dict_params_simulation['typeSimulation'] == '1 Stock For Each Company':
             broker.add_max_nb_of_stocks_to_buy(1)
-        # broker.add_sell_filters(Filters.FilterNot())
-        # broker.add_buy_filters(Filters.FilterNotInPortfolio())
+            broker.add_sell_filters(Filters.FilterNot())
+            broker.add_buy_filters(Filters.FilterNotInPortfolio())
         broker.run_simulation()
+        print('End of simulation')
         # TODO: delete call to ManagerCompany
         # res_val = ManagerCompany.get_daily_values(db)
         # list_date = [v['date'] for v in res_val]

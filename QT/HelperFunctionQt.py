@@ -437,3 +437,23 @@ def get_params_simulation(parent_object):
         name_obj = child.objectName()  # get name of value
         return_res[name_obj[name_obj.rfind('_') + 1:]] = obj_text
     return return_res
+
+
+def read_reference_curve(path_log_broker, in_list=False):
+    """
+    Read log of data of the reference curve and return in list the data
+    :param path_log_broker: path of log who contains data for reference curve
+    :type path_log_broker: str
+    :return: list of list or DataFrame of Panda for value of portfolio of each open day
+    :rtype: list[list] | pd.DataFrame
+    """
+    path_log_broker = path_log_broker.replace('log_brok', 'log_brok_ref')
+    file = open(path_log_broker, 'r')
+    if in_list:
+        list_data = []
+        for line in file:
+            line = line.strip().split(';')
+            list_data.append(line)
+        return list_data
+    else:
+        return pd.read_csv(file, sep=';')

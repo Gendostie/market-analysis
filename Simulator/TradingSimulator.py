@@ -28,4 +28,4 @@ def main_simulator(initial_liquidity):
     # TODO: ONLY FOR TESTING
 
 if __name__ == "__main__":
-    main_simulator(100000)
+    main_simulator(1000000)

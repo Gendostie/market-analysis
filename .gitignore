@@ -2,5 +2,4 @@
 *.pyc
 SNP500
 log.txt
-log_brok.csv
-log_port.csv
+*.csv
