@@ -1,5 +1,6 @@
 import random
 from datetime import datetime
+import numpy as np
 
 from Portfolio import Portfolio
 from Market import Market
@@ -13,9 +14,9 @@ list_type_simulation = ['technical_analysis', 'by_low_set_high', 'global_ranking
 #                                           Broker
 #########################################################################################################
 class Broker:
-    def __init__(self, db, initial_liquidity, log_broker, log_port,
+    def __init__(self, db, initial_liquidity, log_broker, log_broker_ref, log_port,
                  min_date=datetime(2006, 1, 3), max_date=datetime(2016, 11, 4),
-                 min_value=0, max_value=float("inf"), fig=None, data_ref_curve=None):
+                 min_value=0, max_value=float("inf"), fig=None):
         # TODO: Add comment
         """
         Create Broker
@@ -25,6 +26,8 @@ class Broker:
         :type initial_liquidity: int
         :param log_broker: path file to write log of Broker
         :type log_broker: str
+        :param log_broker_ref: path file to write log of Broker ref_curve
+        :type log_broker_ref: str
         :param log_port: path file to write log of Portfolio
         :type log_port: str
         :param min_date: date to start simulation
@@ -37,14 +40,12 @@ class Broker:
         :type max_value: int
         :param fig: figure for update plot QT
         :type fig: matplotlib.figure.Figure
-        :param data_ref_curve: Data of reference curve for plot Qt simulation
-        :type data_ref_curve: pandas.DataFrame
         """
         # The Market where the broker is buying and selling stocks
         self._market = Market(min_date, max_date, db)
 
         self.log_broker = open(log_broker, 'w')
-        self.log_broker.write("date;cash;stocks_value;bill\n")
+        self.log_broker.write("date;cash;stocks_value;bill;value_with_ref_curve\n")
 
         # The portfolio contains all the stocks bought for the current day and time and
         # the cash money that can be used instantly by the broker to buy stocks.
@@ -57,6 +58,7 @@ class Broker:
         # Dictionary that keeps track of the value of our portfolio at any given time since the start of the simulation.
         # Key: Date ; Value: Total of our assets for any given
         self._hist_market_value = {}
+        self._simulation_port_value = []  # keep in memory value in order dates
 
         # A commission is how much the broker is asking to get paid for a given transaction.
         # Initially, there is no commission. It must be added with a setter.
@@ -67,7 +69,8 @@ class Broker:
         self._buy_filters = []
 
         self._fig = fig
-        self._data_ref_curve = data_ref_curve
+        self._data_ref_curve = HelperFunctionQt.read_reference_curve(log_broker_ref, True)
+        self._ref_curve_value = []
 
     #######################################################################################################
     #                                      Commission
@@ -248,6 +251,9 @@ class Broker:
             if not self._portfolio.can_buy():
                 break
 
+    def get_value(self, d):
+        return d
+
     def _tracking(self, mode_debug=False):
         """
         Log transaction of day
@@ -255,20 +261,21 @@ class Broker:
         :type mode_debug: bool
         :return: None
         """
-        # TODO : Add the draw(), data structure to keep track of value over time & maybe more
         # Calculate how much we have
-        # TODO : Remove bill?
-        self._hist_market_value[self._market.get_current_date()] = \
-            self._portfolio.get_cash_money() + \
-            self._portfolio.get_value_of_portfolio(self._market) -\
-            self._bill
+        self._simulation_port_value.append(self._portfolio.get_cash_money()
+                                           + self._portfolio.get_value_of_portfolio(self._market)
+                                           - self._bill)
+        self._hist_market_value[self._market.get_current_date()] = self._simulation_port_value[-1]
+        self._ref_curve_value.append(float(self._data_ref_curve.get(str(self._market.get_current_date()), [0])[-1])
+                                     * self._simulation_port_value[-1] + 100000)
         if mode_debug:
             print("{}\t\t{}".format(self._market.get_current_date(),
                                     self._hist_market_value[self._market.get_current_date()]))
-        self.log_broker.write("{};{};{};{}\n".format(self._market.get_current_date(),
-                                                     self._portfolio.get_cash_money(),
-                                                     self._portfolio.get_value_of_portfolio(self._market),
-                                                     self._bill))
+        self.log_broker.write("{};{};{};{};{}\n".format(self._market.get_current_date(),
+                                                        self._portfolio.get_cash_money(),
+                                                        self._portfolio.get_value_of_portfolio(self._market),
+                                                        self._bill,
+                                                        self._ref_curve_value[-1]))
 
     def run_simulation(self, mode_debug=False):
         """
@@ -279,7 +286,6 @@ class Broker:
         """
         # As long as there is a new business day in our simulation;
         trading = True
-        cpt_update_plot_qt = 0
         while trading:
             # Sell companies in our portfolio that satisfy our criteria for selling;
             self._sell()
@@ -289,21 +295,15 @@ class Broker:
                 self._buy()
 
             # Keep track of our assets
-            self._tracking(mode_debug)
-            # Update plot QT
-            if self._fig and cpt_update_plot_qt >= 20:
-                HelperFunctionQt.update_plot(self._fig, list(self._hist_market_value.keys()),
-                                             list(self._hist_market_value.values()), self._data_ref_curve)
-                cpt_update_plot_qt = 0
-            else:
-                cpt_update_plot_qt += 1
+            self._tracking(mode_debug=mode_debug)
 
             # Go to the next trading day.
             trading = self._market.next()
+
         # Update plot QT
         if self._fig:
-            HelperFunctionQt.update_plot(self._fig, list(self._hist_market_value.keys()),
-                                         list(self._hist_market_value.values()), self._data_ref_curve)
-        # TODO: Remove this print, instead, print a summarize in the log.
+            # Calculate portfolio_value with ref_curve for ref_curve optimal
+            HelperFunctionQt.update_plot(self._fig, sorted(self._hist_market_value.keys()),
+                                         self._simulation_port_value, self._ref_curve_value)
         if mode_debug:
             self._portfolio.print_portfolio()

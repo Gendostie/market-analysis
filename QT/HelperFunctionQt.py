@@ -1,10 +1,12 @@
 import io
 import pandas as pd
+import numpy as np
 from PyQt4 import QtCore, QtGui
 
 from matplotlib.backends.backend_qt4agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.figure import Figure
 from matplotlib import dates
+from matplotlib import pyplot
 
 from MainWindow import _translate
 from Manager_DB import ManagerPortfolio
@@ -444,22 +446,22 @@ def get_params_simulation(parent_object):
     return return_res
 
 
-def read_reference_curve(path_log_broker, in_list=False):
+def read_reference_curve(path_log_broker_ref, put_data_in_dict=False):
     """
     Read log of data of the reference curve and return in list the data
-    :param path_log_broker: path of log who contains data for reference curve
-    :type path_log_broker: str
-    :return: list of list or DataFrame of Panda for value of portfolio of each open day
-    :rtype: list[list] | pd.DataFrame
+    :param path_log_broker_ref: path of log who contains data for reference curve
+    :type path_log_broker_ref: str
+    :return: dict of list or DataFrame of Panda for value of portfolio of each open day
+    :rtype: dict[list] | pd.DataFrame
     """
-    path_log_broker = path_log_broker.replace('log_brok', 'log_brok_ref')
-    file = open(path_log_broker, 'r')
-    if in_list:
-        list_data = []
+    file = open(path_log_broker_ref, 'r')
+    if put_data_in_dict:
+        dict_data = {}
+        next(file)  # skip first line
         for line in file:
             line = line.strip().split(';')
-            list_data.append(line)
-        return list_data
+            dict_data[line[0]] = line[1:]
+        return dict_data
     else:
         return pd.read_csv(io.StringIO(file.read()), sep=';')
 
@@ -467,25 +469,35 @@ def read_reference_curve(path_log_broker, in_list=False):
 #########################################################################################################
 #                                 Function to create and update plot QT
 #########################################################################################################
-def create_plot_qt(x_date, y_value, horizontal_layout_plot):
+def create_plot_qt(x_date, y_value, ref_curve_val, horizontal_layout_plot):
     """
     Create plot to display in interface qt in a layout box.
     :param x_date: list datetime associate to values in axis y
     :type x_date: list[datetime]
     :param y_value: list of value to display line of plot
     :type y_value: list[float]
+    :param ref_curve_val: Value of reference curve for plot Qt simulation
+    :type ref_curve_val: list
     :param horizontal_layout_plot:
     :type horizontal_layout_plot: QtGui.QLayout
     :return: figure of plot
     :rtype: Figure
     """
     fig = Figure()
-    axes = fig.add_subplot(111)
-    axes.plot(x_date, y_value)
-    if len(x_date) > 0:
-        set_axes_fig_plot(axes, x_date[0], x_date[-1])
-    fig.autofmt_xdate()
 
+    axes = fig.add_subplot(111)
+    axes.plot(x_date, y_value, 'b', x_date, ref_curve_val, 'g')
+    axes.legend(['Simulation', 'Reference Curve'], loc='best')
+    if len(x_date) > 0:
+        axes.set_xlim(x_date[0], x_date[-1])
+        axes.xaxis.set_major_formatter(dates.DateFormatter('%Y-%m-%d'))
+        axes.format_xdata = dates.DateFormatter('%Y-%m-%d')
+
+    axes.set_title('Results of simulation')
+    axes.set_xlabel('Dates')
+    axes.set_ylabel('Values ($)')
+
+    fig.autofmt_xdate()
     canvas = FigureCanvas(fig)
     # Clear plot if exists already
     for i in range(horizontal_layout_plot.count()):
@@ -496,27 +508,7 @@ def create_plot_qt(x_date, y_value, horizontal_layout_plot):
     return fig
 
 
-def set_axes_fig_plot(axes, x_min, x_max):
-    """
-    Set axes to display label of axis and title of plot and
-    :param axes: object axes
-    :type axes: Axes of matplotlib
-    :param x_min: datetime min
-    :type x_min: datetime
-    :param x_max: datetime max
-    :type x_max: datetime
-    :return: None
-    """
-    axes.set_xlim(x_min, x_max)
-    axes.xaxis.set_major_formatter(dates.DateFormatter('%Y-%m-%d'))
-    axes.format_xdata = dates.DateFormatter('%Y-%m-%d')
-
-    axes.set_title('Results of simulation')
-    axes.set_xlabel('Dates')
-    axes.set_ylabel('Values ($)')
-
-
-def update_plot(fig, x_date, y_value, ref_curve):
+def update_plot(fig, x_date, y_value, ref_curve_val):
     """
     Udate plot current of widget
     :param fig: object Figure
@@ -525,16 +517,25 @@ def update_plot(fig, x_date, y_value, ref_curve):
     :type x_date: list[datetime]
     :param y_value: list of value to display line of plot
     :type y_value: list[float]
-    :param ref_curve: Data of reference curve for plot Qt simulation
-    :type ref_curve: pandas.DataFrame
+    :param ref_curve_val: Value of reference curve for plot Qt simulation
+    :type ref_curve_val: list
     :return: None
     """
+    print('Update plot Qt')
     axes = fig.get_axes()[0]
-    axes.cla()
-    axes.plot(x_date, y_value)
-    # axes.plot(list(ref_curve['date']), ref_curve.values)
-    # TODO Calculate portfolio_value with ref_curve for ref_curv optimal
-    axes.legend(['Simulation', 'Reference Curve'], loc='best')
-    set_axes_fig_plot(axes, x_date[0], x_date[-1])
-    fig.autofmt_xdate()
+    line_sim, line_ref_curve, = axes.get_lines()
+
+    y_value = np.asarray(y_value)
+    ref_curve_val = np.asarray(ref_curve_val)
+
+    axes.set_xlim(x_date[0], x_date[-1])
+    axes.set_ylim(min(y_value.min(), ref_curve_val.min()) - 1,
+                  max(y_value.max(), ref_curve_val.max()) + 1)
+    axes.xaxis.set_major_formatter(dates.DateFormatter('%Y-%m-%d'))
+    axes.format_xdata = dates.DateFormatter('%Y-%m-%d')
+
+    line_sim.set_data(x_date, y_value)
+    line_sim.set_data(x_date, y_value)
+    line_ref_curve.set_data(x_date, ref_curve_val)
     fig.canvas.draw()
+

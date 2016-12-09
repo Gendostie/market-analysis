@@ -24,6 +24,8 @@ dict_type_simulation = {'Technical Analysis': 'technical_analysis', 'By Low Set 
                         'Global Ranking': 'global_ranking', '1 Stock For Each Company': '1_stock_for_each_company',
                         '': None}
 dict_params_value_sim = {}  # get last value of params of type simulation until no change type simulation
+list_msg_simulation = ['No simulation in course', 'Simulation in progress...',
+                       'Error during simulation, please try again']
 
 # Create db connection global
 config = configparser.ConfigParser()
@@ -33,9 +35,8 @@ db = DbConnection(config.get('database', 'HOST'),
                   config.get('database', 'PASSWORD'),
                   config.get('database', 'DATABASE'))
 path_log_broker = config.get('path', 'path_log_broker')
+path_log_broker_ref = config.get('path', 'path_log_broker_ref')
 path_log_port = config.get('path', 'path_log_portfolio')
-# Keep in memory reference curve for simulation
-data_ref_curve = HelperFunctionQt.read_reference_curve(path_log_broker)
 
 
 class ManagerMainWindow(Ui_MainWindow):
@@ -572,10 +573,10 @@ class Slots:
             dict_params_value_sim.update(HelperFunctionQt.get_params_simulation(Dialog))
             print(dict_params_value_sim)
 
-    # TODO: to completed
     @staticmethod
     def start_simulation():
         print('Start simulation')
+        ui.textEdit_msgSimulation.setText(list_msg_simulation[1])
         dict_params_simulation = HelperFunctionQt.get_params_simulation(ui.frame_simulation)
         dict_params_simulation.update(dict_params_value_sim)
         print(dict_params_simulation)
@@ -584,15 +585,15 @@ class Slots:
         dict_min_max.update(HelperFunctionQt.get_min_max_layout_checked(ui.verticalLayout_right_2))
         print(dict_min_max)
 
-        fig = HelperFunctionQt.create_plot_qt([], [], ui.horizontalLayout_plot)
+        fig = HelperFunctionQt.create_plot_qt([], [], [], ui.horizontalLayout_plot)
         str_timestamp = str(int(datetime.timestamp(datetime.now())))
         broker = Broker(db, dict_params_simulation['valuePortfolio'],
-                        path_log_broker.replace('log_brok', 'log_brok' + str_timestamp),
+                        path_log_broker.replace('log_brok', 'log_brok' + str_timestamp), path_log_broker_ref,
                         path_log_port.replace('log_port', 'log_port' + str_timestamp),
-                        datetime.strptime(dict_params_simulation['simulatorTo'], '%Y-%m-%d'),
                         datetime.strptime(dict_params_simulation['simulatorFrom'], '%Y-%m-%d'),
+                        datetime.strptime(dict_params_simulation['simulatorTo'], '%Y-%m-%d'),
                         dict_params_simulation.get('minInvest', 0), dict_params_simulation.get('maxInvest', MAX_INT),
-                        fig, data_ref_curve)
+                        fig)
         # set type and value commission
         if dict_params_simulation['commissionPctDollar'] == '%':
             broker.set_percent_commission(dict_params_simulation.get('commission', 0))
@@ -616,7 +617,7 @@ class Slots:
         broker.run_simulation()
         print('End of simulation')
 
-    # TODO: to completed
+    # TODO: to completed in other project
     @staticmethod
     def show_report():
         print('Show report simulation')
