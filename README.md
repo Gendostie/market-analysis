@@ -6,6 +6,7 @@
   To get same configuration MySql: 
     - user: root
     - password: root
+- Qt 4.8, you can have the most recent version
 
 ## Python packages
 - Use `pip install -r requirements.txt` to install all required packages.
