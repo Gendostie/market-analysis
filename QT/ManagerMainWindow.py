@@ -59,6 +59,10 @@ class ManagerMainWindow(Ui_MainWindow):
         Setup for widget already in MainWindow.ui to modify
         :return: None
         """
+        # create folder for results simulation if not exists
+        if not os.path.exists(path_log_broker[:path_log_broker.rfind('/') + 1]):
+            os.makedirs(path_log_broker[:path_log_broker.rfind('/') + 1])
+
         self.get_min_max_value_criteria()
         # Stock Screener
         # Set min max criteria Stock Screener
