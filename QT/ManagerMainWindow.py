@@ -592,6 +592,11 @@ class Slots:
                         datetime.strptime(dict_params_simulation['simulatorTo'], '%Y-%m-%d'),
                         dict_params_simulation.get('minInvest', 0), dict_params_simulation.get('maxInvest', MAX_INT),
                         fig)
+        # Keep params to simulation in a log
+        file_log_params = open(path_log_broker.replace('log_brok', 'log_params_sim_' + str_timestamp), 'w')
+        file_log_params.write(str(dict_params_simulation) + '\n')
+        file_log_params.write(str(dict_min_max) + '\n')
+        file_log_params.close()
         # set type and value commission
         if dict_params_simulation['commissionPctDollar'] == '%':
             broker.set_percent_commission(dict_params_simulation.get('commission', 0))
@@ -622,14 +627,14 @@ class Slots:
             if len(dict_criteria) < 0:
                 for criterion in HelperFunctionQt.dict_criteria.items():
                     dict_criteria.update({criterion: {}})
-            broker.add_sell_filters(Filters.FilterCriteriaGlobalRankingSell(dict_criteria))
-            broker.add_buy_filters(Filters.FilterCriteriaGlobalRankingBuy(dict_criteria))
+            broker.add_sell_filters(Filters.FilterCriteriaGlobalRankingSell())
+            broker.add_buy_filters(Filters.FilterCriteriaGlobalRankingBuy())
+            broker.calculate_global_ranking(True, dict_criteria)
         elif dict_type_simulation.get(ui.comboBox_typeSimulation.currentText()) == '':
             pass
         else:
             raise ValueError('Error type simulation, it\'s not in list, you put %s'
                              % ui.comboBox_typeSimulation.currentText())
-
         broker.run_simulation()
         print('End of simulation')
 

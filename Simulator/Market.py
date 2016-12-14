@@ -1,5 +1,6 @@
 from datetime import datetime, timedelta
 from QT.Singleton import divide
+from HelperFunctionQt import calculate_global_ranking
 
 
 class Market:
@@ -36,6 +37,11 @@ class Market:
 
         # Charge the prices for this day. Optimization to speed up the get_price function.
         self._prices = self.__load_prices()
+
+        # if true, global ranking calculate for each day
+        self._calculate_global_ranking = False
+        self._dict_criteria_glob_ranking = {}
+        self._list_cie_glob_ranking = []
 
     ####################################################################################################
     #     Callable functions
@@ -157,6 +163,29 @@ class Market:
 
         return divide(actual_price - last_year_price,
                       last_year_price, 100)
+
+    def get_list_global_ranking(self):
+        return self._list_cie_glob_ranking
+
+    def compute_global_ranking(self):
+        """
+        Compute global ranking of company in market
+        :return: list of company with global ranking
+        :rtype: list[dict]
+        """
+        fct_criterion_special = {'dividend_yield': self.get_dividend_yield, 'p_e_ratio': self.get_p_e_ratio,
+                                 'p_b_ratio': self.get_p_b_ratio, '52wk': self.get_52wk}
+        # Create structure for call fct calculate_global_ranking
+        list_company = []
+        for symbol in self.get_trading_stocks():
+            dict_cie = {'symbol': symbol}
+            for criterion in self._dict_criteria_glob_ranking:
+                if criterion in fct_criterion_special.keys():
+                    dict_cie[criterion] = fct_criterion_special.get(criterion)(symbol)
+                else:
+                    dict_cie[criterion] = self.get_value_criterion_company(criterion, symbol)
+            list_company.append(dict_cie)
+        self._list_cie_glob_ranking = calculate_global_ranking(list_company, self._dict_criteria_glob_ranking)
 
     ####################################################################################################
     #     Set up some variables for the simulation

@@ -108,10 +108,7 @@ class FilterCriteriaMinMaxBuy(Filter):
         return new_list
 
 
-class FilterCriteriaGlobalRankingBuy:
-    def __init__(self, dict_criteria):
-        self._dict_criteria = dict_criteria
-
+class FilterCriteriaGlobalRankingBuy(Filter):
     def run(self, lst, market, portfolio):
         """
         Calculate Global ranking depending of list criteria for get 100 companies with best global ranking
@@ -124,23 +121,10 @@ class FilterCriteriaGlobalRankingBuy:
         :return: list of 100 companies with best global ranking
         :rtype: list[str]
         """
-        fct_criterion_special = {'dividend_yield': market.get_dividend_yield, 'p_e_ratio': market.get_p_e_ratio,
-                                 'p_b_ratio': market.get_p_b_ratio, '52wk': market.get_52wk}
-        # Create structure for call fct calculate_global_ranking
-        list_company = []
-        for symbol in market.get_trading_stocks():
-            dict_cie = {'symbol': symbol}
-            for criterion in self._dict_criteria:
-                if criterion in fct_criterion_special.keys():
-                    dict_cie[criterion] = fct_criterion_special.get(criterion)(symbol)
-                else:
-                    dict_cie[criterion] = market.get_value_criterion_company(criterion, symbol)
-            list_company.append(dict_cie)
-        list_company = calculate_global_ranking(list_company, self._dict_criteria)
         # Filter company
         new_list = []
         for company in lst:
-            if company in sorted(list_company, key=get_value_global_ranking)[:100]:
+            if company in sorted(market.get_list_global_ranking(), key=get_value_global_ranking)[:100]:
                 new_list.append(company)
         return new_list
 
@@ -168,10 +152,7 @@ class FilterCriteriaMinMaxSell(Filter):
         return new_list
 
 
-class FilterCriteriaGlobalRankingSell:
-    def __init__(self, dict_criteria):
-        self._dict_criteria = dict_criteria
-
+class FilterCriteriaGlobalRankingSell(Filter):
     def run(self, lst, market, portfolio):
         """
         Calculate Global ranking depending of list criteria for get companies with global ranking not in top 100
@@ -184,23 +165,10 @@ class FilterCriteriaGlobalRankingSell:
         :return: list of companies not in top 100 for global ranking
         :rtype: list[str]
         """
-        fct_criterion_special = {'dividend_yield': market.get_dividend_yield, 'p_e_ratio': market.get_p_e_ratio,
-                                'p_b_ratio': market.get_p_b_ratio, '52wk': market.get_52wk}
-        # Create structure for call fct calculate_global_ranking
-        list_company = []
-        for symbol in market.get_trading_stocks():
-            dict_cie = {'symbol': symbol}
-            for criterion in self._dict_criteria:
-                if criterion in fct_criterion_special.keys():
-                    dict_cie[criterion] = fct_criterion_special.get(criterion)(symbol)
-                else:
-                    dict_cie[criterion] = market.get_value_criterion_company(criterion, symbol)
-            list_company.append(dict_cie)
-        list_company = calculate_global_ranking(list_company, self._dict_criteria)
         # Filter company
         new_list = []
         for company in lst:
-            if company in sorted(list_company, key=get_value_global_ranking)[100:]:
+            if company in sorted(market.get_list_global_ranking(), key=get_value_global_ranking)[100:]:
                 new_list.append(company)
         return new_list
 

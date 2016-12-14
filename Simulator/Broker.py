@@ -171,6 +171,18 @@ class Broker:
     def add_max_nb_of_stocks_to_buy(self, nb_stocks):
         self._portfolio.set_max_number_of_stocks_to_buy(nb_stocks)
 
+    def calculate_global_ranking(self, calculate_glob_ranking, dict_params):
+        """
+        Set variable to say if we compute global ranking
+        :param calculate_glob_ranking: boolean to say if we need calculate global ranking
+        :type calculate_glob_ranking: bool
+        :param dict_params: dict criteria for compute global ranking
+        :type dict_params: dict{dict}
+        :return: None
+        """
+        self._market._calculate_global_ranking = calculate_glob_ranking
+        self._market._dict_criteria_glob_ranking = dict_params
+
     #######################################################################################################
     #                                Run the simulation
     #######################################################################################################
