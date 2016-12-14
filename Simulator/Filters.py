@@ -1,4 +1,17 @@
 import random
+from HelperFunctionQt import calculate_global_ranking
+
+
+def get_value_global_ranking(a):
+    """
+    Function to get value Global ranking to sort list of dict
+    :param a: dict company
+    :type a: dict
+    :return: value of Global Ranking
+    :rtype: float
+    """
+    return float(a.get('Global Ranking', 0))
+
 
 class Filter:
     def __init__(self, name_attr=None, param1=None, param2=None):
@@ -90,8 +103,45 @@ class FilterCriteriaMinMaxBuy(Filter):
                 value_criterion = fct_criterion_special.get(self._name_attr)(symbol)
             else:
                 value_criterion = market.get_value_criterion_company(self._name_attr, symbol)
-            if self._param1 > value_criterion > self._param2:
+            if value_criterion is not None and self._param1 > float(value_criterion) > self._param2:
                 new_list.append(symbol)
+        return new_list
+
+
+class FilterCriteriaGlobalRankingBuy:
+    def __init__(self, dict_criteria):
+        self._dict_criteria = dict_criteria
+
+    def run(self, lst, market, portfolio):
+        """
+        Calculate Global ranking depending of list criteria for get 100 companies with best global ranking
+        :param lst: list of company in market
+        :type lst: list[str]
+        :param market: object Market
+        :type market: Market.Market
+        :param portfolio: object Portfolio
+        :type portfolio: Portfolio.Portfolio
+        :return: list of 100 companies with best global ranking
+        :rtype: list[str]
+        """
+        fct_criterion_special = {'dividend_yield': market.get_dividend_yield, 'p_e_ratio': market.get_p_e_ratio,
+                                 'p_b_ratio': market.get_p_b_ratio, '52wk': market.get_52wk}
+        # Create structure for call fct calculate_global_ranking
+        list_company = []
+        for symbol in market.get_trading_stocks():
+            dict_cie = {'symbol': symbol}
+            for criterion in self._dict_criteria:
+                if criterion in fct_criterion_special.keys():
+                    dict_cie[criterion] = fct_criterion_special.get(criterion)(symbol)
+                else:
+                    dict_cie[criterion] = market.get_value_criterion_company(criterion, symbol)
+            list_company.append(dict_cie)
+        list_company = calculate_global_ranking(list_company, self._dict_criteria)
+        # Filter company
+        new_list = []
+        for company in lst:
+            if company in sorted(list_company, key=get_value_global_ranking)[:100]:
+                new_list.append(company)
         return new_list
 
 
@@ -113,6 +163,44 @@ class FilterCriteriaMinMaxSell(Filter):
                 value_criterion = fct_criterion_special.get(self._name_attr)(symbol)
             else:
                 value_criterion = market.get_value_criterion_company(self._name_attr, symbol)
-            if self._param1 <= value_criterion <= self._param2:
+            if value_criterion is not None and self._param1 <= float(value_criterion) <= self._param2:
                 new_list.append(symbol)
         return new_list
+
+
+class FilterCriteriaGlobalRankingSell:
+    def __init__(self, dict_criteria):
+        self._dict_criteria = dict_criteria
+
+    def run(self, lst, market, portfolio):
+        """
+        Calculate Global ranking depending of list criteria for get companies with global ranking not in top 100
+        :param lst: list of company in market
+        :type lst: list[str]
+        :param market: object Market
+        :type market: Market.Market
+        :param portfolio: object Portfolio
+        :type portfolio: Portfolio.Portfolio
+        :return: list of companies not in top 100 for global ranking
+        :rtype: list[str]
+        """
+        fct_criterion_special = {'dividend_yield': market.get_dividend_yield, 'p_e_ratio': market.get_p_e_ratio,
+                                'p_b_ratio': market.get_p_b_ratio, '52wk': market.get_52wk}
+        # Create structure for call fct calculate_global_ranking
+        list_company = []
+        for symbol in market.get_trading_stocks():
+            dict_cie = {'symbol': symbol}
+            for criterion in self._dict_criteria:
+                if criterion in fct_criterion_special.keys():
+                    dict_cie[criterion] = fct_criterion_special.get(criterion)(symbol)
+                else:
+                    dict_cie[criterion] = market.get_value_criterion_company(criterion, symbol)
+            list_company.append(dict_cie)
+        list_company = calculate_global_ranking(list_company, self._dict_criteria)
+        # Filter company
+        new_list = []
+        for company in lst:
+            if company in sorted(list_company, key=get_value_global_ranking)[100:]:
+                new_list.append(company)
+        return new_list
+

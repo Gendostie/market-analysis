@@ -3849,6 +3849,9 @@
        <enum>QFrame::Raised</enum>
       </property>
       <widget class="QPushButton" name="btn_setParamsSimulation">
+       <property name="enabled">
+        <bool>false</bool>
+       </property>
        <property name="geometry">
         <rect>
          <x>367</x>
@@ -7287,10 +7290,13 @@
       </widget>
      </widget>
      <widget class="QPushButton" name="btn_showReport">
+      <property name="enabled">
+       <bool>false</bool>
+      </property>
       <property name="geometry">
        <rect>
-        <x>1098</x>
-        <y>660</y>
+        <x>1158</x>
+        <y>670</y>
         <width>100</width>
         <height>40</height>
        </rect>
@@ -7314,9 +7320,9 @@
      <widget class="QWidget" name="horizontalLayoutWidget_5">
       <property name="geometry">
        <rect>
-        <x>180</x>
+        <x>20</x>
         <y>280</y>
-        <width>891</width>
+        <width>1121</width>
         <height>431</height>
        </rect>
       </property>

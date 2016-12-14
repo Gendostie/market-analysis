@@ -17,7 +17,6 @@ class Broker:
     def __init__(self, db, initial_liquidity, log_broker, log_broker_ref, log_port,
                  min_date=datetime(2006, 1, 3), max_date=datetime(2016, 11, 4),
                  min_value=0, max_value=float("inf"), fig=None):
-        # TODO: Add comment
         """
         Create Broker
         :param db: connexion in to DB
@@ -52,7 +51,6 @@ class Broker:
         self._portfolio = Portfolio(initial_liquidity, min_value, max_value, log_port)
 
         # The bill is how much the broker has charged for its services.
-        # TODO : Make something of it
         self._bill = 0.0
 
         # Dictionary that keeps track of the value of our portfolio at any given time since the start of the simulation.
@@ -173,31 +171,10 @@ class Broker:
     def add_max_nb_of_stocks_to_buy(self, nb_stocks):
         self._portfolio.set_max_number_of_stocks_to_buy(nb_stocks)
 
-    def set_simulation_predefined(self, type_simulation):
-        """
-        Set simulation predefined in list_type_simulation
-        :param type_simulation: name simulation, if not exists in list_type_simulation do nothing
-        :type type_simulation: str
-        :return: None
-        """
-        if type_simulation == list_type_simulation[0]:  # technical_analysis
-            print('Configuration technical_analysis')
-        if type_simulation == list_type_simulation[1]:  # by_low_set_high
-            print('Configuration by_low_set_high')
-        if type_simulation == list_type_simulation[2]:  # global_ranking
-            print('Configuration global_ranking')
-        elif type_simulation == list_type_simulation[3]:  # 1_stock_for_each_company
-            self.add_max_nb_of_stocks_to_buy(1)
-            self._sell_filters.append(Filters.FilterNot())
-            self._buy_filters.append(Filters.FilterNotInPortfolio())
-        else:
-            return
-
     #######################################################################################################
     #                                Run the simulation
     #######################################################################################################
     def _sell(self):
-        # TODO : Comment
         """
         Sell company
         :return: None
@@ -221,7 +198,6 @@ class Broker:
                 self._bill += commission
 
     def _buy(self):
-        # TODO: Comment
         """
         Buy company
         :return: None
@@ -267,7 +243,7 @@ class Broker:
                                            - self._bill)
         self._hist_market_value[self._market.get_current_date()] = self._simulation_port_value[-1]
         self._ref_curve_value.append(float(self._data_ref_curve.get(str(self._market.get_current_date()), [0])[-1])
-                                     * self._simulation_port_value[-1] + 100000)
+                                     * self._simulation_port_value[-1])
         if mode_debug:
             print("{}\t\t{}".format(self._market.get_current_date(),
                                     self._hist_market_value[self._market.get_current_date()]))
@@ -305,5 +281,6 @@ class Broker:
             # Calculate portfolio_value with ref_curve for ref_curve optimal
             HelperFunctionQt.update_plot(self._fig, sorted(self._hist_market_value.keys()),
                                          self._simulation_port_value, self._ref_curve_value)
+            self._fig.savefig(self.log_broker.name.replace('log_brok', 'simulation'))
         if mode_debug:
             self._portfolio.print_portfolio()

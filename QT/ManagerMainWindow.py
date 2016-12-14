@@ -20,9 +20,8 @@ from Simulator import Filters
 MAX_INT = pow(2, 63)-1  # replace sys.maxint no available in python 3
 
 dict_min_max_value_criteria = {}
-dict_type_simulation = {'Technical Analysis': 'technical_analysis', 'By Low Set High': 'by_low_set_high',
-                        'Global Ranking': 'global_ranking', '1 Stock For Each Company': '1_stock_for_each_company',
-                        '': None}
+dict_type_simulation = {'1 Stock For Each Company': '1_stock_for_each_company', 'Global ranking': 'global_ranking',
+                        '': ''}
 dict_params_value_sim = {}  # get last value of params of type simulation until no change type simulation
 list_msg_simulation = ['No simulation in course', 'Simulation in progress...',
                        'Error during simulation, please try again']
@@ -576,7 +575,6 @@ class Slots:
     @staticmethod
     def start_simulation():
         print('Start simulation')
-        ui.textEdit_msgSimulation.setText(list_msg_simulation[1])
         dict_params_simulation = HelperFunctionQt.get_params_simulation(ui.frame_simulation)
         dict_params_simulation.update(dict_params_value_sim)
         print(dict_params_simulation)
@@ -588,8 +586,8 @@ class Slots:
         fig = HelperFunctionQt.create_plot_qt([], [], [], ui.horizontalLayout_plot)
         str_timestamp = str(int(datetime.timestamp(datetime.now())))
         broker = Broker(db, dict_params_simulation['valuePortfolio'],
-                        path_log_broker.replace('log_brok', 'log_brok' + str_timestamp), path_log_broker_ref,
-                        path_log_port.replace('log_port', 'log_port' + str_timestamp),
+                        path_log_broker.replace('log_brok', 'log_brok_' + str_timestamp), path_log_broker_ref,
+                        path_log_port.replace('log_port', 'log_port_' + str_timestamp),
                         datetime.strptime(dict_params_simulation['simulatorFrom'], '%Y-%m-%d'),
                         datetime.strptime(dict_params_simulation['simulatorTo'], '%Y-%m-%d'),
                         dict_params_simulation.get('minInvest', 0), dict_params_simulation.get('maxInvest', MAX_INT),
@@ -603,21 +601,39 @@ class Slots:
             raise ValueError('Error type commission, % or $, you put %s'
                              % str(dict_params_simulation['commissionPctDollar']))
         # Add filter for criteria selected
+        dict_criteria = {}
         for criterion, min_max in dict_min_max.items():
             name_bd_criterion = HelperFunctionQt.dict_criteria.get(criterion)
+            dict_criteria.update({name_bd_criterion: {}})
             if not name_bd_criterion:
                 print('Error criterion name, not exists in dictionary of HelperFunctionQt.dict_criteria, criterion = %s'
                       % criterion)
-            broker.add_sell_filters(Filters.FilterCriteriaMinMaxSell(HelperFunctionQt.dict_criteria.get(criterion),
-                                                                     min_max.get('min', 0), min_max.get('max', 0)))
-            broker.add_buy_filters(Filters.FilterCriteriaMinMaxBuy(HelperFunctionQt.dict_criteria.get(criterion),
-                                                                   min_max.get('min', 0), min_max.get('max', 0)))
+            broker.add_sell_filters(Filters.FilterCriteriaMinMaxSell(name_bd_criterion, min_max.get('min', 0),
+                                                                     min_max.get('max', 0)))
+            broker.add_buy_filters(Filters.FilterCriteriaMinMaxBuy(name_bd_criterion, min_max.get('min', 0),
+                                                                   min_max.get('max', 0)))
         # Configure simulation predefined in dict_params_simulation
-        broker.set_simulation_predefined(dict_params_simulation['typeSimulation'])
+        if dict_type_simulation.get(ui.comboBox_typeSimulation.currentText()) == '1_stock_for_each_company':
+            broker.add_max_nb_of_stocks_to_buy(1)
+            broker.add_sell_filters(Filters.FilterNot())
+            broker.add_buy_filters(Filters.FilterNotInPortfolio())
+        # no type simulation specific
+        elif dict_type_simulation.get(ui.comboBox_typeSimulation.currentText()) == 'global_ranking':
+            if len(dict_criteria) < 0:
+                for criterion in HelperFunctionQt.dict_criteria.items():
+                    dict_criteria.update({criterion: {}})
+            broker.add_sell_filters(Filters.FilterCriteriaGlobalRankingSell(dict_criteria))
+            broker.add_buy_filters(Filters.FilterCriteriaGlobalRankingBuy(dict_criteria))
+        elif dict_type_simulation.get(ui.comboBox_typeSimulation.currentText()) == '':
+            pass
+        else:
+            raise ValueError('Error type simulation, it\'s not in list, you put %s'
+                             % ui.comboBox_typeSimulation.currentText())
+
         broker.run_simulation()
         print('End of simulation')
 
-    # TODO: to completed in other project
+    # TODO: to completed
     @staticmethod
     def show_report():
         print('Show report simulation')

@@ -364,7 +364,7 @@ def calculate_global_ranking(list_company, dict_params):
     Calculate global ranking for company
     :param list_company: list value for all company s&p500
     :type list_company: list[dict]
-    :param dict_params: list criteria selected
+    :param dict_params: dict criteria selected
     :type dict_params: dict[dict]
     :return: list value for all company s&p500 with adding global ranking
     :rtype: list[dict]
@@ -483,6 +483,7 @@ def create_plot_qt(x_date, y_value, ref_curve_val, horizontal_layout_plot):
     :return: figure of plot
     :rtype: Figure
     """
+    pyplot.ion()
     fig = Figure()
 
     axes = fig.add_subplot(111)
