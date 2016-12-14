@@ -64,6 +64,9 @@ class Market:
             self.next()
         # Charge the new prices for the day. Optimization to speed up the get_price function.
         self._prices = self.__load_prices()
+        # compute global ranking
+        if self._calculate_global_ranking:
+            self.compute_global_ranking()
         return True
 
     def get_current_date(self):
@@ -179,11 +182,12 @@ class Market:
         list_company = []
         for symbol in self.get_trading_stocks():
             dict_cie = {'symbol': symbol}
-            for criterion in self._dict_criteria_glob_ranking:
-                if criterion in fct_criterion_special.keys():
-                    dict_cie[criterion] = fct_criterion_special.get(criterion)(symbol)
-                else:
-                    dict_cie[criterion] = self.get_value_criterion_company(criterion, symbol)
+            for criterion, criterion_bd in self._dict_criteria_glob_ranking.items():
+                if criterion != 'Adj. Close':
+                    if criterion_bd in fct_criterion_special.keys():
+                        dict_cie[criterion] = fct_criterion_special.get(criterion_bd)(symbol)
+                    else:
+                        dict_cie[criterion] = self.get_value_criterion_company(criterion_bd, symbol)
             list_company.append(dict_cie)
         self._list_cie_glob_ranking = calculate_global_ranking(list_company, self._dict_criteria_glob_ranking)
 

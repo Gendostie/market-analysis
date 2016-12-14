@@ -293,6 +293,6 @@ class Broker:
             # Calculate portfolio_value with ref_curve for ref_curve optimal
             HelperFunctionQt.update_plot(self._fig, sorted(self._hist_market_value.keys()),
                                          self._simulation_port_value, self._ref_curve_value)
-            self._fig.savefig(self.log_broker.name.replace('log_brok', 'simulation'))
+            self._fig.savefig(self.log_broker.name.replace('log_brok', 'simulation')[:-3] + '.png', format='png')
         if mode_debug:
             self._portfolio.print_portfolio()

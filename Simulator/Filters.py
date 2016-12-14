@@ -1,5 +1,4 @@
 import random
-from HelperFunctionQt import calculate_global_ranking
 
 
 def get_value_global_ranking(a):

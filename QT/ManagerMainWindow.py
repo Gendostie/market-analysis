@@ -610,10 +610,8 @@ class Slots:
             raise ValueError('Error type commission, % or $, you put %s'
                              % str(dict_params_simulation['commissionPctDollar']))
         # Add filter for criteria selected
-        dict_criteria = {}
         for criterion, min_max in dict_min_max.items():
             name_bd_criterion = HelperFunctionQt.dict_criteria.get(criterion)
-            dict_criteria.update({name_bd_criterion: {}})
             if not name_bd_criterion:
                 print('Error criterion name, not exists in dictionary of HelperFunctionQt.dict_criteria, criterion = %s'
                       % criterion)
@@ -628,12 +626,11 @@ class Slots:
             broker.add_buy_filters(Filters.FilterNotInPortfolio())
         # no type simulation specific
         elif dict_type_simulation.get(ui.comboBox_typeSimulation.currentText()) == 'global_ranking':
-            if len(dict_criteria) < 0:
-                for criterion in HelperFunctionQt.dict_criteria.items():
-                    dict_criteria.update({criterion: {}})
+            if len(dict_min_max) < 1:
+                dict_min_max = HelperFunctionQt.dict_criteria
             broker.add_sell_filters(Filters.FilterCriteriaGlobalRankingSell())
             broker.add_buy_filters(Filters.FilterCriteriaGlobalRankingBuy())
-            broker.calculate_global_ranking(True, dict_criteria)
+            broker.calculate_global_ranking(True, dict_min_max)
         elif dict_type_simulation.get(ui.comboBox_typeSimulation.currentText()) == '':
             pass
         else:
