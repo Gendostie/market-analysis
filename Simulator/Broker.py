@@ -182,6 +182,7 @@ class Broker:
         """
         self._market._calculate_global_ranking = calculate_glob_ranking
         self._market._dict_criteria_glob_ranking = dict_params
+        self._market.compute_global_ranking()
 
     #######################################################################################################
     #                                Run the simulation
@@ -293,6 +294,6 @@ class Broker:
             # Calculate portfolio_value with ref_curve for ref_curve optimal
             HelperFunctionQt.update_plot(self._fig, sorted(self._hist_market_value.keys()),
                                          self._simulation_port_value, self._ref_curve_value)
-            self._fig.savefig(self.log_broker.name.replace('log_brok', 'simulation')[:-3] + '.png', format='png')
+            self._fig.savefig(self.log_broker.name.replace('log_brok', 'simulation')[:-3] + 'png', format='png')
         if mode_debug:
             self._portfolio.print_portfolio()

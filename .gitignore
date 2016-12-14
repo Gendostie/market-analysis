@@ -5,3 +5,4 @@ log.txt
 *.csv
 !log_brok_ref.csv
 !log_port_ref.csv
+/Results_simulation/

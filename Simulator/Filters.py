@@ -120,12 +120,17 @@ class FilterCriteriaGlobalRankingBuy(Filter):
         :return: list of 100 companies with best global ranking
         :rtype: list[str]
         """
-        # Filter company
-        new_list = []
-        for company in lst:
-            if company in sorted(market.get_list_global_ranking(), key=get_value_global_ranking)[:100]:
-                new_list.append(company)
-        return new_list
+        list_glob_rank_cie = [c.get('symbol') for c in sorted(market.get_list_global_ranking(),
+                                                              key=get_value_global_ranking)[:100]]
+        if len(list_glob_rank_cie) > 0 and len(lst) > 0:
+            # Filter company
+            new_list = []
+            for company in lst:
+                if company in list_glob_rank_cie:
+                    new_list.append(company)
+            return new_list
+        else:
+            return lst
 
 
 ##########################################################################################################
@@ -164,10 +169,14 @@ class FilterCriteriaGlobalRankingSell(Filter):
         :return: list of companies not in top 100 for global ranking
         :rtype: list[str]
         """
-        # Filter company
-        new_list = []
-        for company in lst:
-            if company in sorted(market.get_list_global_ranking(), key=get_value_global_ranking)[100:]:
-                new_list.append(company)
-        return new_list
-
+        list_glob_rank_cie = [c.get('symbol') for c in sorted(market.get_list_global_ranking(),
+                                                              key=get_value_global_ranking)[:100]]
+        if len(list_glob_rank_cie) > 0 and len(lst) > 0:
+            # Filter company
+            new_list = []
+            for company in lst:
+                if company in list_glob_rank_cie:
+                    new_list.append(company)
+            return new_list
+        else:
+            return lst
