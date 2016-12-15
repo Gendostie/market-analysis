@@ -1,4 +1,7 @@
-from DbConnection import DbConnection
+try:
+    from DbConnection import DbConnection
+except ImportError:
+    from Manager_DB.DbConnection import DbConnection
 
 HOST = '127.0.0.1'
 USER = 'root'

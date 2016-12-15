@@ -3,7 +3,11 @@ import math
 from datetime import timedelta
 from QT.Singleton import divide
 
-from DbConnection import DbConnection
+try:
+    from DbConnection import DbConnection
+except ImportError:
+    from Manager_DB.DbConnection import DbConnection
+
 
 # TODO : Config
 HOST = '127.0.0.1'
@@ -132,7 +136,6 @@ def get_historic_value_all_company(db=None):
     return_value = []
     for company_name, symbol, date_daily_value, adj_close, \
         datetime_value, revenue, gross_margin, income, earning, dividends, book_value, cash_flow in res:
-        # TODO: Add comment
         result_52wk = ()
         addedDays = 0
         while len(result_52wk) == 0:
@@ -167,18 +170,6 @@ def get_historic_value_all_company(db=None):
                              'P/E Ratio': divide(adj_close, earning),
                              'P/B Ratio': divide(adj_close, book_value),
                              '52wk (%)': divide(adj_close - last_year_close, last_year_close, 100)})
-    return return_value
-
-
-# TODO: test to show plot qt
-def get_daily_values(db=None):
-    if not db or type(db) is not DbConnection:
-        db = DbConnection(HOST, USER, PASSWORD, DATABASE)
-    query = """SELECT date_daily_value, adj_close FROM daily_value WHERE id_symbol = 'GOOGL' ORDER BY date_daily_value"""
-    res = db.select_in_db(query)
-    return_value = []
-    for date, value in res:
-        return_value.append({'date': date, 'value': value})
     return return_value
 
 

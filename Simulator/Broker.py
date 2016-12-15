@@ -1,35 +1,62 @@
 import random
+from datetime import datetime
+import numpy as np
+
 from Portfolio import Portfolio
 from Market import Market
-from datetime import datetime
+import Filters
+import HelperFunctionQt
+
+list_type_simulation = ['technical_analysis', 'by_low_set_high', 'global_ranking', '1_stock_for_each_company']
 
 
 #########################################################################################################
 #                                           Broker
 #########################################################################################################
 class Broker:
-    # TODO: Keep log?
-    def __init__(self, initial_liquidity, db, log_broker, log_port,
+    def __init__(self, db, initial_liquidity, log_broker, log_broker_ref, log_port,
                  min_date=datetime(2006, 1, 3), max_date=datetime(2016, 11, 4),
-                 min_value=0, max_value=float("inf")):
-        # TODO: Add comment
+                 min_value=0, max_value=float("inf"), fig=None):
+        """
+        Create Broker
+        :param db: connexion in to DB
+        :type db: Manager_DB.DbConnection.DbConnection
+        :param initial_liquidity: value to portfolio to begin
+        :type initial_liquidity: int
+        :param log_broker: path file to write log of Broker
+        :type log_broker: str
+        :param log_broker_ref: path file to write log of Broker ref_curve
+        :type log_broker_ref: str
+        :param log_port: path file to write log of Portfolio
+        :type log_port: str
+        :param min_date: date to start simulation
+        :type min_date: datetime.datetime
+        :param max_date: date included when the simulation stops
+        :type max_date: datetime.datetime
+        :param min_value: min stock value to do transaction
+        :type min_value: int
+        :param max_value: max stock value to invest in a company
+        :type max_value: int
+        :param fig: figure for update plot QT
+        :type fig: matplotlib.figure.Figure
+        """
         # The Market where the broker is buying and selling stocks
         self._market = Market(min_date, max_date, db)
 
-        # TODO: LOG
-        self.log = log_broker
+        self.log_broker = open(log_broker, 'w')
+        self.log_broker.write("date;cash;stocks_value;bill;value_with_ref_curve\n")
 
         # The portfolio contains all the stocks bought for the current day and time and
         # the cash money that can be used instantly by the broker to buy stocks.
         self._portfolio = Portfolio(initial_liquidity, min_value, max_value, log_port)
 
         # The bill is how much the broker has charged for its services.
-        # TODO : Make something of it
         self._bill = 0.0
 
         # Dictionary that keeps track of the value of our portfolio at any given time since the start of the simulation.
         # Key: Date ; Value: Total of our assets for any given
         self._hist_market_value = {}
+        self._simulation_port_value = []  # keep in memory value in order dates
 
         # A commission is how much the broker is asking to get paid for a given transaction.
         # Initially, there is no commission. It must be added with a setter.
@@ -38,6 +65,10 @@ class Broker:
         # Filters are functions used to select which companies should be in our portfolio at any given time.
         self._sell_filters = []
         self._buy_filters = []
+
+        self._fig = fig
+        self._data_ref_curve = HelperFunctionQt.read_reference_curve(log_broker_ref, True)
+        self._ref_curve_value = []
 
     #######################################################################################################
     #                                      Commission
@@ -54,7 +85,7 @@ class Broker:
             :type type_commission: str
             :param commission_val: The value of the commission. In % or $ depending of its type.
             :type commission_val: float | int
-            :return: Nothing
+            :return: None
             """
             self.value = commission_val
             self.type = type_commission
@@ -75,30 +106,31 @@ class Broker:
     #######################################################################################################
     #                                         Setters
     #######################################################################################################
-
     def set_flat_fee_commission(self, value):
         """Set the commission of the broker to a flat fee for any transaction done.
 
         :param value: The flat fee that will be charged for any transaction. Must be > 0.
+                      If == 0, put to no_commission.
         :type value: float | int
-        :return: Nothing
+        :return: None
         """
         if value > 0:
             self._commission = self._Commission("flat_fee", value)
         else:
-            raise ValueError
+            self._commission = self._Commission()
 
     def set_percent_commission(self, value):
         """Set the commission of the broker to a percentage of any transaction done.
 
-        :param value: Percentage of the transaction that will be charged. Must be > 0. 0.5 => 0.005%
+        :param value: Percentage of the transaction that will be charged. Must be > 0 and < 100.
+                      If == 0, put to no_commission.
         :type value: float | int
-        :return: Nothing
+        :return: None
         """
         if value > 0:
-            self._commission = self._Commission("percent", value/100)
+            self._commission = self._Commission("percent", value)
         else:
-            raise ValueError
+            self._commission = self._Commission()
 
     def add_sell_filters(self, *filters):
         """Add one or many filters to reduce the list of companies in our portfolio.
@@ -113,7 +145,7 @@ class Broker:
         specific criterion (or many criteria).
 
         :param filters: One or many functions as described above.
-        :return: Nothing
+        :return: None
         """
         for f in filters:
             self._sell_filters.append(f)
@@ -131,7 +163,7 @@ class Broker:
         criterion (or many criteria).
 
         :param filters: One or many functions as described above.
-        :return: Nothing
+        :return: None
         """
         for f in filters:
             self._buy_filters.append(f)
@@ -139,12 +171,27 @@ class Broker:
     def add_max_nb_of_stocks_to_buy(self, nb_stocks):
         self._portfolio.set_max_number_of_stocks_to_buy(nb_stocks)
 
+    def calculate_global_ranking(self, calculate_glob_ranking, dict_params):
+        """
+        Set variable to say if we compute global ranking
+        :param calculate_glob_ranking: boolean to say if we need calculate global ranking
+        :type calculate_glob_ranking: bool
+        :param dict_params: dict criteria for compute global ranking
+        :type dict_params: dict{dict}
+        :return: None
+        """
+        self._market._calculate_global_ranking = calculate_glob_ranking
+        self._market._dict_criteria_glob_ranking = dict_params
+        self._market.compute_global_ranking()
+
     #######################################################################################################
     #                                Run the simulation
     #######################################################################################################
-
     def _sell(self):
-        # TODO : Comment
+        """
+        Sell company
+        :return: None
+        """
         # Get the list of all companies that we can sell (those we have in our portfolio);
         lst = self._portfolio.get_companies()
 
@@ -164,7 +211,10 @@ class Broker:
                 self._bill += commission
 
     def _buy(self):
-        # TODO: Comment
+        """
+        Buy company
+        :return: None
+        """
         # Get the list of all companies that we can buy (those trading that day in the market);
         lst = self._market.get_trading_stocks()
 
@@ -190,24 +240,39 @@ class Broker:
             if not self._portfolio.can_buy():
                 break
 
-    def _tracking(self):
-        # TODO : Add the draw(), data structure to keep track of value over time & maybe more
-        # Calculate how much we have
-        # TODO : Remove bill?
-        self._hist_market_value[self._market.get_current_date()] = \
-            self._portfolio.get_cash_money() + \
-            self._portfolio.get_value_of_portfolio(self._market) -\
-            self._bill
-        # TODO : Only for debugging
-        print("{}\t\t{}".format(self._market.get_current_date(),
-                                self._hist_market_value[self._market.get_current_date()]))
-        self.log.write("{};{};{};{}\n".format(self._market.get_current_date(),
-                                              self._portfolio.get_cash_money(),
-                                              self._portfolio.get_value_of_portfolio(self._market),
-                                              self._bill))
+    def get_value(self, d):
+        return d
 
-    def run_simulation(self):
-        # TODO: Comment
+    def _tracking(self, mode_debug=False):
+        """
+        Log transaction of day
+        :param mode_debug: if want print the logs
+        :type mode_debug: bool
+        :return: None
+        """
+        # Calculate how much we have
+        self._simulation_port_value.append(self._portfolio.get_cash_money()
+                                           + self._portfolio.get_value_of_portfolio(self._market)
+                                           - self._bill)
+        self._hist_market_value[self._market.get_current_date()] = self._simulation_port_value[-1]
+        self._ref_curve_value.append(float(self._data_ref_curve.get(str(self._market.get_current_date()), [0])[-1])
+                                     * self._simulation_port_value[-1])
+        if mode_debug:
+            print("{}\t\t{}".format(self._market.get_current_date(),
+                                    self._hist_market_value[self._market.get_current_date()]))
+        self.log_broker.write("{};{};{};{};{}\n".format(self._market.get_current_date(),
+                                                        self._portfolio.get_cash_money(),
+                                                        self._portfolio.get_value_of_portfolio(self._market),
+                                                        self._bill,
+                                                        self._ref_curve_value[-1]))
+
+    def run_simulation(self, mode_debug=False):
+        """
+        Start simulation
+        :param mode_debug: if want print the logs
+        :type mode_debug: bool
+        :return: None
+        """
         # As long as there is a new business day in our simulation;
         trading = True
         while trading:
@@ -219,9 +284,16 @@ class Broker:
                 self._buy()
 
             # Keep track of our assets
-            self._tracking()
+            self._tracking(mode_debug=mode_debug)
 
             # Go to the next trading day.
             trading = self._market.next()
-        # TODO: Remove this print, instead, print a résumé in the log.
-        self._portfolio.print_portfolio()
+
+        # Update plot QT
+        if self._fig:
+            # Calculate portfolio_value with ref_curve for ref_curve optimal
+            HelperFunctionQt.update_plot(self._fig, sorted(self._hist_market_value.keys()),
+                                         self._simulation_port_value, self._ref_curve_value)
+            self._fig.savefig(self.log_broker.name.replace('log_brok', 'simulation')[:-3] + 'png', format='png')
+        if mode_debug:
+            self._portfolio.print_portfolio()

@@ -1,9 +1,9 @@
 from datetime import datetime, timedelta
 from QT.Singleton import divide
+from HelperFunctionQt import calculate_global_ranking
 
 
 class Market:
-    # TODO: To complete in the end
     """Class that encapsulate information about the market between two dates in the past.
 
     The class is initiated with a starting and ending date. It keeps the current date of the simulation.
@@ -12,6 +12,15 @@ class Market:
     """
 
     def __init__(self, begin, end, db):
+        """
+
+        :param begin: start date of simulation
+        :type begin: datetime.datetime
+        :param end: end date of simulation
+        :type end: datetime.datetime
+        :param db: connexion in to DB
+        :type db: Manager_DB.DbConnection.DbConnection
+        """
         self._db = db
 
         # Set the dates for the simulation
@@ -28,6 +37,11 @@ class Market:
 
         # Charge the prices for this day. Optimization to speed up the get_price function.
         self._prices = self.__load_prices()
+
+        # if true, global ranking calculate for each day
+        self._calculate_global_ranking = False
+        self._dict_criteria_glob_ranking = {}
+        self._list_cie_glob_ranking = []
 
     ####################################################################################################
     #     Callable functions
@@ -50,12 +64,10 @@ class Market:
             self.next()
         # Charge the new prices for the day. Optimization to speed up the get_price function.
         self._prices = self.__load_prices()
+        # compute global ranking
+        if self._calculate_global_ranking:
+            self.compute_global_ranking()
         return True
-
-    def debug_print(self):
-        # TODO : REMOVE, only for debugging
-        """Print the information for the current date."""
-        print(self.df_market.loc[self._current_date])
 
     def get_current_date(self):
         """Return the current date of the simulation.
@@ -85,57 +97,41 @@ class Market:
             price = 0.0
         return price
 
-    def _query_historical_data(self, col_name, symbol):
-        query = """SELECT {}
-                   FROM historic_value
-                   WHERE id_symbol = "{}"
-                   AND date_historic_value = (SELECT date_historic_value
-                                              FROM historic_value
-                                              WHERE date_historic_value <= "{}"
-                                              AND id_symbol = "{}"
-                                              ORDER BY date_historic_value DESC
-                                              LIMIT 1);""".format(col_name, symbol,
-                                                                  self._current_date, symbol)
+    def get_value_criterion_company(self, col_name, symbol):
+        """
+        Return value criterion within col_name of company
+        :param col_name: name criterion to get value
+        :type col_name: str
+        :param symbol: symbol of a company
+        :type symbol: str
+        :return: value of criterion, if None, return 0.0
+        :rtype: float
+        """
+        query = """SELECT {} FROM historic_value
+                    WHERE id_symbol = '{}'
+                        AND date_historic_value = (SELECT date_historic_value
+                                                      FROM historic_value
+                                                      WHERE date_historic_value <= '{}' AND id_symbol = '{}'
+                                                    ORDER BY date_historic_value DESC
+                                                    LIMIT 1);""".format(col_name, symbol, self._current_date, symbol)
 
         result = self._db.select_in_db(query)
-        if result is not ():
-            result = result[0][0]
+        if len(result) > 0:
+            return result[0][0]
         else:
-            result = None
-        return result
-
-    def get_revenue(self, symbol):
-        return self._query_historical_data("revenu_usd_mil", symbol)
-
-    def get_gross_margin(self, symbol):
-        return self._query_historical_data("gross_margin_pct", symbol)
-
-    def get_net_income(self, symbol):
-        return self._query_historical_data("net_income_usd_mil", symbol)
-
-    def get_EPS(self, symbol):
-        return self._query_historical_data("earning_per_share_usd", symbol)
-
-    def get_dividends(self, symbol):
-        return self._query_historical_data("dividends_usd", symbol)
-
-    def get_BVPS(self, symbol):
-        return self._query_historical_data("book_value_per_share_usd", symbol)
-
-    def get_free_cash_flow_per_share(self, symbol):
-        return self._query_historical_data("free_cash_flow_per_share_usd", symbol)
+            return 0.0
 
     def get_dividend_yield(self, symbol):
-        return divide(self.get_dividends(symbol),
+        return divide(self.get_value_criterion_company('dividends_usd', symbol),
                       self.get_price(symbol), 100)
 
     def get_p_e_ratio(self, symbol):
         return divide(self.get_price(symbol),
-                      self.get_EPS(symbol))
+                      self.get_value_criterion_company('earning_per_share_usd', symbol))
 
     def get_p_b_ratio(self, symbol):
         return divide(self.get_price(symbol),
-                      self.get_BVPS(symbol))
+                      self.get_value_criterion_company('book_value_per_share_usd', symbol))
 
     def get_52wk(self, symbol):
         actual_price = self.get_price(symbol)
@@ -160,8 +156,8 @@ class Market:
         # Get the price at that date
         query = """SELECT adj_close
                      FROM daily_value
-                     WHERE date_daily_value = "{}"
-                     AND id_symbol = "{}";""".format(last_year_date, symbol)
+                     WHERE date_daily_value = '{}'
+                     AND id_symbol = '{}';""".format(last_year_date, symbol)
         result = self._db.select_in_db(query)
         if result is not ():
             last_year_price = result[0][0]
@@ -170,6 +166,30 @@ class Market:
 
         return divide(actual_price - last_year_price,
                       last_year_price, 100)
+
+    def get_list_global_ranking(self):
+        return self._list_cie_glob_ranking
+
+    def compute_global_ranking(self):
+        """
+        Compute global ranking of company in market
+        :return: list of company with global ranking
+        :rtype: list[dict]
+        """
+        fct_criterion_special = {'dividend_yield': self.get_dividend_yield, 'p_e_ratio': self.get_p_e_ratio,
+                                 'p_b_ratio': self.get_p_b_ratio, '52wk': self.get_52wk}
+        # Create structure for call fct calculate_global_ranking
+        list_company = []
+        for symbol in self.get_trading_stocks():
+            dict_cie = {'symbol': symbol}
+            for criterion, criterion_bd in self._dict_criteria_glob_ranking.items():
+                if criterion != 'Adj. Close':
+                    if criterion_bd in fct_criterion_special.keys():
+                        dict_cie[criterion] = fct_criterion_special.get(criterion_bd)(symbol)
+                    else:
+                        dict_cie[criterion] = self.get_value_criterion_company(criterion_bd, symbol)
+            list_company.append(dict_cie)
+        self._list_cie_glob_ranking = calculate_global_ranking(list_company, self._dict_criteria_glob_ranking)
 
     ####################################################################################################
     #     Set up some variables for the simulation
@@ -183,8 +203,8 @@ class Market:
         """
         query = """SELECT DISTINCT date_daily_value
                    FROM daily_value
-                   WHERE date_daily_value >= "{}"
-                     AND date_daily_value <= "{}";""".format(self._current_date, self._end_date)
+                   WHERE date_daily_value >= '{}'
+                     AND date_daily_value <= '{}';""".format(self._current_date, self._end_date)
         business_days = {}
         for tpl in self._db.select_in_db(query):
             date = tpl[0]
@@ -195,15 +215,18 @@ class Market:
             business_days[date.year][date.month].append(date.day)
         return business_days
 
-    # TODO: Comments
     def __load_prices(self):
-        list_prices = {}
+        """
+        Get adjusted close value of companies in table SQL daily_value
+        :return: dict
+        """
+        dict_prices = {}
         query = """SELECT id_symbol, adj_close
                    FROM daily_value
-                   WHERE date_daily_value = "{}";""" .format(self._current_date)
+                   WHERE date_daily_value = '{}';""" .format(self._current_date)
         for symbol, price in self._db.select_in_db(query):
-            list_prices[symbol] = price
-        return list_prices
+            dict_prices[symbol] = price
+        return dict_prices
 
     ####################################################################################################
     #     Check state of the simulation.
@@ -215,7 +238,7 @@ class Market:
         Require the initialization of self.business_day with the function get_business_days().
 
         :param date: The date that we want to check.
-        :type date: datetime
+        :type date: datetime.datetime
         :return: True if it's a business day. False otherwise.
         :rtype: bool
         """
@@ -236,4 +259,3 @@ class Market:
             return True
         else:
             return False
-

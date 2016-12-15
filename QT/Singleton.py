@@ -1,7 +1,3 @@
-#!/usr/bin/python
-# -*- coding: utf-8 -*-
-
-
 class Singleton:
     _instance = None
 
@@ -24,8 +20,17 @@ class Singleton:
         self.is_descending = value
 
 
-# TODO: Add comment
 def divide(num, denom, mult=1):
+    """
+    Makes division and multiplied by a factor. Cast the result in string and keep to decimal.
+    :param num: numerator of the fraction
+    :type num: int | float
+    :param denom: denominator of the fraction
+    :type denom: int | float
+    :param mult: multiplier of the fraction
+    :type mult: int | float
+    :return: str
+    """
     if (num is None) or (denom is None) or (denom == 0):
         return None
     else:

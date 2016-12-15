@@ -1,21 +1,30 @@
+import sys
+import os
+if os.path.abspath('..') not in sys.path:
+    sys.path.insert(0, os.path.abspath('..'))  # add path of project for call Manager_DB
+
 from PyQt4 import QtCore, QtGui
 import configparser
-from matplotlib.backends.backend_qt4agg import FigureCanvasQTAgg as FigureCanvas
-from matplotlib.figure import Figure
-from matplotlib import dates
+from datetime import datetime
+import pandas as pd
 
-from DbConnection import DbConnection
-from QT.MainWindow import Ui_MainWindow
-from QT.DialogPopUp import Ui_Dialog
-from Manager_DB import ManagerPortfolio, ManagerCompany
-from QT import HelperFunctionQt
-from QT.Singleton import Singleton
+from Manager_DB.DbConnection import DbConnection
+from Manager_DB import ManagerCompany, ManagerPortfolio
+from MainWindow import Ui_MainWindow
+from DialogPopUp import Ui_Dialog
+import HelperFunctionQt
+from Singleton import Singleton
+from Simulator.Broker import Broker
+from Simulator import Filters
+
+MAX_INT = pow(2, 63)-1  # replace sys.maxint no available in python 3
 
 dict_min_max_value_criteria = {}
-dict_type_simulation = {'Technical Analysis': 'technical_analysis_windows', 'By Low Set High': 'by_low_set_high',
-                        'Global Ranking': 'global_ranking', '1 Stock For Each Company': ''}
+dict_type_simulation = {'1 Stock For Each Company': '1_stock_for_each_company', 'Global ranking': 'global_ranking',
+                        '': ''}
 dict_params_value_sim = {}  # get last value of params of type simulation until no change type simulation
-market_object = None
+list_msg_simulation = ['No simulation in course', 'Simulation in progress...',
+                       'Error during simulation, please try again']
 
 # Create db connection global
 config = configparser.ConfigParser()
@@ -24,6 +33,9 @@ db = DbConnection(config.get('database', 'HOST'),
                   config.get('database', 'USER'),
                   config.get('database', 'PASSWORD'),
                   config.get('database', 'DATABASE'))
+path_log_broker = config.get('path', 'path_log_broker')
+path_log_broker_ref = config.get('path', 'path_log_broker_ref')
+path_log_port = config.get('path', 'path_log_portfolio')
 
 
 class ManagerMainWindow(Ui_MainWindow):
@@ -47,6 +59,10 @@ class ManagerMainWindow(Ui_MainWindow):
         Setup for widget already in MainWindow.ui to modify
         :return: None
         """
+        # create folder for results simulation if not exists
+        if not os.path.exists(path_log_broker[:path_log_broker.rfind('/') + 1]):
+            os.makedirs(path_log_broker[:path_log_broker.rfind('/') + 1])
+
         self.get_min_max_value_criteria()
         # Stock Screener
         # Set min max criteria Stock Screener
@@ -228,6 +244,8 @@ class ManagerMainWindow(Ui_MainWindow):
         self.btn_showReport.clicked.connect(Slots.show_report)
         # clear old params of type simulation
         self.comboBox_typeSimulation.currentIndexChanged.connect(dict_params_value_sim.clear)
+        # Set max combobox commission depending if is in % or $
+        self.comboBox_commissionPctDollar.currentIndexChanged.connect(Slots.change_max_spinbox_commission)
 
     def create_combobox_portfolio(self, tab_widget_name, combobox_name):
         """
@@ -511,6 +529,22 @@ class Slots:
         HelperFunctionQt.select_deselect_combobox_layout(ui.verticalLayout_right_2, QtCore.Qt.Unchecked)
 
     @staticmethod
+    def change_max_spinbox_commission(idx_type_commission):
+        """
+        Change max of spinbox commission depending type of commission. If %, max is 100 and if in $, max is 999
+        :param idx_type_commission: index of item combobox selected. Normally is 0 for $ and 1 for $
+        :type idx_type_commission: int
+        :return:None
+        """
+        if ui.comboBox_commissionPctDollar.itemText(idx_type_commission) == '%':
+            ui.doubleSpinBox_commission.setMaximum(100)
+        elif ui.comboBox_commissionPctDollar.itemText(idx_type_commission) == '$':
+            ui.doubleSpinBox_commission.setMaximum(999)
+        else:
+            print('Error type commission, % or $, you put %s' %
+                  ui.comboBox_commissionPctDollar.itemText(idx_type_commission))
+
+    @staticmethod
     def open_windows_setting_params_simulation():
         """
         Open pop-up of dialog Qt to set params specific to type simulation selected. The value of params is
@@ -542,103 +576,73 @@ class Slots:
             dict_params_value_sim.update(HelperFunctionQt.get_params_simulation(Dialog))
             print(dict_params_value_sim)
 
-    # TODO: to completed
     @staticmethod
     def start_simulation():
         print('Start simulation')
-        # dict_params_simulation = HelperFunctionQt.get_params_simulation(ui.frame_simulation)
-        # dict_params_simulation.update(dict_params_value_sim)
-        # print(dict_params_simulation)
-        # dict_min_max = {}
-        # dict_min_max.update(HelperFunctionQt.get_min_max_layout_checked(ui.verticalLayout_left_2))
-        # dict_min_max.update(HelperFunctionQt.get_min_max_layout_checked(ui.verticalLayout_right_2))
-        # print(dict_min_max)
+        dict_params_simulation = HelperFunctionQt.get_params_simulation(ui.frame_simulation)
+        dict_params_simulation.update(dict_params_value_sim)
+        print(dict_params_simulation)
+        dict_min_max = {}
+        dict_min_max.update(HelperFunctionQt.get_min_max_layout_checked(ui.verticalLayout_left_2))
+        dict_min_max.update(HelperFunctionQt.get_min_max_layout_checked(ui.verticalLayout_right_2))
+        print(dict_min_max)
 
-        # TODO: delete call to ManagerCompany
-        res_val = ManagerCompany.get_daily_values(db)
-        list_date = [v['date'] for v in res_val]
-        list_val = [v['value'] for v in res_val]
-        
-        # mpl_canvas = MplCanvas(ui.horizontalLayout_plot, list_date[:], list_val[:])
-        fig = create_plot_qt(list_date[:10], list_val[:10])
-        for i in range(10, len(list_date[:100]), 10):
-            # update_plot(fig, list_date[i:i+10], list_val[i:i+10])
-            update_plot(fig, list_date[:i], list_val[:i])
-            # create_plot_qt(list_date[:i], list_val[:i])
-        print('End update plot')
+        fig = HelperFunctionQt.create_plot_qt([], [], [], ui.horizontalLayout_plot)
+        str_timestamp = str(int(datetime.timestamp(datetime.now())))
+        broker = Broker(db, dict_params_simulation['valuePortfolio'],
+                        path_log_broker.replace('log_brok', 'log_brok_' + str_timestamp), path_log_broker_ref,
+                        path_log_port.replace('log_port', 'log_port_' + str_timestamp),
+                        datetime.strptime(dict_params_simulation['simulatorFrom'], '%Y-%m-%d'),
+                        datetime.strptime(dict_params_simulation['simulatorTo'], '%Y-%m-%d'),
+                        dict_params_simulation.get('minInvest', 0), dict_params_simulation.get('maxInvest', MAX_INT),
+                        fig)
+        # Keep params to simulation in a log
+        file_log_params = open(path_log_broker.replace('log_brok', 'log_params_sim_' + str_timestamp), 'w')
+        file_log_params.write(str(dict_params_simulation) + '\n')
+        file_log_params.write(str(dict_min_max) + '\n')
+        file_log_params.close()
+        # set type and value commission
+        if dict_params_simulation['commissionPctDollar'] == '%':
+            broker.set_percent_commission(dict_params_simulation.get('commission', 0))
+        elif dict_params_simulation['commissionPctDollar'] == '$':
+            broker.set_flat_fee_commission(dict_params_simulation.get('commission', 0))
+        else:
+            raise ValueError('Error type commission, % or $, you put %s'
+                             % str(dict_params_simulation['commissionPctDollar']))
+        # Add filter for criteria selected
+        for criterion, min_max in dict_min_max.items():
+            name_bd_criterion = HelperFunctionQt.dict_criteria.get(criterion)
+            if not name_bd_criterion:
+                print('Error criterion name, not exists in dictionary of HelperFunctionQt.dict_criteria, criterion = %s'
+                      % criterion)
+            broker.add_sell_filters(Filters.FilterCriteriaMinMaxSell(name_bd_criterion, min_max.get('min', 0),
+                                                                     min_max.get('max', 0)))
+            broker.add_buy_filters(Filters.FilterCriteriaMinMaxBuy(name_bd_criterion, min_max.get('min', 0),
+                                                                   min_max.get('max', 0)))
+        # Configure simulation predefined in dict_params_simulation
+        if dict_type_simulation.get(ui.comboBox_typeSimulation.currentText()) == '1_stock_for_each_company':
+            broker.add_max_nb_of_stocks_to_buy(1)
+            broker.add_sell_filters(Filters.FilterNot())
+            broker.add_buy_filters(Filters.FilterNotInPortfolio())
+        # no type simulation specific
+        elif dict_type_simulation.get(ui.comboBox_typeSimulation.currentText()) == 'global_ranking':
+            if len(dict_min_max) < 1:
+                dict_min_max = HelperFunctionQt.dict_criteria
+            broker.add_sell_filters(Filters.FilterCriteriaGlobalRankingSell())
+            broker.add_buy_filters(Filters.FilterCriteriaGlobalRankingBuy())
+            broker.calculate_global_ranking(True, dict_min_max)
+        elif dict_type_simulation.get(ui.comboBox_typeSimulation.currentText()) == '':
+            pass
+        else:
+            raise ValueError('Error type simulation, it\'s not in list, you put %s'
+                             % ui.comboBox_typeSimulation.currentText())
+        broker.run_simulation()
+        print('End of simulation')
 
     # TODO: to completed
     @staticmethod
     def show_report():
         print('Show report simulation')
-
-    # TODO: to completed
-    @staticmethod
-    def get_value_params():
-        print(0)
-
-
-def create_plot_qt(x_date, y_value):
-    """
-    Create plot to display in interface qt in a layout box.
-    :param x_date: list datetime associate to values in axis y
-    :type x_date: list[datetime]
-    :param y_value: list of value to display line of plot
-    :type y_value: list[float]
-    :return: figure of plot
-    :rtype: Figure
-    """
-    fig = Figure()
-
-    axes = fig.add_subplot(111)
-    axes.plot(x_date, y_value)
-    set_axes_fig_plot(axes, x_date[0], x_date[-1])
-    fig.autofmt_xdate()
-
-    canvas = FigureCanvas(fig)
-    ui.horizontalLayout_plot.addWidget(canvas)
-    canvas.draw()
-
-    return fig
-
-
-def set_axes_fig_plot(axes, x_min, x_max):
-    """
-    Set axes to display label of axis and title of plot and
-    :param axes: object axes
-    :type axes: Axes of matplotlib
-    :param x_min: datetime min
-    :type x_min: datetime
-    :param x_max: datetime max
-    :type x_max: datetime
-    :return: None
-    """
-    axes.set_xlim(x_min, x_max)
-    axes.xaxis.set_major_formatter(dates.DateFormatter('%Y-%m-%d'))
-    axes.format_xdata = dates.DateFormatter('%Y-%m-%d')
-
-    axes.set_title('Results of simulation')
-    axes.set_xlabel('Dates')
-    axes.set_ylabel('Values ($)')
-
-
-def update_plot(fig, x_date, y_value):
-    """
-    Udate plot current of widget
-    :param fig: object Figure
-    :type fig: Figure
-    :param x_date: list datetime associate to values in axis y
-    :type x_date: list[datetime]
-    :param y_value: list of value to display line of plot
-    :type y_value: list[float]
-    :return: None
-    """
-    axes = fig.get_axes()[0]
-    axes.cla()
-    axes.plot(x_date, y_value)
-    set_axes_fig_plot(axes, x_date[0], x_date[-1])
-    fig.autofmt_xdate()
-    fig.canvas.draw()
 
 
 if __name__ == "__main__":
@@ -652,4 +656,4 @@ if __name__ == "__main__":
     ui.setup_manager()
     ui.create_connection_signal_slot()
     MainWindow.show()
-    sys.exit(app.exec_())
+    app.exec_()

@@ -6,35 +6,28 @@
   To get same configuration MySql: 
     - user: root
     - password: root
+- Qt 4.8, you can have the most recent version
 
-## Package python to need
-- To install, use `pip install -r requirements.txt` to install all package required
-- To check package required in your system, use `pip freeze -r requirements.txt`
+## Python packages
+- Use `pip install -r requirements.txt` to install all required packages.
+- To check which packages to install on your system, use `pip freeze -r requirements.txt`
 - To update, use `pip install -r requirements.txt -U`
 
 ## Interface QT
-- We use PyQt4 to switch file ui in file py and use language Python
-    - We use `QT/convert_ui_to_py.bat` to execute function pyuic4 of Pyt4, 
-      most fast to update modification in file ui to file py
+- To be able to use Qt in Python, we are using PyQt4. It converts a ui file into a python file.
+    - We use the function `QT/convert_ui_to_py.bat` to make this conversion more easily.
 - To install PyQt4, go to https://www.riverbankcomputing.com/software/pyqt/download
 
-## Export data base MySql
-First time, must be create schema before export db. After, to update bd,
-pass to step 2.
-1. Create schema `market_analysis`
-    - CREATE SCHEMA 'market_analysis';
-2. Export table sql
-    - Click `Data import/restore`
-    - Choice `/market-analysis/DB` of your Git `market_analysis`
-    - Start import
-
 ## DbConnexion.py
-Create a connexion to db MySql.
-Two functions can using:
+Create a connexion to a MySql database.
+Two functions can be used:
 
     - select_in_db(self, query, params=None)
     - modified_db(self, query, params=None)
 
 ## Installation
-1. `pip install -r requirements.txt`, for install package and add -U for 
-   update package
+1. `pip install -r requirements.txt` to install packages and add -U to 
+   update package.
+2. Verify that only `install_db` is True in `config.ini`.
+3. Execute the script `Install_DB/installer.py` to create the database
+4. You are ready to begin.

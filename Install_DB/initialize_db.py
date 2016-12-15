@@ -1,9 +1,17 @@
-from os import path
+from os import path, getcwd
 import json
 import configparser
 
-from Manager_DB.DbConnection import DbConnection
-from Manager_DB import ManagerCompany
+try:
+    from Manager_DB.DbConnection import DbConnection
+    from Manager_DB import ManagerCompany
+except ImportError:
+    # add path of project for call Manager_DB
+    import sys
+    sys.path.extend([getcwd()[:-len('Install_DB')-1]])
+
+    from Manager_DB.DbConnection import DbConnection
+    from Manager_DB import ManagerCompany
 
 
 def insert_company_snp500():

@@ -1,10 +1,30 @@
+import io
 import pandas as pd
+import numpy as np
 from PyQt4 import QtCore, QtGui
+
+from matplotlib.backends.backend_qt4agg import FigureCanvasQTAgg as FigureCanvas
+from matplotlib.figure import Figure
+from matplotlib import dates
+from matplotlib import pyplot
 
 from MainWindow import _translate
 from Manager_DB import ManagerPortfolio
-from QT import ValueTableItem
+import ValueTableItem
 from Singleton import divide
+
+dict_criteria = {'Adj. Close': 'close_val',
+                 'Revenue (Mil)': 'revenu_usd_mil',
+                 'Net Income (Mil)': 'net_income_usd_mil',
+                 'Gross Margin (%)': 'gross_margin_pct',
+                 'Dividends': 'dividends_usd',
+                 'EPS': 'earning_per_share_usd',
+                 'BVPS': 'book_value_per_share_usd',
+                 'FCFPS': 'free_cash_flow_per_share_usd',
+                 'Div. Yield (%)': 'dividend_yield',
+                 'P/E Ratio': 'p_e_ratio',
+                 'P/B Ratio': 'p_b_ratio',
+                 '52wk (%)': '52wk'}
 
 
 def get_row_table_widget(table_widget, idx_row):
@@ -177,19 +197,6 @@ def set_min_max_slider_layout(layout, dict_min_max_value_criteria_calc):
     :type dict_min_max_value_criteria_calc: dict{dict}
     :return: None
     """
-    dict_criteria = {'Adj. Close': 'close_val',
-                     'Revenue (Mil)': 'revenu_usd_mil',
-                     'Net Income (Mil)': 'net_income_usd_mil',
-                     'Gross Margin (%)': 'gross_margin_pct',
-                     'Dividends': 'dividends_usd',
-                     'EPS': 'earning_per_share_usd',
-                     'BVPS': 'book_value_per_share_usd',
-                     'FCFPS': 'free_cash_flow_per_share_usd',
-                     'Div. Yield (%)': 'dividend_yield',
-                     'P/E Ratio': 'p_e_ratio',
-                     'P/B Ratio': 'p_b_ratio',
-                     '52wk (%)': '52wk'}
-
     for idx_layout in range(layout.count()):
         # Layout of the attribute
         layout_attr = layout.itemAt(idx_layout)
@@ -357,7 +364,7 @@ def calculate_global_ranking(list_company, dict_params):
     Calculate global ranking for company
     :param list_company: list value for all company s&p500
     :type list_company: list[dict]
-    :param dict_params: list criteria selected
+    :param dict_params: dict criteria selected
     :type dict_params: dict[dict]
     :return: list value for all company s&p500 with adding global ranking
     :rtype: list[dict]
@@ -437,3 +444,99 @@ def get_params_simulation(parent_object):
         name_obj = child.objectName()  # get name of value
         return_res[name_obj[name_obj.rfind('_') + 1:]] = obj_text
     return return_res
+
+
+def read_reference_curve(path_log_broker_ref, put_data_in_dict=False):
+    """
+    Read log of data of the reference curve and return in list the data
+    :param path_log_broker_ref: path of log who contains data for reference curve
+    :type path_log_broker_ref: str
+    :return: dict of list or DataFrame of Panda for value of portfolio of each open day
+    :rtype: dict[list] | pd.DataFrame
+    """
+    file = open(path_log_broker_ref, 'r')
+    if put_data_in_dict:
+        dict_data = {}
+        next(file)  # skip first line
+        for line in file:
+            line = line.strip().split(';')
+            dict_data[line[0]] = line[1:]
+        return dict_data
+    else:
+        return pd.read_csv(io.StringIO(file.read()), sep=';')
+
+
+#########################################################################################################
+#                                 Function to create and update plot QT
+#########################################################################################################
+def create_plot_qt(x_date, y_value, ref_curve_val, horizontal_layout_plot):
+    """
+    Create plot to display in interface qt in a layout box.
+    :param x_date: list datetime associate to values in axis y
+    :type x_date: list[datetime]
+    :param y_value: list of value to display line of plot
+    :type y_value: list[float]
+    :param ref_curve_val: Value of reference curve for plot Qt simulation
+    :type ref_curve_val: list
+    :param horizontal_layout_plot:
+    :type horizontal_layout_plot: QtGui.QLayout
+    :return: figure of plot
+    :rtype: Figure
+    """
+    pyplot.ion()
+    fig = Figure()
+
+    axes = fig.add_subplot(111)
+    axes.plot(x_date, y_value, 'b', x_date, ref_curve_val, 'g')
+    axes.legend(['Simulation', 'Reference Curve'], loc='best')
+    if len(x_date) > 0:
+        axes.set_xlim(x_date[0], x_date[-1])
+        axes.xaxis.set_major_formatter(dates.DateFormatter('%Y-%m-%d'))
+        axes.format_xdata = dates.DateFormatter('%Y-%m-%d')
+
+    axes.set_title('Results of simulation')
+    axes.set_xlabel('Dates')
+    axes.set_ylabel('Values ($)')
+
+    fig.autofmt_xdate()
+    canvas = FigureCanvas(fig)
+    # Clear plot if exists already
+    for i in range(horizontal_layout_plot.count()):
+        horizontal_layout_plot.itemAt(i).widget().setParent(None)
+    horizontal_layout_plot.addWidget(canvas)
+    canvas.draw()
+
+    return fig
+
+
+def update_plot(fig, x_date, y_value, ref_curve_val):
+    """
+    Udate plot current of widget
+    :param fig: object Figure
+    :type fig: Figure
+    :param x_date: list datetime associate to values in axis y
+    :type x_date: list[datetime]
+    :param y_value: list of value to display line of plot
+    :type y_value: list[float]
+    :param ref_curve_val: Value of reference curve for plot Qt simulation
+    :type ref_curve_val: list
+    :return: None
+    """
+    print('Update plot Qt')
+    axes = fig.get_axes()[0]
+    line_sim, line_ref_curve, = axes.get_lines()
+
+    y_value = np.asarray(y_value)
+    ref_curve_val = np.asarray(ref_curve_val)
+
+    axes.set_xlim(x_date[0], x_date[-1])
+    axes.set_ylim(min(y_value.min(), ref_curve_val.min()) - 1,
+                  max(y_value.max(), ref_curve_val.max()) + 1)
+    axes.xaxis.set_major_formatter(dates.DateFormatter('%Y-%m-%d'))
+    axes.format_xdata = dates.DateFormatter('%Y-%m-%d')
+
+    line_sim.set_data(x_date, y_value)
+    line_sim.set_data(x_date, y_value)
+    line_ref_curve.set_data(x_date, ref_curve_val)
+    fig.canvas.draw()
+
